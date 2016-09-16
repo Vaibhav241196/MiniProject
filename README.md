@@ -23,3 +23,5 @@ Steps to take before pushing to the repo
 3. Merge you branch with that updated branch (git merge origin/<branch_name (master for main branch)>).
 4. Fix any conflicts.
 5. Push into your branch (git push -u origin <branch_name>)
+
+6. To be continued...
