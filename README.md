@@ -1,6 +1,8 @@
 # MiniProject
 An online project expo, version control and management platform developed as the mini project of our TE.
 
+The Project is in Python 2.7. Make sure you are working with python 2.7 only and create your virtualenv in Python 2.7 only.
+
 Steps to setup the project to start development
 
 1. Clone or fetch the repo (the project).
