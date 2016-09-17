@@ -1,4 +1,4 @@
-# MiniProject
+# MiniProject - TE
 An online project expo, version control and management platform developed as the mini project of our TE.
 
 The Project is in Python 2.7. Make sure you are working with python 2.7 only and create your virtualenv in Python 2.7 only.
@@ -24,4 +24,8 @@ Steps to take before pushing to the repo
 4. Fix any conflicts.
 5. Push into your branch (git push -u origin <branch_name>)
 
+<<<<<<< HEAD
 6. To be continued...
+=======
+
+>>>>>>> origin/tejas
