@@ -20,8 +20,16 @@ body
   padding: 8% 0 0;
   margin: auto;
 }
+.signup-form
+{
+   width: 90%;
+  padding: 3% 0 0;
+  margin-left: 2%;
+  line-height: 10px;
 
-.login-form input {
+  
+}
+.login-form , .signup-form input {
   font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
@@ -33,7 +41,13 @@ body
   font-size: 14px;
   
 }
-
+#modal2.modal { width: 50% !important ; max-height: 100% !important } 
+#modal1.modal { width: 32% !important ; } 
+.signup-form
+{
+  margin-bottom: 7px;
+  padding: 10px;
+}
 .button-collapse, .brand-logo
 {
   margin-left: 20px;
@@ -50,7 +64,10 @@ body
 {
   margin: auto;
 }
-
+#buttonofsubmit
+{
+  margin: 20px;
+}
 .message {
   margin-left: 40%;
   margin-top: 30px;
@@ -90,34 +107,34 @@ body
 
 #belowNav
 {
-	background: url("../images/background.jpg");
-	width: 100%;
+  background: url("../images/background.jpg");
+  width: 100%;
 }
 #topHeading
 {
-	font-size: 50px;
-	color: white;
-	padding-top: 100px;
+  font-size: 50px;
+  color: white;
+  padding-top: 100px;
 }
 #topPara
 {
-	font-size: 20px;
+  font-size: 20px;
 }
 #imageLaptop
 {
-	padding-top: 100px;
-	height: 400px;
-	margin-bottom: 50px;
-	
+  padding-top: 100px;
+  height: 400px;
+  margin-bottom: 50px;
+  
 }
 #topButton
 {
-	font-size: 16px;
+  font-size: 16px;
 }
 #scaleImage, 
 {
 
-	height: 400px;
+  height: 400px;
   padding-top:75px;
 }
 #scaleData
@@ -206,4 +223,16 @@ body
   background: black;
   color: white;
   height: 30px;
+}
+
+@media screen and (min-width: 480px) and (max-width: 767px) {
+
+  #modal2.modal { width: 75% !important ; max-height: 100% !important }
+  #modal1.modal { width: 80% !important ; } 
+   
+}
+@media screen and (max-width: 480px) {
+
+  #modal2.modal { width: 75% !important ; max-height: 100% !important } 
+  #modal1.modal { width: 95% !important ; }
 }
