@@ -48,6 +48,28 @@ def acceptSignUp():
 		return "Hello world"
 
 
+@app.route('/login',methods = ['POST','GET'])
+def log_in():
+	if request.method == "POST":
+		username = request.form['username']
+		password = request.form['password']
+		document = {
+					'email':username,
+					'password' : password,
+					}
+		response = {}
+		print document
+		result = find(document)
+		print result
+		if result.count() == 0:
+			response['message'] = "Invalid username and password"
+		else:
+			response['message'] = "Login successful"
+
+		return json.dumps(response)
+	else:
+		return json.dumps("Fuck Off")
+
 
 """if __name__ == "__main__":
     print __name__
