@@ -56,4 +56,4 @@ def acceptSignUp():
     app.run()
     print __name__
     print app"""
-app.run()
+#app.run()
