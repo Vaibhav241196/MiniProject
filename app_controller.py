@@ -2,7 +2,7 @@ from flask import Flask,render_template,request,url_for
 from models.crud import insert,find
 import json
 
-app = Flask(__name__)
+app = Flask(__name__)   
 
 @app.route('/')
 def index():
@@ -49,5 +49,11 @@ def acceptSignUp():
 
 
 
-if __name__ == "__main__":
+"""if __name__ == "__main__":
+    print __name__
+    print app
+    print Flask
     app.run()
+    print __name__
+    print app"""
+app.run()
