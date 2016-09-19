@@ -33,9 +33,10 @@ def acceptSignUp():
 	    result = find({"email" : email })
 
 	    if(result.count() == 0):
-	    	insert(document);
+	    	insert(document,1);
 	    	response['status'] = 0;
 	    	response['message'] = "Registration successful";
+	    	
 
 	    else:
 	    	response['status'] = 1;
