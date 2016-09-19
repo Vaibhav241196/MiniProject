@@ -30,10 +30,10 @@ def acceptSignUp():
 	    				"password" : password,
 	               }
 
-	    result = find({"email" : email })
+	    result = find({"email" : email },'users')
 
 	    if(result.count() == 0):
-	    	insert(document);
+	    	insert(document,'users');
 	    	response['status'] = 0;
 	    	response['message'] = "Registration successful";
 
@@ -59,7 +59,7 @@ def log_in():
 					}
 		response = {}
 		print document
-		result = find(document)
+		result = find(document,'users')
 		print result
 		if result.count() == 0:
 			response['message'] = "Invalid username and password"
