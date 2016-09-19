@@ -13,6 +13,7 @@ def find(document,collection_name):
 	if collection_name == "project":
 		for i in project.find(document):
 			print i._id
+			print i.fullName
 		return project.find(document)
 
 	else:
