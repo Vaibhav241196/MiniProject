@@ -1,0 +1,158 @@
+ <!DOCTYPE html>
+    <head>
+      
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/materialize.min.css') }}" media="screen,projection"/>
+      <link href='https://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
+      <link href='https://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
+      <script src="https://use.fontawesome.com/d8c8729e60.js"></script>
+
+     
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/palette.css') }}" />
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}" />
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+     <div class="navbar-fixed">
+    <nav class="dark-primary-color">
+    <div class="nav-wrapper">
+      <a href="#!" class="brand-logo garamond"><strong>proHub</strong></a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Features</a></li>
+         <li><a href="#">Tutorial</a></li>
+          <li><a href="#">Contact</a></li>
+         <li><a href="#">About</a></li>
+        <li><a  class="modal-trigger" href="#modal1">Login</a></li>
+         <li><a class="modal-trigger" href="#modal2">Signup</a></li>
+       
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+        <li><a href="#">Features</a></li>
+         <li><a href="#">Tutorial</a></li>
+         <li><a href="#">Contact</a></li>
+        <li><a href="#">About</a></li>
+        <li><a class="modal-trigger" href="#modal1">Login</a></li>
+        <li><a class="modal-trigger" href="#modal2">Signup</a></li>
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+ <!-- Modal Structure 1-->
+  <div id="modal1" class="modal modal-fixed-footer center-align">
+    <form class="login-form" action = "/login" method = "post">
+      <h1 class="center-align" id="h1a">LOGIN FORM</h1>
+
+    <input type="text" class="black-text" placeholder="Username/Email" name = "username"/>
+      <input type="password" class="black-text" placeholder="Password" name = "password"/>
+      <input type = "submit" class="btn waves-effect dark-primary-color white-text darken-text-2" id="buttonoflogin">Submit
+<p class="message">Not registered? </p>
+  <a class="btn waves-effect dark-primary-color white-text darken-text-2 modal-trigger" id="buttonofreg" href="#modal2">Create an account
+  </a>
+    </form>
+  </div>
+  
+   <!-- Modal Structure 2-->
+   <div id="modal2" class="modal center-align black-text">
+    <form class="signup-form" action="/signup" method="post">
+      <h1 id="h1a">SIGN UP</h1>
+      <input name = "fullName" type="text" placeholder="Full Name"/>
+      <input name="userName" type="text" placeholder="Username"/>
+       <input name="email" type="email" placeholder="E-mail"/>
+      <input name="password" type="password" placeholder="Password"/>
+      <input name="repeatPassword"type="password" placeholder="Repeat Password"/>
+      <input name="termsCheck" type="checkbox" class="filled-in" id="filled-in-box" checked="checked" />
+      <label for="filled-in-box">You agree to the terms and conditions.</label><br>
+      <input class="btn waves-effect dark-primary-color white-text darken-text-2" type="submit" id="buttonofsubmit" value="Submit" />
+
+  
+    </form>
+  </div>
+  
+
+
+<div id="belowNav" class="row center-align">
+ <div class="col s12 m4 l5 offset-l1" id="topHeading">COLLABORATE. TRACK.<br>WIN.<br><p id="topPara">Project management tool that enables companies of all sizes to implement and scale agile practices.</p>
+<a href = "#modal2" class="modal-trigger waves-effect waves-light btn" id="topButton"><i class="material-icons left">send</i>Try Now</a>
+ </div>
+ <div class="col s12 m4 l5"><img src="{{ url_for('static',filename='images/laptop2.png') }}" id="imageLaptop" class="responsive-img"></div>
+</div>
+
+<div class="row center-align">
+<div class="col s12 m4 l5 offset-l1"><img src="{{ url_for('static',filename='images/screenshot.jpg') }}" class="responsive-img" id="scaleImage"></div>
+
+<div class="col s12 m4 l5" id="scaleData"><p>
+  <h1>
+Scale value delivery over process.
+</h1>
+Scaling Agile works best when each team can effectively ingrain Agile into their own process. That’s why Mingle is designed to integrate with a team’s current workflow. Once teams are effectively practicing Agile, Program Managers can use Mingle’s Planner feature to define objectives for the organization, track a plan’s progress, and receive alerts when a plan changes.
+</p></div>
+</div>
+
+<div class="parallax-container">
+      <div class="parallax"><img src="{{ url_for('static',filename='images/parallax1.png') }}" class="responsive-img"></div>      
+</div>            
+
+<div class="row center-align" id="belowParallax1">
+
+<div class="col s12 m4 l5 offset-l1" id="teamData"><p>
+  <h1>
+Let your team work the way they want to.
+</h1>
+Finding the workflow that suits your team best can be challenging. Too much structure slows progress, but not enough can halt it all together. Mingle’s flexibility lets you tailor your workflow to your team—whether you use Kanban, Scrum, Agile, or something in between.
+</p></div>
+<div class="col s12 m4 l5"><img src="{{ url_for('static',filename='images/screenshot.jpg') }}" class="responsive-img" id="teamImage"></div>
+
+</div>
+
+<div class="row center-align">
+  <div class="col s10 m8 l8 offset-l2" id="we2help"><p> <h1>
+We are here to help.</h1>
+The entire Mingle team is dedicated to making work more productive and enjoyable for you, which is why we all pitch in to make your Mingle experience better. Whether it’s one of our product managers answering a support question or an analyst giving you a personal demo, we’re all here to make sure you get the most out of Mingle.
+</p></div>
+</div>
+
+<div class="parallax-container">
+      <div class="parallax"><img src="{{ url_for('static',filename='images/parallax1.png') }}" class="responsive-img"></div>      
+</div>            
+
+<div class="row" id="getStarted">
+
+<div class="center-align col s10 m8 l8 offset-l2">
+    <h2>Get Started with your first project</h2>
+    <a href= "#modal2" class="modal-trigger waves-effect waves-light btn" id="bottomButton"><i class="material-icons left">send</i>Try Now</a>
+</div>
+</div>
+
+<div class="row center-align">
+  <div class="col s10 m8 l8 offset-l2 garamond">
+    <h1 id="pro">pro</h1><h1 id="hub">Hub</h1>
+  </div><br>
+<div class="col s10 m8 l8 offset-l2">
+<a href="#"><i class="fa fa-facebook-square animated zoomIn" aria-hidden="true" id="twitter"></i></a>
+<a href="#"><i class="fa fa-linkedin-square animated zoomIn" aria-hidden="true" id="linkedin"></i></a>
+<a href="#"><i class="fa fa-github-square animated zoomIn" aria-hidden="true" id="github"></i></a>
+<a href="#"><i class="fa fa-twitter-square animated zoomIn" aria-hidden="true" id="twitter"></i></a>
+</div>
+</div>
+ <div class="footer-copyright">
+            <div class="container center-align">
+              ©2016 All Rights Reserved.
+            </div>
+          </div>
+     <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
+      <script type="text/javascript">
+        $( document ).ready(function(){
+          $(".button-collapse").sideNav();
+            $('.modal-trigger').leanModal();
+             $('.parallax').parallax();
+        })
+      </script>
+    </body>
+  </html>
+        
