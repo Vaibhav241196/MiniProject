@@ -44,12 +44,12 @@
 </div>
  <!-- Modal Structure 1-->
   <div id="modal1" class="modal modal-fixed-footer center-align">
-    <form class="login-form">
+    <form class="login-form" action = "/login" method = "post">
       <h1 class="center-align" id="h1a">LOGIN FORM</h1>
 
-    <input type="text" class="black-text" placeholder="Username/Email"/>
-      <input type="password" class="black-text" placeholder="Password"/>
-      <a class="btn waves-effect dark-primary-color white-text darken-text-2" id="buttonoflogin">Login</a>
+    <input type="text" class="black-text" placeholder="Username/Email" name = "username"/>
+      <input type="password" class="black-text" placeholder="Password" name = "password"/>
+      <input type = "submit" class="btn waves-effect dark-primary-color white-text darken-text-2" id="buttonoflogin">Submit
 <p class="message">Not registered? </p>
   <a class="btn waves-effect dark-primary-color white-text darken-text-2 modal-trigger" id="buttonofreg" href="#modal2">Create an account
   </a>

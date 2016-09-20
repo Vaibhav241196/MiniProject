@@ -18,10 +18,14 @@ Steps to take before working with a fetched repo
 
 Steps to take before pushing to the repo
 
-1. Before doing the final commit for pushing, make sure to add all the package dependencies you have added into the requirements.txt file   	by using the commmand pip freeze > requirements.txt 
+1. Before doing the final commit for pushing, make sure to add all the package dependencies you have added into the requirements.txt file by using the commmand                   pip freeze > requirements.txt 
 2. First fetch the branch you are working on from repo to get updated branch. (git fetch)
 3. Merge you branch with that updated branch (git merge origin/<branch_name (master for main branch)>).
 4. Fix any conflicts.
 5. Push into your branch (git push -u origin <branch_name>)
 
+<<<<<<< HEAD
+6. To be continued...
+=======
 
+>>>>>>> origin/tejas
