@@ -1,6 +1,7 @@
 from flask import Flask,render_template,request,url_for
 from models.crud import insert,find
 import json
+from sendmail import sendEmails
 
 app = Flask(__name__)   
 
@@ -35,9 +36,11 @@ def acceptSignUp():
 
 
 	    if result1.count() == 0 and result2.count() == 0:
-	    	insert(document,'users');
+	    	insert(document,'users')
 	    	response['status'] = 0
 	    	response['message'] = "Registration successful"
+	    	sendEmails();
+
 
 	    else:
 	    	response['status'] = 1

@@ -149,10 +149,11 @@ lobody
 #belowParallax1
 {
   color: white;
-  background-color: #475869;
+  background:url("../images/background.jpg");
 }
 #teamData
 {
+  
   color: white;
   padding-top: 40px;
   margin-right: 20px;
