@@ -1,0 +1,68 @@
+/* All THe styles go  here */
+
+/* Global Styles - used throughout the website */
+body
+{
+    background-color: #EEEEEE;
+}
+
+.fixed {
+    position: fixed;
+}
+
+/* Navbar */
+
+nav {
+	padding : 0 2%;
+}
+
+/* Left sidebar */
+
+.left-sidebar {
+    width: 15%;
+    height : 600px;
+    top: 64px;
+}
+
+/* Right Scrren */
+
+.content-main {
+    width: 80%;
+    margin-left: 20%;
+    padding-top: 120px;
+}
+
+.spacer {
+    height: 10px
+}
+
+/* Project Listing screen styles */
+
+.single-project-listing {
+    border: 2px solid grey;  /* Accent Color */
+    height: 100px;
+    width: 90%;
+    margin: 20px auto;
+    background-color: white;
+    -webkit-box-shadow: 7.5px 0 5px -2px #888;
+          box-shadow: 7.5px 0 5px -2px #888;
+
+     -webkit-box-shadow: 7.5px 7.5px 5px -2px #888;
+          box-shadow: 7.5px 7.5px 5px -2px #888;
+}
+
+#userImage
+{
+    height: auto;
+    width: 12%;
+    vertical-align: center;
+    padding-top: 10px;
+    float: left;
+
+}
+#projFolder
+{
+    color:grey;
+  font-size: 60px;
+  margin-top: 12%;
+}

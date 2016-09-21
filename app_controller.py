@@ -37,6 +37,7 @@ def acceptSignUp():
 	    	insert(document,'users');
 	    	response['status'] = 0
 	    	response['message'] = "Registration successful"
+	    	return render_template('userdashboard.html',response = response)
 
 	    else:
 	    	response['status'] = 1
@@ -44,10 +45,11 @@ def acceptSignUp():
 	    		response['message'] = "Username already exists"
 	    	else:
 	    		response['message'] = "Email already exists"  
-	    return json.dumps(response)
+	    	return render_template('index.html',response = response)
+	    #return json.dumps(response)
 
 	else:
-		return "Hello world"
+		return render_template("index.html")
 
 
 @app.route('/login',methods = ['POST','GET'])
@@ -71,14 +73,18 @@ def log_in():
 			result = find(document,'users')
 			if result.count() == 0:
 				response['message'] = "Invalid username and password"
+				return render_template("index.html",response = response)
 			else:
 				response['message'] = "Login Successful"
+				return json.dumps(response)
+				#return render_template("userdashboard.html",response)
 		else:
 			response['message'] = "Login successful"
+			return render_template("userdashboard.html",response = response)
 
-		return json.dumps(response)
+		#return json.dumps(response)
 	else:
-		return json.dumps("Fuck Off")
+		return render_template("index.html")
 
 
 """if __name__ == "__main__":
