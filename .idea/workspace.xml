@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0294dc8-0b07-4d9e-b7db-f5a042db2b2b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/css/style.css" afterPath="$PROJECT_DIR$/static/css/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/index.html" afterPath="$PROJECT_DIR$/templates/index.html" />
     </list>
     <ignored path="ProHub.iws" />
@@ -36,17 +36,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="74" selection-start-line="10" selection-start-column="74" selection-end-line="10" selection-end-column="74" />
+            <state relative-caret-position="390">
+              <caret line="50" column="76" selection-start-line="50" selection-start-column="76" selection-end-line="50" selection-end-column="76" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/css/style.css">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="360">
@@ -66,8 +66,8 @@
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/app_controller.py" />
-        <option value="$PROJECT_DIR$/templates/index.html" />
         <option value="$PROJECT_DIR$/static/css/style.css" />
+        <option value="$PROJECT_DIR$/templates/index.html" />
       </list>
     </option>
   </component>
@@ -545,18 +545,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="74" selection-start-line="10" selection-start-column="74" selection-end-line="10" selection-end-column="74" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="141" column="19" selection-start-line="141" selection-start-column="19" selection-end-line="141" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="50" column="76" selection-start-line="50" selection-start-column="76" selection-end-line="50" selection-end-column="76" />
           <folding />
         </state>
       </provider>
