@@ -20,8 +20,14 @@ nav {
 
 .left-sidebar {
     width: 15%;
-    height : 600px;
-    top: 64px;
+    height : 800px;
+    padding-top : 20px;
+    top: 64px; 
+}
+
+.left-sidebar a {
+    width:80%;
+    margin-top:20px;
 }
 
 /* Right Scrren */
