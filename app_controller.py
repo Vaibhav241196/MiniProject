@@ -30,18 +30,20 @@ def acceptSignUp():
 	    				"password" : password,
 	               }
 
-	    result = find({"email" : email })
+	    result1 = find({"email" : email },'users')
+	    result2 = find({"userName":username},'users')
 
-	    if(result.count() == 0):
-	    	insert(document);
-	    	response['status'] = 0;
-	    	response['message'] = "Registration successful";
+	    if result1.count() == 0 and result2.count() == 0:
+	    	insert(document,'users');
+	    	response['status'] = 0
+	    	response['message'] = "Registration successful"
 
 	    else:
-	    	response['status'] = 1;
-	    	response['message'] = "Email already exists";
-	    
-
+	    	response['status'] = 1
+	    	if result1.count() == 0:
+	    		response['message'] = "Username already exists"
+	    	else:
+	    		response['message'] = "Email already exists"  
 	    return json.dumps(response)
 
 	else:
@@ -59,10 +61,18 @@ def log_in():
 					}
 		response = {}
 		print document
-		result = find(document)
+		result = find(document,'users')
 		print result
 		if result.count() == 0:
-			response['message'] = "Invalid username and password"
+			document = {
+						'userName':username,
+						'password':password,
+						}
+			result = find(document,'users')
+			if result.count() == 0:
+				response['message'] = "Invalid username and password"
+			else:
+				response['message'] = "Login Successful"
 		else:
 			response['message'] = "Login successful"
 
