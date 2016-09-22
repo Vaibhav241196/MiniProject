@@ -93,3 +93,7 @@ def log_in():
     print __name__
     print app"""
 #app.run()
+
+def userLogin()
+	login_manager = LoginManager()
+	login_manager.init_app(app)
