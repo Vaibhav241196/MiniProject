@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-
         <title> User Dashboard </title>
-
               <script src="https://use.fontawesome.com/d8c8729e60.js"></script>
 
         <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -29,11 +27,11 @@
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
        <li><a href="#">Features</a></li>
-        <li style="float:right;"><a href="#"><img src="{{ url_for('static' , filename='images/userimage.png')}}" class="responsive-img circle" id="userImage" /><span>Howdy {{ User!! }}</span></a></li>
+        <li style="float:right;"><a href="#"><img src="{{ url_for('static' , filename='images/userimage.png')}}" class="responsive-img circle" id="userImage" /><span>Howdy {{ response['message'] }}</span></a></li>
       </ul>
 
       <ul class="side-nav" id="mobile-demo">
-       <li><a href="#"><img src="userimage.png" class="responsive-img circle" id="userImage" /><span>Howdy {{ User!! }}</span></a></li>
+       <li><a href="#"><img src="userimage.png" class="responsive-img circle" id="userImage" /><span>Howdy {{ response['message'] }}</span></a></li>
        <li><a href="#">Features</a></li>
       </ul>
     </div>
@@ -43,7 +41,9 @@
 
 
 
-            <div class="left-sidebar dark-primary-color fixed">
+            <div class="left-sidebar dark-primary-color fixed center-align">
+            <a href="" class="btn waves-effect waves-light"> My Projects</a>
+            <a href="" class="btn waves-effect waves-light"> Shared Projects</a>
             </div>
 
             <div class="content-main">

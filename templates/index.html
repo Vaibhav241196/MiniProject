@@ -44,12 +44,12 @@
 </div>
  <!-- Modal Structure 1-->
   <div id="modal1" class="modal modal-fixed-footer center-align">
-    <form class="login-form" action = "/login" method = "post">
+    <form class="login-form">
       <h1 class="center-align" id="h1a">LOGIN FORM</h1>
 
-    <input type="text" class="black-text" placeholder="Username/Email" name = "username"/>
-      <input type="password" class="black-text" placeholder="Password" name = "password"/>
-      <input type = "submit" class="btn waves-effect dark-primary-color white-text darken-text-2" id="buttonoflogin">Submit
+    <input type="text" class="black-text" placeholder="Username/Email"/>
+      <input type="password" class="black-text" placeholder="Password"/>
+      <a class="btn waves-effect dark-primary-color white-text darken-text-2" id="buttonoflogin">Login</a>
 <p class="message">Not registered? </p>
   <a class="btn waves-effect dark-primary-color white-text darken-text-2 modal-trigger" id="buttonofreg" href="#modal2">Create an account
   </a>
@@ -59,17 +59,16 @@
    <!-- Modal Structure 2-->
    <div id="modal2" class="modal center-align black-text">
     <form class="signup-form" action="/signup" method="post">
-      <h1 id="h1a">SIGN UP</h1>
-      <input name = "fullName" type="text" placeholder="Full Name"/>
-      <input name="userName" type="text" placeholder="Username"/>
-       <input name="email" type="email" placeholder="E-mail"/>
-      <input name="password" type="password" placeholder="Password"/>
-      <input name="repeatPassword"type="password" placeholder="Repeat Password"/>
-      <input name="termsCheck" type="checkbox" class="filled-in" id="filled-in-box" checked="checked" />
-      <label for="filled-in-box">You agree to the terms and conditions.</label><br>
-      <input class="btn waves-effect dark-primary-color white-text darken-text-2" type="submit" id="buttonofsubmit" value="Submit" />
+        <h1 id="h1a">SIGN UP</h1>
+        <input name = "fullName" type="text" placeholder="Full Name"/>
+        <input name="userName" type="text" placeholder="Username"/>
+        <input name="email" type="email" placeholder="E-mail"/>
+        <input name="password" type="password" placeholder="Password"/>
+        <input name="repeatPassword"type="password" placeholder="Repeat Password"/>
+        <input name="termsCheck" type="checkbox" class="filled-in" id="filled-in-box" checked="checked" />
+        <label for="filled-in-box">You agree to the terms and conditions.</label><br>
 
-  
+        <input type="submit" class="waves-effect waves-light btn" value="Submit" />
     </form>
   </div>
   

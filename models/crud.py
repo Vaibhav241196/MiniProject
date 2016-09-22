@@ -19,3 +19,9 @@ def find(document,collection_name):
 
 	else:
 		return users.find(document)
+
+def find_unique(document,collection_name):
+	if collection_name == "project":
+		return project.find_one(document)
+	else:
+		return users.find_one(document)

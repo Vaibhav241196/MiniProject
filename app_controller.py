@@ -1,7 +1,11 @@
 from flask import Flask,render_template,request,url_for
-from models.crud import insert,find
+from models.crud import insert,find,find_unique
 import json
+
 from sendmail import sendEmails
+
+import os
+
 
 app = Flask(__name__)   
 
@@ -36,10 +40,15 @@ def acceptSignUp():
 
 
 	    if result1.count() == 0 and result2.count() == 0:
-	    	insert(document,'users')
+
+	    	insert(document,'users');
+	    	#print direct_add
+	    	direct_add = find_unique(document,'users')
+	    	print direct_add
+	    	os.mkdir("user/"+str(direct_add['_id']))
 	    	response['status'] = 0
 	    	response['message'] = "Registration successful"
-	    	sendEmails();
+	    	return render_template('userdashboard.html',response = response)
 
 
 	    else:
@@ -48,10 +57,11 @@ def acceptSignUp():
 	    		response['message'] = "Username already exists"
 	    	else:
 	    		response['message'] = "Email already exists"  
-	    return json.dumps(response)
+	    	return render_template('index.html',response = response)
+	    #return json.dumps(response)
 
 	else:
-		return "Hello world"
+		return render_template("index.html")
 
 
 @app.route('/login',methods = ['POST','GET'])
@@ -75,14 +85,25 @@ def log_in():
 			result = find(document,'users')
 			if result.count() == 0:
 				response['message'] = "Invalid username and password"
+				return render_template("index.html",response = response)
 			else:
 				response['message'] = "Login Successful"
+				return json.dumps(response)
+				#return render_template("userdashboard.html",response)
 		else:
 			response['message'] = "Login successful"
+			return render_template("userdashboard.html",response = response)
 
-		return json.dumps(response)
+		#return json.dumps(response)
 	else:
-		return json.dumps("Fuck Off")
+		return render_template("index.html")
+
+@app.route('/dump')
+def dump_page():
+	response = {}
+	response['message'] = "Login successful"
+	return render_template("userdashboard.html",response = response)
+
 
 
 """if __name__ == "__main__":
@@ -92,8 +113,3 @@ def log_in():
     app.run()
     print __name__
     print app"""
-#app.run()
-
-def userLogin()
-	login_manager = LoginManager()
-	login_manager.init_app(app)
