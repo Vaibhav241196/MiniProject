@@ -41,7 +41,7 @@ def acceptSignUp():
 	    if result1.count() == 0 and result2.count() == 0:
 	    	insert(document,'users');
 	    	direct_add = find_unique(document,'users')
-	    	os.mkdir("user/"+str(direct_add['_id']))
+	    	os.makedirs("user/"+str(direct_add['_id']))
 	    	session['id'] = direct_add['_id']
 	    	response['status'] = 0
 	    	response['message'] = "Registration successful"
