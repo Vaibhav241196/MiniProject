@@ -18,7 +18,6 @@ def index():
 
 	return render_template('index.html')
 
-
 @app.route('/signup', methods=['GET','POST'])
 def acceptSignUp():
     
@@ -48,8 +47,10 @@ def acceptSignUp():
 
 	    	insert(document,'users');
 	    	direct_add = find_unique(document,'users')
+
 	    	os.makedirs("user/"+str(direct_add['_id']))
 	    	session['id'] = str(direct_add['_id'])
+
 	    	response['status'] = 0
 	    	response['message'] = "Registration successful"
 	    	return render_template('userdashboard.html',response = response)

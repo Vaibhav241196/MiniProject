@@ -29,7 +29,7 @@ nav {
 }
 
 .left-sidebar a {
-    width:80%;
+    width:100%;
     margin-top:20px;
 
 }
@@ -70,9 +70,36 @@ nav {
     float: left;
 
 }
-#projFolder
-{
+#projFolder {
     color:grey;
-  font-size: 60px;
-  margin-top: 12%;
+    font-size: 60px;
+    margin-top: 12%;
+}
+
+.side-nav.large-screen {
+    top: 64px;
+    width: 15%;
+}
+
+ul.tabs {
+    flex-direction: column;
+    height: 100%;
+    float: left;
+    width: 15% !important;
+}
+
+.tabs .tab {
+    text-align: left;
+}
+
+ul.tabs li a {
+    width: 100% !important;
+}
+
+ul.tabs .indicator {
+    display: none;
+}
+
+ul.tabs li a.active {
+    background-color: white;
 }
