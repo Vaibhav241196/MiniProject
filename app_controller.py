@@ -88,7 +88,6 @@ def log_in():
 			if result1: 
 				session['id'] = str(result1['_id'])
 			else:
-				print document2
 				session['id'] = str(result2['_id'])
 
 			return render_template("userdashboard.html",response = response)
