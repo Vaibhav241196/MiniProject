@@ -9,7 +9,6 @@ app = Flask(__name__)
 def index():
 	return render_template('index.html')
 
-
 @app.route('/signup', methods=['GET','POST'])
 def acceptSignUp():
     
@@ -39,7 +38,7 @@ def acceptSignUp():
 	    	#print direct_add
 	    	direct_add = find_unique(document,'users')
 	    	print direct_add
-	    	os.mkdir("user/"+str(direct_add['_id']))
+	    	os.makdirs("user/"+str(direct_add['_id']))
 	    	response['status'] = 0
 	    	response['message'] = "Registration successful"
 	    	return render_template('userdashboard.html',response = response)

@@ -1305,7 +1305,7 @@ $(document).ready(function(){
         }
 
         // Act as regular link if target attribute is specified.
-        if (!!$(this).attr("target")) {
+        if (!!$(this).attr("tar get")) {
           return;
         }
 
