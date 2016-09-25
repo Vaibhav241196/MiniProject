@@ -1,11 +1,16 @@
-from flask import Flask,render_template,request,url_for
-from models.crud import insert,find
+from flask import Flask,render_template,session,redirect, url_for, escape, request
+from models.crud import insert,find,find_unique	
 import json
+import os
 
 app = Flask(__name__)   
 
 @app.route('/')
 def index():
+	if 'id' in session:
+		response = {}
+		response['message']  =' Login successful'
+		return render_template('userdashboard.html',response = response)  
 	return render_template('index.html')
 
 
@@ -35,8 +40,12 @@ def acceptSignUp():
 
 	    if result1.count() == 0 and result2.count() == 0:
 	    	insert(document,'users');
+	    	direct_add = find_unique(document,'users')
+	    	os.makedirs("user/"+str(direct_add['_id']))
+	    	session['id'] = direct_add['_id']
 	    	response['status'] = 0
 	    	response['message'] = "Registration successful"
+	    	return render_template('userdashboard.html',response = response)
 
 	    else:
 	    	response['status'] = 1
@@ -44,10 +53,11 @@ def acceptSignUp():
 	    		response['message'] = "Username already exists"
 	    	else:
 	    		response['message'] = "Email already exists"  
-	    return json.dumps(response)
+	    	return render_template('index.html',response = response)
+	    #return json.dumps(response)
 
 	else:
-		return "Hello world"
+		return render_template("index.html")
 
 
 @app.route('/login',methods = ['POST','GET'])
@@ -55,30 +65,55 @@ def log_in():
 	if request.method == "POST":
 		username = request.form['username']
 		password = request.form['password']
-		document = {
+		document1 = {
 					'email':username,
 					'password' : password,
 					}
+		document2 = {
+					'userName':username,
+					'password' : password,
+					}
 		response = {}
-		print document
-		result = find(document,'users')
-		print result
-		if result.count() == 0:
-			document = {
-						'userName':username,
-						'password':password,
-						}
-			result = find(document,'users')
-			if result.count() == 0:
-				response['message'] = "Invalid username and password"
-			else:
-				response['message'] = "Login Successful"
-		else:
+		result1 = find(document1,'users')
+		result2 = find(document2,'users')
+		if result1.count() != 0 or result2.count() != 0:
 			response['message'] = "Login successful"
-
-		return json.dumps(response)
+			direct_add = find_unique(document,'users')
+			session['id'] = direct_add['_id']
+			return render_template("userdashboard.html",response = response)
+		else:
+			response['message'] = "Invalid username and password"
+			return render_template("index.html",response = response)
 	else:
-		return json.dumps("Fuck Off")
+		return render_template("index.html")
+
+@app.route('/check')
+def check():
+	print session
+	#print session['id']
+	response = {}
+	response['message'] = "login successful"
+	return render_template("userdashboard.html",response = response) 
+@app.route('/dump')
+def dump_page():
+	response = {}
+	response['message'] = "Login successful"
+	return render_template("userdashboard.html",response = response)
+
+
+
+@app.route('/logout')
+def log_out():
+	session.pop('id',None)
+	return render_template("index.html")
+
+
+
+
+
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+
+
 
 
 """if __name__ == "__main__":
@@ -88,4 +123,4 @@ def log_in():
     app.run()
     print __name__
     print app"""
-#app.run()
+

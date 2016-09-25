@@ -1,4 +1,4 @@
-body
+lobody
 {
   font-family: asap;
 }
@@ -68,6 +68,11 @@ body
 {
   margin: 20px;
 }
+
+input[type='submit'] {
+    padding-top:0;
+}
+
 .message {
   margin-left: 40%;
   margin-top: 30px;
@@ -131,9 +136,8 @@ body
 {
   font-size: 16px;
 }
-#scaleImage, 
+#scaleImage
 {
-
   height: 400px;
   padding-top:75px;
 }
