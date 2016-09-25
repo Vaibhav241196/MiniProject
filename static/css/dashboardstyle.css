@@ -101,5 +101,6 @@ ul.tabs .indicator {
 }
 
 ul.tabs li a.active {
-    background-color: white;
+    background-color: #eeeeee;
+    color:black !important;
 }
