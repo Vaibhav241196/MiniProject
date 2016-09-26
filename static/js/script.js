@@ -5,25 +5,10 @@
 $(document).ready(function (){
 
     // Navbar collapsible dropdown button initialization for mobile
+    $(".button-collapse").sideNav();
 
-    var target;
+     $('ul.tabs').tabs();
 
-    initTabs();
-
-    $('ul.tabs').tabs({
-             onShow : function (currentTab) {
-                 $(this).parent().parent().find('li a').removeClass('active');
-                 $(this).addClass('active');
-
-                 initTabs();
-         }
-     });
-
-
-
-
-     // $('ul.tabs').tabs('select_tab', 'projects-shared');
-     $(".button-collapse").sideNav();
 
 });
 

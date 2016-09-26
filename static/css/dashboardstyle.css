@@ -39,7 +39,7 @@ nav {
 .content-main {
     width: 80%;
     margin-left: 20%;
-    padding-top: 120px;
+    padding-top: 40px;
 }
 
 .spacer {
@@ -76,23 +76,23 @@ nav {
     margin-top: 12%;
 }
 
+
+/* For side nav */
 .side-nav.large-screen {
     top: 64px;
-    width: 15%;
 }
 
 ul.tabs {
-    flex-direction: column;
     height: 100%;
-    float: left;
+    display: block;
     width: 15% !important;
 }
 
-.tabs .tab {
+.tabs .tab a {
     text-align: left;
 }
 
-ul.tabs li a {
+ul.tabs li {
     width: 100% !important;
 }
 
@@ -103,4 +103,5 @@ ul.tabs .indicator {
 ul.tabs li a.active {
     background-color: #eeeeee;
     color:black !important;
+    border-right: 4px solid white;
 }
