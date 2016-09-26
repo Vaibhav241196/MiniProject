@@ -1,5 +1,5 @@
 from flask import Flask,render_template,session,redirect, url_for, escape, request
-from models.crud import insert,find,find_unique	
+from models.crud import *
 import json
 from sendmail import sendEmails
 import os
@@ -10,22 +10,9 @@ app = Flask(__name__)
 @app.route('/')
 def index():
 	if 'id' in session:
-		response = {}
-		response['message']  =' Login successful'
-
 		userId = session['id']
-		projMembers = find_project(userId,'project')
-
-		
-
-
-
-
-
-
-
-
-		return render_template('userdashboard.html',response = response)  
+		proj_list = find_project(userId,'project')
+		return render_template('userdashboard.html','proj_list':proj_list)  
 
 	return render_template('index.html')
 
@@ -62,20 +49,20 @@ def acceptSignUp():
 			os.makedirs("user/"+str(direct_add['_id']))
 			session['id'] = str(direct_add['_id'])
 
-	    	response['status'] = 0
-	    	response['message'] = "Registration successful"
+			response['status'] = 0
+			response['message'] = "Registration successful"
 
 
-	    	return redirect(url_for('index'))
+			return redirect(url_for('index'))
 
 
-	    else:
-	    	response['status'] = 1
-	    	if result1.count() == 0:
-	    		response['message'] = "Username already exists"
-	    	else:
-	    		response['message'] = "Email already exists"  
-	    	return json.dumps(response)
+		else:
+			response['status'] = 1
+			if result1.count() == 0:
+				response['message'] = "Username already exists"
+			else:
+				response['message'] = "Email already exists"  
+			return json.dumps(response)
 
 
 	else:
@@ -137,12 +124,12 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 
 """if __name__ == "__main__":
-    print __name__
-    print app
-    print Flask
-    app.run()
-    print __name__
-    print app"""
+	print __name__
+	print app
+	print Flask
+	app.run()
+	print __name__
+	print app"""
 #app.run()
 
 
