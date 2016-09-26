@@ -12,6 +12,19 @@ def index():
 	if 'id' in session:
 		response = {}
 		response['message']  =' Login successful'
+
+		userId = session['id']
+		projMembers = find_project(userId,'project')
+
+		
+
+
+
+
+
+
+
+
 		return render_template('userdashboard.html',response = response)  
 
 	return render_template('index.html')
@@ -49,22 +62,26 @@ def acceptSignUp():
 			os.makedirs("user/"+str(direct_add['_id']))
 			session['id'] = str(direct_add['_id'])
 
-			response['status'] = 0
-			response['message'] = "Registration successful"
-			return render_template('userdashboard.html',response = response)
+	    	response['status'] = 0
+	    	response['message'] = "Registration successful"
 
 
-		else:
-			response['status'] = 1
-			if result1.count() == 0:
-				response['message'] = "Username already exists"
-			else:
-				response['message'] = "Email already exists"  
-			return render_template('index.html',response = response)
-	    #return json.dumps(response)
+	    	return redirect(url_for('index'))
+
+
+	    else:
+	    	response['status'] = 1
+	    	if result1.count() == 0:
+	    		response['message'] = "Username already exists"
+	    	else:
+	    		response['message'] = "Email already exists"  
+	    	return json.dumps(response)
+
 
 	else:
-		return render_template("index.html")
+		response['status'] = 1
+		response['message'] = "Request message not post"
+		return json.dumps(response)
 
 
 @app.route('/login',methods = ['POST','GET'])
@@ -87,22 +104,25 @@ def log_in():
 		result1 = find_unique(document1,'users')
 		result2 = find_unique(document2,'users')
 
-		if result1 != 0 or result2 != 0:
+		if result1 != None or result2 != None:
 			response['status'] = 0
 			response['message'] = "Login successful"
 
-			if result1: 
+			if result1 != None: 
 				session['id'] = str(result1['_id'])
 			else:
 				session['id'] = str(result2['_id'])
 
-				return render_template("userdashboard.html",response = response)
 
+			return redirect(url_for('index'))
+		
 		else:
 			response['message'] = "Invalid username and password"
-			return render_template("index.html",response = response)
+			return json.dumps(response)
 	else:
-		return render_template("index.html")
+		response['status'] = 1
+		response['message'] = "Request message not post"
+		return json.dumps(response)
 
 
 @app.route('/logout')
