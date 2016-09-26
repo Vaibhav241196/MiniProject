@@ -1,9 +1,7 @@
 from flask import Flask,render_template,session,redirect, url_for, escape, request
 from models.crud import insert,find,find_unique	
 import json
-
 from sendmail import sendEmails
-
 import os
 
 
@@ -20,49 +18,49 @@ def index():
 
 @app.route('/signup', methods=['GET','POST'])
 def acceptSignUp():
-    
+
 	if request.method == 'POST':
 
-	    fullname=request.form['fullName']
-	    username=request.form['userName']
-	    email=request.form['email']
-	    password=request.form['password']
-	    repeatpassword=request.form['repeatPassword']
-	    termscheck=request.form['termsCheck']
+		fullname=request.form['fullName']
+		username=request.form['userName']
+		email=request.form['email']
+		password=request.form['password']
+		repeatpassword=request.form['repeatPassword']
+		termscheck=request.form['termsCheck']
 
-	    response = {}
+		response = {}
 
-	    document = {
-	    				"fullName" : fullname,
-	    				"userName" : username,
-	    				"email" : email,
-	    				"password" : password,
-	               }
+		document = {
+		"fullName" : fullname,
+		"userName" : username,
+		"email" : email,
+		"password" : password,
+		}
 
-	    result1 = find({"email" : email },'users')
-	    result2 = find({"userName":username},'users')
-
-
-	    if result1.count() == 0 and result2.count() == 0:
-
-	    	insert(document,'users');
-	    	direct_add = find_unique(document,'users')
-
-	    	os.makedirs("user/"+str(direct_add['_id']))
-	    	session['id'] = str(direct_add['_id'])
-
-	    	response['status'] = 0
-	    	response['message'] = "Registration successful"
-	    	return render_template('userdashboard.html',response = response)
+		result1 = find({"email" : email },'users')
+		result2 = find({"userName":username},'users')
 
 
-	    else:
-	    	response['status'] = 1
-	    	if result1.count() == 0:
-	    		response['message'] = "Username already exists"
-	    	else:
-	    		response['message'] = "Email already exists"  
-	    	return render_template('index.html',response = response)
+		if result1.count() == 0 and result2.count() == 0:
+
+			insert(document,'users');
+			direct_add = find_unique(document,'users')
+
+			os.makedirs("user/"+str(direct_add['_id']))
+			session['id'] = str(direct_add['_id'])
+
+			response['status'] = 0
+			response['message'] = "Registration successful"
+			return render_template('userdashboard.html',response = response)
+
+
+		else:
+			response['status'] = 1
+			if result1.count() == 0:
+				response['message'] = "Username already exists"
+			else:
+				response['message'] = "Email already exists"  
+			return render_template('index.html',response = response)
 	    #return json.dumps(response)
 
 	else:
@@ -74,16 +72,16 @@ def log_in():
 	if request.method == "POST":
 		username = request.form['username']
 		password = request.form['password']
-		
+
 		document1 = {
-					'email':username,
-					'password' : password,
-					}
+		'email':username,
+		'password' : password,
+		}
 
 		document2 = {
-					'userName':username,
-					'password' : password,
-        }
+		'userName':username,
+		'password' : password,
+		}
 		response = {}
 
 		result1 = find_unique(document1,'users')
@@ -98,8 +96,8 @@ def log_in():
 			else:
 				session['id'] = str(result2['_id'])
 
-			return render_template("userdashboard.html",response = response)
-		
+				return render_template("userdashboard.html",response = response)
+
 		else:
 			response['message'] = "Invalid username and password"
 			return render_template("index.html",response = response)

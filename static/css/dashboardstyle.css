@@ -79,7 +79,7 @@ nav {
 
 /* For side nav */
 .side-nav.large-screen {
-    top: 64px;
+    top: 121.5666px;
 }
 
 ul.tabs {
@@ -101,7 +101,40 @@ ul.tabs .indicator {
 }
 
 ul.tabs li a.active {
-    background-color: #eeeeee;
+    background-color: #eeeeee; 
     color:black !important;
     border-right: 4px solid white;
+}
+
+#create-nav-bar {
+    /*/*height: 40px;*/ 
+    background-color: #00695C;
+
+}
+
+
+
+#new-logo
+{
+  color:white !important;
+  font-size: 25px;
+  margin: 5% 3% 5% 3%;
+  float:left;
+}   
+#logo
+{
+  color:white !important;
+  font-size: 25px;
+  margin: 5% 3% 5% 3%;
+  float:right;
+}   
+#new-project
+{
+    color:white;
+    font-size:10;
+}
+#horizonatal-nav-bar
+{
+    float:right;    
+    /*background-color:black;*/
 }
