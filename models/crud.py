@@ -25,3 +25,9 @@ def find_unique(document,collection_name):
 		return project.find_one(document)
 	else:
 		return users.find_one(document)
+
+def find_project(id,collection_name):
+	if collection_name == "project":
+		return db.project.find({"members" : str(id)})
+
+
