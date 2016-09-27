@@ -9,7 +9,10 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/font-awesome.min.css')}}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/dashboardstyle.css')}}">
         <link href='https://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
+
     </head>
+
+
 
     <body>
 
@@ -42,7 +45,22 @@
                     </div>
                 </nav>
 
-            </div>
+                </div>
+                    <div class = "row" id = "create-nav-bar">
+                    <div class="col s10 m4 l3" >
+<a href="#" title = "new" ><i class=" waves-effect fa  fa-plus " aria-hidden="true" id="new-logo"></i></a>                    
+
+                    </div>
+                    <div class="col s10 m4 l3 " id = "horizonatal-nav-bar">
+<a href="#" title = "delete" ><i class=" waves-effect fa  fa-trash " aria-hidden="true" id="logo"></i></a>
+<a href="#" title = "download"><i class="waves-effect fa   fa-download " aria-hidden="true" id="logo"></i></a>
+<a href="#" title = "rename" ><i class=" waves-effect fa   fa-pencil-square-o " aria-hidden="true" id="logo"></i></a>
+
+</div>
+                    </div>
+
+
+            
 
             <div class="content-main">
 
@@ -254,8 +272,6 @@
         <script rel="script" type="text/javascript" src="{{ url_for( 'static' , filename='js/jquery-3.1.0.min.js') }}" ></script>
         <script rel="script" type="text/javascript" src="{{ url_for ('static', filename='js/materialize.min.js') }} "></script>
         <script rel="script" type="text/javascript" src="{{  url_for('static' , filename='js/script.js') }}"></script>
-
-
 
     </body>
 </html>
