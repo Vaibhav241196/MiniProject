@@ -30,7 +30,7 @@ $(document).ready(function (){
             done(function(res) {
 
             if(res.status === true)
-                $("#member-list").append("<li value=" + res.id + "class='member'>"+ userName + "</li>");
+                $("#member-list").append("<li value=" + res.id + " class='member'>"+ userName + "</li>");
 
             else
                 alert("No such user found");
@@ -43,23 +43,40 @@ $(document).ready(function (){
 
     $("form#new_project").submit(function(evt){
 
-        console.log('Test');
         evt.preventDefault();
-        var projectName = $("input#member-name").val();
+        console.log('Test');
+        var projectData = {};
+
+        projectData.projectName = $("input#project-name").val();
+        projectData.projectDescription = $("input#project-description").val();
+        projectData.projectMembers = [];
+
+        var members = $("#member-list li");
+
+        console.log(members.length);
+
+        // for (i in members) {
+        //     console.log($(members[i]).attr('value'));
+        //     // data.projectMembers.push($(members[i]).attr('value'));
+        // }
+
+        console.log(members);
+
+        $.each($("#member-list li"),function (index,value){
+            projectData.projectMembers.push($(value).attr('value'));
+        });
+
+        console.log(projectData);
 
         $.ajax({
-            url: '/checkMembers',
+            url: '/createProject',
             method: 'POST',
-            data : { member_name: userName },
-            dataType : 'json',
+            data : JSON.stringify(projectData),
+            contentType: 'application/json',
+            dataType : 'html',
         }).
             done(function(res) {
-
-            if(res.status === true)
-                $("#member-list").append("<li value=" + res.id + "class='member'>"+ userName + "</li>");
-
-            else
-                alert("No such user found");
+                document.write(res);
         }).
             fail(function (err) {
                 console.log(err);

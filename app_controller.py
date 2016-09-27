@@ -95,8 +95,10 @@ def log_in():
             response['message'] = "Login successful"
 
             if result1 != None:
+                print type(result1)
                 session['id'] = str(result1['_id'])
             else:
+                print type(result2)
                 session['id'] = str(result2['_id'])
 
             return redirect(url_for('index'))
@@ -127,13 +129,12 @@ def checkMembers():
 
 @app.route('/createProject',methods=['POST'])
 def createProject():
+    print 'Hello'
 
-    document = {}
-    document['project_name'] = request.form['project_name']
-    document['project_description'] = request.form['project_description']
-    document['project_members'] = request.form['project_members']
+    document = request.get_json()
 
-    project_id = insert(document,'projects')
+    project_id = insert(document,'projects').inserted_id
+
 
     makedirs('projects/' + str(project_id))
     chdir('projects/' + str(project_id))
