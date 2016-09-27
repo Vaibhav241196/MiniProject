@@ -4,7 +4,6 @@ import json
 from sendmail import sendEmails
 import os
 
-
 app = Flask(__name__)   
 
 @app.route('/')
@@ -69,7 +68,6 @@ def acceptSignUp():
 		response['status'] = 1
 		response['message'] = "Request message not post"
 		return json.dumps(response)
-
 
 @app.route('/login',methods = ['POST','GET'])
 def log_in():
