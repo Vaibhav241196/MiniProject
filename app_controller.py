@@ -10,17 +10,20 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    if 'id' in session:
-        userId = session['id']
-        proj_list = find_project(userId, 'project')
 
-        return render_template('userdashboard.html', proj_list=proj_list)
-
-    return render_template('index.html')
+	response = {}
+	if 'id' in session:
+		userId = session['id']
+		#response = {}
+		response['message'] = "suhavan"
+		proj_list = find_project(userId,'project')
+		return render_template('userdashboard.html',proj_list=proj_list,response = response)  
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def acceptSignUp():
+
+    response = {}
     if request.method == 'POST':
 
         fullname = request.form['fullName']
@@ -29,7 +32,6 @@ def acceptSignUp():
         password = request.form['password']
 
 
-        response = {}
 
         document = {
             "fullName": fullname,
@@ -76,6 +78,7 @@ def log_in():
         username = request.form['username']
         password = request.form['password']
 
+
         document1 = {
             'email': username,
             'password': password,
@@ -88,6 +91,7 @@ def log_in():
 
         result1 = find_unique(document1, 'users')
         result2 = find_unique(document2, 'users')
+
 
         if result1 != None or result2 != None:
             response['status'] = 0
