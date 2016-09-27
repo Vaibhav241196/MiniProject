@@ -71,7 +71,7 @@ def acceptSignUp():
 def log_in():
 
     response = {}
-    
+
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
