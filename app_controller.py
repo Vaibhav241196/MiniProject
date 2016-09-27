@@ -3,7 +3,8 @@ from models.crud import *
 
 import json
 from sendmail import sendEmails
-import os
+from os import makedirs,chdir
+from subprocess import call
 
 app = Flask(__name__)
 
@@ -47,7 +48,7 @@ def acceptSignUp():
             insert(document, 'users');
             direct_add = find_unique(document, 'users')
 
-            os.makedirs("user/" + str(direct_add['_id']))
+            makedirs("user/" + str(direct_add['_id']))
             session['id'] = str(direct_add['_id'])
 
             response['status'] = 0
@@ -113,24 +114,44 @@ def log_in():
 @app.route('/logout')
 def log_out():
     session.pop('id', None)
-    return render_template("index.html")
-
+    return redirect(url_for('index'))
 
 @app.route('/checkMembers', methods=['POST'])
 def checkMembers():
     username = request.form['member_name'];
     m = find_unique({'userName': username}, 'users')
-
     if m:
-        return json.dumps({"status": True})
+        return json.dumps({"status": True, "id": str(m['_id'])})
     else:
         return json.dumps({"status": False})
+
+@app.route('/createProject',methods=['POST'])
+def createProject():
+
+    document = {}
+    document['project_name'] = request.form['project_name']
+    document['project_description'] = request.form['project_description']
+    document['project_members'] = request.form['project_members']
+
+    project_id = insert(document,'projects')
+
+    makedirs('projects/' + str(project_id))
+    chdir('projects/' + str(project_id))
+    call(['git','init'],shell=False);
+
+    return redirect(url_for('projectDashBoard',id=project_id))
+
+@app.route('/projectDashBoard/<id>')
+def projectDashBoard(id):
+
+    project = find_project_by_id(id)
+    return render_template('project_dashboard.html',project=project)
+
 
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 """if __name__ == "__main__":
-<<<<<<< HEAD
     print __name__
     print app
     print Flask

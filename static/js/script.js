@@ -30,7 +30,33 @@ $(document).ready(function (){
             done(function(res) {
 
             if(res.status === true)
-                $("#member-list").append("<li class='member'>"+ userName + "</li>");
+                $("#member-list").append("<li value=" + res.id + "class='member'>"+ userName + "</li>");
+
+            else
+                alert("No such user found");
+        }).
+            fail(function (err) {
+                console.log(err);
+        });
+
+    });
+
+    $("form#new_project").submit(function(evt){
+
+        console.log('Test');
+        evt.preventDefault();
+        var projectName = $("input#member-name").val();
+
+        $.ajax({
+            url: '/checkMembers',
+            method: 'POST',
+            data : { member_name: userName },
+            dataType : 'json',
+        }).
+            done(function(res) {
+
+            if(res.status === true)
+                $("#member-list").append("<li value=" + res.id + "class='member'>"+ userName + "</li>");
 
             else
                 alert("No such user found");
