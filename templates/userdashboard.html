@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/palette.css')}}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/font-awesome.min.css')}}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/dashboardstyle.css')}}">
+        <link href='https://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
     </head>
 
     <body>
@@ -49,8 +50,10 @@
                     <li class="tab"> <a class="waves-effect white-text active" href="#all-projects"> All Projects </a></li>
                     <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> My Projects </a></li>
                     <li class="tab"> <a class="waves-effect white-text" href="#projects-shared" > Shared Projects </a></li>
-                    <li class="tab"> <a class="waves-effect white-text" href="#new-project"> New Project </a></li>
+                    <li class="tab"> <a class="waves-effect white-text modal-trigger" href="#new-project"> Create New Project</a> </li>
                 </ul>
+
+
 
                 <div id="all-projects" class="tab-content">
                     <div class="row">
@@ -200,21 +203,48 @@
                     <p>Hello</p>
                 </div>
 
-                <div id="new-task" class="modal">
+                <div id="new-project" class="modal">
                     <div class="modal-content">
-                        <form id="new-project" method="post" action="url_for()">
-                            <input type="text" name="project-name" />
-                            <input type="text" name="project-description" />
-                            <select name="members">
-                                <option>Vaibhav Lohani</option>
-                                <option>Suhavan Gupta</option>
-                                <option>Tejas Kulkarni</option>
-                            </select>
-                        </form>
+                          <div class="row">
+                              <form class="col s12 ">
+
+                                  <h2 class="center-align heading red-text"> Add New Project </h2>
+
+                                  <div class="row">
+                                      <div class="input-field col s10 offset-s1">
+                                        <input placeholder="Placeholder" id="project-name" type="text" class="validate" />
+                                        <label for="first_name">Project Name</label>
+                                      </div>
+                                      <div class="input-field col s10 offset-s1">
+                                        <input id="project-description" type="text" class="validate" placeholder="Description" />
+                                        <label for="project-description">Project Description</label>
+                                      </div>
+                                  </div>
+
+                                  <div class="row">
+                                      <div class="input-field col s10 offset-s1">
+
+                                          <ul id="member-list">
+                                          </ul>
+
+                                          <input type="text" name="member-name" id="member-name" placeholder="Username"/>
+                                          <label for="member-name">Members</label>
+                                          <a id="members-form-submit" class="btn-floating btn-large waves-effect waves-light red" href="#"> <i class="fa fa-2x fa-user-plus white-text    "></i> </a>
+
+                                      </div>
+                                  </div>
+
+                                  <div class="row center-align">
+                                    <input type="submit" value="Submit" class="btn waves-effect waves-light" />
+                                  </div>
+                              </form>
+                          </div>
                     </div>
 
 
                 </div>
+
+
 
             </div>
 
