@@ -4,6 +4,7 @@
 body
 {
     background-color: #EEEEEE;
+    font-family: Roboto, sans-serif;
 }
 
 .fixed {
@@ -79,7 +80,7 @@ nav {
 
 /* For side nav */
 .side-nav.large-screen {
-    top: 121.5666px;
+    top: 64px;
 }
 
 ul.tabs {
@@ -106,13 +107,76 @@ ul.tabs li a.active {
     border-right: 4px solid white;
 }
 
+input#member-name {
+    width : 80%;
+    margin-right: 5%;
+    float: left;
+}
+
+a#members-form-submit {
+    float: left;
+}
+
+.heading {
+    font-family: "EB garamond", sans-serif ;
+}
+
+::-webkit-input-placeholder {
+    color: #FF0000;
+    opacity: 0.45 !important; /* for chrome */
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    color: #FF0000;
+    opacity: 0.45;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    color: #FF0000;
+    opacity: 0.45;
+}
+
+:-ms-input-placeholder {
+   color: #FF0000;
+   opacity: 0.45;
+}
+
+/* label color */
+.input-field label {
+ color: black;
+}
+
+ /*label focus color */
+
+.input-field input[type=text]:focus + label {
+ color: red;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+ border-bottom: 1px solid red;
+ box-shadow: 0 1px 0 0 red;
+}
+/* valid color */
+.input-field input[type=text].valid {
+ border-bottom: 1px solid red;
+ box-shadow: 0 1px 0 0 red;
+}
+/* invalid color */
+.input-field input[type=text].invalid {
+ border-bottom: 1px solid red;
+ box-shadow: 0 1px 0 0 red;
+}
+/* icon prefix focus color */
+.input-field .prefix.active {
+ color: red;
+}
+        
+
 #create-nav-bar {
     /*/*height: 40px;*/ 
     background-color: #00695C;
 
 }
-
-
 
 #new-logo
 {
@@ -127,14 +191,11 @@ ul.tabs li a.active {
   font-size: 25px;
   margin: 5% 3% 5% 3%;
   float:right;
-}   
-#new-project
-{
-    color:white;
-    font-size:10;
 }
+
 #horizonatal-nav-bar
 {
     float:right;    
     /*background-color:black;*/
 }
+

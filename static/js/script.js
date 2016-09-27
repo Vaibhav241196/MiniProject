@@ -6,20 +6,65 @@ $(document).ready(function (){
 
     // Navbar collapsible dropdown button initialization for mobile
     $(".button-collapse").sideNav();
+    $('ul.tabs').tabs();
 
-     $('ul.tabs').tabs();
 
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal-trigger').leanModal();
+
+    // For select buttons
+    $('select').material_select();
+
+    $("a#members-form-submit").click(function(evt){
+
+        console.log('Test');
+        evt.preventDefault();
+        var userName = $("input#member-name").val();
+
+        $.ajax({
+            url: '/checkMembers',
+            method: 'POST',
+            data : { member_name: userName },
+            dataType : 'json',
+        }).
+            done(function(res) {
+
+            if(res.status === true)
+                $("#member-list").append("<li value=" + res.id + "class='member'>"+ userName + "</li>");
+
+            else
+                alert("No such user found");
+        }).
+            fail(function (err) {
+                console.log(err);
+        });
+
+    });
+
+    $("form#new_project").submit(function(evt){
+
+        console.log('Test');
+        evt.preventDefault();
+        var projectName = $("input#member-name").val();
+
+        $.ajax({
+            url: '/checkMembers',
+            method: 'POST',
+            data : { member_name: userName },
+            dataType : 'json',
+        }).
+            done(function(res) {
+
+            if(res.status === true)
+                $("#member-list").append("<li value=" + res.id + "class='member'>"+ userName + "</li>");
+
+            else
+                alert("No such user found");
+        }).
+            fail(function (err) {
+                console.log(err);
+        });
+
+    });
 
 });
-
-function initTabs() {
-    $('div.tab-content').css('display','none');
-
-    $.each($('ul.tabs a'), function (key,value) {
-       if($(value).hasClass('active')){
-           target = $(value).attr('href');
-
-           $(target).css('display','block');
-       }
-    });
-}
