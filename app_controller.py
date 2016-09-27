@@ -68,11 +68,25 @@ def acceptSignUp():
 	else:
 		return render_template("index.html")
 
-@app.route('/login',methods = ['POST','GET'])
+
+@app.route('/login', methods=['POST', 'GET'])
 def log_in():
+	response = {}
+
 	if request.method == "POST":
 		username = request.form['username']
 		password = request.form['password']
+
+		document1 = {
+			'email': username,
+			'password': password,
+		}
+
+		document2 = {
+			'userName': username,
+			'password': password,
+		}
+
 		result1 = find_unique(document1, 'users')
 		result2 = find_unique(document2, 'users')
 
@@ -133,8 +147,10 @@ def projectDashBoard(id):
 	project = find_project_by_id(id)
 	return render_template('project_dashboard.html',project=project)
 
-
-
+@app.route('/rename',methods = ['POST'])
+def rename():
+	proj_name = request.form['proj_name']
+	
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 """if __name__ == "__main__":
