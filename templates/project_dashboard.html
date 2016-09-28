@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+{#    <title>{{project['projectName']}} - ProHub</title>#}
+
     <title>ProHub</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/materialize.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/palette.css') }}" />
@@ -39,10 +42,13 @@
 </div>
 
 
+
+{#<h1>{{project['projectName']}}</h1>#}
 <div class="center-align">
     <h4 class="center-align">Project-Name</h4>
     <a class="btn waves waves-effect right commit-log right-align" style="margin-right: 6%;"> Commit Log </a>
 </div>
+
 
 
 <div class="row" id="changeTab">
@@ -55,27 +61,25 @@
 </div>
 
 <div class="content-main">
-
-                <ul class="side-nav tabs large-screen fixed default-primary-color">
-                     <li class="no-padding">
-        <ul class="collapsible collapsible-accordion">
-          <li>
-          <a class="waves-effect white-text collapsible-header" href="#my-projects">BRANCHES</a>
-            <div class="collapsible-body">
-              <ul>
-                <li class="tab"> <a class="waves-effect white-text" href="#my-projects">Master</a></li>
-                <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Tejas</a></li>
-                <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Vaibhav</a></li>
-                <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Suhavan</a></li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </li>
-                    <li class="tab"> <a class="waves-effect white-text" href="#my-projects">Add Member</a></li>
-                    <li class="tab"> <a class="waves-effect white-text" href="#projects-shared" >Remove Member</a></li>
-                    
-                </ul>
+    <ul class="side-nav tabs large-screen fixed default-primary-color">
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+              <li>
+              <a class="waves-effect white-text collapsible-header" href="#my-projects">BRANCHES</a>
+                <div class="collapsible-body">
+                  <ul>
+                    <li class="tab"> <a class="waves-effect white-text" href="#my-projects">Master</a></li>
+                    <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Tejas</a></li>
+                    <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Vaibhav</a></li>
+                    <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Suhavan</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+        </li>
+        <li class="tab"> <a class="waves-effect white-text" href="#my-projects">Add Member</a></li>
+        <li class="tab"> <a class="waves-effect white-text" href="#projects-shared" >Remove Member</a></li>
+    </ul>
 </div>
 
 

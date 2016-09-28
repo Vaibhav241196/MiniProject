@@ -22,4 +22,3 @@ def find_unique(document,collection_name):
 		return projects.find_one(document)
 	else:
 		return users.find_one(document)
-

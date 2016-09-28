@@ -11,13 +11,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	response = {}
-	if 'id' in session:
-		userId = session['id']
-		response = {}
-		response['message'] = "suhavan"
-		proj_list = find({'members':(userId)},'project')
-		return render_template('userdashboard.html', proj_list=proj_list, response=response)
+    response = {}
+    if 'id' in session:
+        userId = session['id']
+        response['message'] = "suhavan"
+        proj_list = find({ "members" : userId } , 'project')
+        return render_template('userdashboard.html',response=response)
+
 
 	else:
 		return render_template("index.html")
@@ -98,7 +98,9 @@ def log_in():
 				session['id'] = str(result1['_id'])
 			else:
 				session['id'] = str(result2['_id'])
+			
 			return redirect(url_for('index'))
+
 
 		else:
 			response['message'] = "Invalid username and password"
@@ -132,6 +134,7 @@ def createProject():
 
 	project_id = insert(document,'projects').inserted_id
 
+    # for m in document['members']:
 
 	makedirs('projects/' + str(project_id))
 	chdir('projects/' + str(project_id))
@@ -144,6 +147,9 @@ def createProject():
 #     project = find_project_by_id(id)
 #     return render_template('project_dashboard.html',project=project)
 
+# @app.route('/projectDashBoard')
+# def projectDashBoard_1():
+#     return render_template('project_dashboard.html')
 
 @app.route('/projectDashBoard')
 def projectDashBoard():
