@@ -12,9 +12,6 @@ def insert(document,collection_name):
 
 def find(document,collection_name):
 	if collection_name == "project":
-		for i in projects.find(document):
-			print i._id
-			print i.fullName
 		return projects.find(document)
 
 	else:
@@ -26,9 +23,3 @@ def find_unique(document,collection_name):
 	else:
 		return users.find_one(document)
 
-def find_project(id,collection_name):
-	if collection_name == "project":
-		return db.projects.find({"members": str(id)})
-
-def find_project_by_id(id):
-	return db.projects.find_one({'_id': id })

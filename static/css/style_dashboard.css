@@ -1,6 +1,6 @@
 /* Tabs Style */
 
-ul.tabs {
+ul.tabsnew {
     width: 70% !important;
     margin: auto;
 }
@@ -22,9 +22,66 @@ ul.tabs {
 .commit-log-div {
     width : 0;
     position: fixed;
-    top: 175px;
+    top: 260px;
     right: 0;
     height: 600px;
     overflow-y: scroll;
     padding: 0 2%;
+}
+
+#changeTab
+{
+
+}
+
+.left-sidebar {
+    width: 15%;
+
+    height : 600px;
+    top: 64px;
+
+    padding-top : 20px;
+    top: 64px; 
+}
+
+.left-sidebar a {
+    width:100%;
+    margin-top:20px;
+
+}
+
+/* Right Scrren */
+
+.content-main {
+    width: 80%;
+    margin-left: 20%;
+    padding-top: 40px;
+}
+/* For side nav */
+.side-nav.large-screen {
+    top: 64px;
+}
+
+.side-nav.tabs {
+    height: 100%;
+    display: block;
+    width: 15% !important;
+}
+
+.tabs .tab a {
+    text-align: left;
+}
+
+.side-nav.tabs li {
+    width: 100% !important;
+}
+
+.side-nav.tabs .indicator {
+    display: none;
+}
+
+.side-nav.tabs li a.active {
+    background-color: #eeeeee; 
+    color:black !important;
+    border-right: 4px solid white;
 }
