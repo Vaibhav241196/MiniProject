@@ -15,12 +15,16 @@ def index():
 	response = {}
 	if 'id' in session:
 		userId = session['id']
-		response['message'] = "suhavan"
-		proj_list = find({ "members" : userId } , 'projects')
-		return render_template('userdashboard.html',response=response)
+		current_user = find_unique({'_id':ObjectId(userId)},'users')
+		response['message'] = current_user['userName']
+		proj_list = []
+		for i in current_user['projects']:
+			proj_list.append(find_unique({'_id':ObjectId(i)},'projects'))
+		print proj_list
+		#proj_list = find({ "members" : userId } , 'projects')
+		return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
 	else:
 		return render_template("index.html")
-
 
 @app.route('/signup', methods=['GET', 'POST'])
 def acceptSignUp():
@@ -116,7 +120,7 @@ def log_out():
 	session.pop('id', None)
 	return redirect(url_for('index'))
 
-@app.route('/checkMembers', methods=['POST'])
+@app.route('/check_members', methods=['POST'])
 def checkMembers():
 	username = request.form['member_name'];
 	m = find_unique({'userName': username}, 'users')
@@ -125,7 +129,7 @@ def checkMembers():
 	else:
 		return json.dumps({"status": False})
 
-@app.route('/createProject',methods=['POST'])
+@app.route('/create_project',methods=['POST'])
 def createProject():
 	print 'Hello'
 
@@ -136,7 +140,7 @@ def createProject():
 	project_id = insert(document,'projects').inserted_id
 
 	for i in document['projectMembers']:
-		temp_update = update(i,{"$push":{'projects':str(project_id)}},users)
+		temp_update = update(i,{"$push":{'projects':str(project_id)}},'users')
 	
 	makedirs('projects/' + str(project_id))
 	chdir('projects/' + str(project_id))
@@ -152,7 +156,7 @@ def createProject():
 # def projectDashBoard_1():
 #     return render_template('project_dashboard.html')
 
-@app.route('/projectDashBoard')
+@app.route('/project_dashboard')
 def projectDashBoard():
 	return render_template('project_dashboard.html')
 
@@ -172,7 +176,6 @@ def dated_url_for(endpoint, **values):
 			values['q'] = int(stat(file_path).st_mtime)
 	return url_for(endpoint, **values)
 
-	
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 """if __name__ == "__main__":

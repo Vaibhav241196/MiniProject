@@ -4,6 +4,9 @@
 
 $(document).ready(function (){
 
+
+    var clickedFolder = null;
+
     // Navbar collapsible dropdown button initialization for mobile
     $(".button-collapse").sideNav();
     $('ul.tabs').tabs();
@@ -22,7 +25,7 @@ $(document).ready(function (){
         var userName = $("input#member-name").val();
 
         $.ajax({
-            url: '/checkMembers',
+            url: '/check_members',
             method: 'POST',
             data : { member_name: userName },
             dataType : 'json',
@@ -68,7 +71,7 @@ $(document).ready(function (){
 
         console.log(projectData);
         $.ajax({
-            url: '/createProject',
+            url: '/create_project',
             method: 'POST',
             data : JSON.stringify(projectData),
             contentType: 'application/json',
@@ -80,5 +83,34 @@ $(document).ready(function (){
             fail(function (err) {
                 console.log(err);
         });
+    });
+
+    /*================ Adds single click functionality for project folder ======================= */
+
+    var folders = $(".single-project-listing");
+
+    folders.click(function(){
+
+        console.log("In single project listing");
+        if (clickedFolder)
+                clickedFolder.css("background-color","white");
+
+            $(this).css("background-color","#BBDEFB");
+            $("#nav-bar-right").css("display","block");
+            clickedFolder = $(this);
+    });
+
+    $(".content-main").click(function(evt) {
+
+        if(! ( $(evt.target).hasClass('single-project-listing') || $(evt.target).hasClass('fa') ) ){
+            if (clickedFolder)
+                clickedFolder.css("background-color", "white");
+
+            $("#nav-bar-right").css("display", "none");
+        }
+    });
+
+    folders.dblclick(function(){
+        window.location.assign("project_dashboard");
     });
 });
