@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for, escape, request
+from flask import Flask, render_template, session, redirect, url_for, escape, request,send_from_directory
 from models.crud import *
 
 import json
@@ -22,7 +22,6 @@ def index():
 		if 'projects' in current_user:
 			for i in current_user['projects']:
 				proj_list.append(find_unique({'_id':ObjectId(i)},'projects'))
-			print proj_list
 		#proj_list = find({ "members" : userId } , 'projects')
 		return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
 	else:
@@ -146,7 +145,7 @@ def createProject():
 	
 	makedirs('projects/' + str(project_id))
 	chdir('projects/' + str(project_id))
-	call(['git','init'],shell=False);
+	call(['git','init'],shell=False)
 	return redirect(url_for('projectDashBoard',id=project_id))
 
 # @app.route('/projectDashBoard/<id>')
@@ -163,8 +162,49 @@ def projectDashBoard():
 	return render_template('project_dashboard.html')
 
 @app.route('/rename',methods = ['POST'])
-def rename():
-	proj_name = request.form['proj_name']
+def rename():		#yet to be integrated
+	proj_id = request.form['proj_id']
+	new_name = requests.form['new_name']
+	#update_project = find_unique({'_id':ObjectId(proj_id)},projects)
+	update_project = update(proj_id,{'$set':{'projectName':str(new_name)}},projects)
+	userId = session['id']
+	current_user = find_unique({'_id':ObjectId(userId)},'users')
+	
+	proj_list = []
+
+	if 'projects' in current_user:
+		for i in current_user['projects']:
+			proj_list.append(find_unique({'_id':ObjectId(i)},'projects'))
+	#return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
+	return json.dumps({user:current_user,proj_list:proj_list})
+
+
+@app.route('/delete',methods = ['POST'])
+def remove():
+	proj_id = request.form['proj_id']
+	temp = delete({'_id':ObjectId(proj_id)},projects)
+
+	userId = session['id']
+	current_user = find_unique({'_id':ObjectId(userId)},'users')
+	
+	proj_list = []
+
+	if 'projects' in current_user:
+		for i in current_user['projects']:
+			proj_list.append(find_unique({'_id':ObjectId(i)},'projects'))
+	#return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
+	return json.dumps({user:current_user,proj_list:proj_list})
+
+#print app.config['MODELS']
+@app.route('/download',methods = ['GET','POST'])	
+def download():	#extension problem
+	#print app.root_path
+	proj_id = request.form['proj_id']
+	call(['tar','-czvf','projects/'+str(proj_id)+'.tar.gz','projects/'+str(proj_id)],shell = False)
+
+	#tar -czvf name-of-archive.tar.gz /path/to/directory-or-file
+	temp_path = path.join(app.root_path+'/projects')
+	return send_from_directory(directory=temp_path, filename = str(proj_id)+'.tar.gz')
 
 @app.context_processor
 def override_url_for():
@@ -179,6 +219,12 @@ def dated_url_for(endpoint, **values):
 	return url_for(endpoint, **values)
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+
+
+@app.route('/down',methods = ['GET','POST'])
+def down():
+	return render_template('test.html')
+
 
 """if __name__ == "__main__":
 	print __name__

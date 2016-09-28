@@ -32,3 +32,8 @@ def update(id,modify,collection_name):
 	else:
 		return users.update({'_id':ObjectId(id)}, modify, upsert = False)
 
+def delete(document,collection_name):
+	if collection_name == "projects":
+		return projects.delete_one(document)
+	else:
+		return users.delete_one(document)
