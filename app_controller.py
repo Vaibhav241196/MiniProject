@@ -115,7 +115,7 @@ def log_out():
     session.pop('id', None)
     return redirect(url_for('index'))
 
-@app.route('/checkMembers', methods=['POST'])
+@app.route('/check_members', methods=['POST'])
 def checkMembers():
     username = request.form['member_name'];
     m = find_unique({'userName': username}, 'users')
@@ -124,7 +124,7 @@ def checkMembers():
     else:
         return json.dumps({"status": False})
 
-@app.route('/createProject',methods=['POST'])
+@app.route('/create_project',methods=['POST'])
 def createProject():
     print 'Hello'
 
@@ -150,10 +150,12 @@ def createProject():
 # def projectDashBoard_1():
 #     return render_template('project_dashboard.html')
 
-@app.route('/projectDashBoard')
+@app.route('/project_dashboard')
 def projectDashBoard():
     return render_template('project_dashboard.html')
 
+
+# For cache bursting of  static files
 
 @app.context_processor
 def override_url_for():
