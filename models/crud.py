@@ -32,3 +32,5 @@ def find_project(id,collection_name):
 
 def find_project_by_id(id):
 	return db.projects.find_one({'_id': id })
+
+

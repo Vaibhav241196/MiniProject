@@ -67,7 +67,6 @@ $(document).ready(function (){
         });
 
         console.log(projectData);
-
         $.ajax({
             url: '/createProject',
             method: 'POST',
@@ -81,7 +80,5 @@ $(document).ready(function (){
             fail(function (err) {
                 console.log(err);
         });
-
     });
-
 });

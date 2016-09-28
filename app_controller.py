@@ -16,7 +16,7 @@ def index():
         userId = session['id']
         # response = {}
         response['message'] = "suhavan"
-        proj_list = find_project(userId, 'project')
+        proj_list = find_p(userId, 'project')
         return render_template('userdashboard.html', proj_list=proj_list, response=response)
 
     else:
@@ -135,6 +135,7 @@ def createProject():
 
     project_id = insert(document,'projects').inserted_id
 
+    # for m in document['members']:
 
     makedirs('projects/' + str(project_id))
     chdir('projects/' + str(project_id))
@@ -148,6 +149,9 @@ def projectDashBoard(id):
     project = find_project_by_id(id)
     return render_template('project_dashboard.html',project=project)
 
+@app.route('/projectDashBoard')
+def projectDashBoard_1():
+    return render_template('project_dashboard.html')
 
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
