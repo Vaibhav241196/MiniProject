@@ -14,10 +14,10 @@ def index():
     response = {}
     if 'id' in session:
         userId = session['id']
-        # response = {}
+        response = {}
         response['message'] = "suhavan"
-        proj_list = find_p(userId, 'project')
-        return render_template('userdashboard.html', proj_list=proj_list, response=response)
+        proj_list = find({ "members" : userId } , 'project')
+        return render_template('userdashboard.html',response=response)
 
     else:
         return render_template("index.html")
@@ -95,10 +95,8 @@ def log_in():
             response['message'] = "Login successful"
 
             if result1 != None:
-                print type(result1)
                 session['id'] = str(result1['_id'])
             else:
-                print type(result2)
                 session['id'] = str(result2['_id'])
 
             return redirect(url_for('index'))
