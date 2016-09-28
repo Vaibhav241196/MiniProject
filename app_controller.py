@@ -18,9 +18,11 @@ def index():
 		current_user = find_unique({'_id':ObjectId(userId)},'users')
 		response['message'] = current_user['userName']
 		proj_list = []
-		for i in current_user['projects']:
-			proj_list.append(find_unique({'_id':ObjectId(i)},'projects'))
-		print proj_list
+
+		if 'projects' in current_user:
+			for i in current_user['projects']:
+				proj_list.append(find_unique({'_id':ObjectId(i)},'projects'))
+			print proj_list
 		#proj_list = find({ "members" : userId } , 'projects')
 		return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
 	else:
