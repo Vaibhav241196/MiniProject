@@ -110,16 +110,15 @@
                     {% for i in proj_list %}
                     {% if ""~user['_id'] != i['owner'] %}
                         <div class="col l2 m4 s6 offset-m1 center-align">
-                        <div class="single-project-listing center-align">
-                                 <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
-                            </div>
-                          <p>{{ i['projectName'] }}</p>
-                    </div>
+	                        <div class="single-project-listing center-align">
+	                            <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
+	                        </div>
+                          	<p>{{ i['projectName'] }}</p>
+                    	</div>
                     {% endif %}
                     {% endfor %}
+                	</div>
                 </div>
-
-
 
                 <div id="new-project" class="modal">
                     <div class="modal-content">
@@ -158,8 +157,6 @@
                               </form>
                           </div>
                     </div>
-
-
                 </div>
 
 
