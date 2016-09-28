@@ -143,16 +143,19 @@ def createProject():
 
     return redirect(url_for('projectDashBoard',id=project_id))
 
-@app.route('/projectDashBoard/<id>')
-def projectDashBoard(id):
+# @app.route('/projectDashBoard/<id>')
+# def projectDashBoard(id):
 
-    project = find_project_by_id(id)
-    return render_template('project_dashboard.html',project=project)
+#     project = find_project_by_id(id)
+#     return render_template('project_dashboard.html',project=project)
 
 @app.route('/projectDashBoard')
 def projectDashBoard_1():
     return render_template('project_dashboard.html')
 
+@app.route('/projectDashBoard')
+def projectDashBoard():
+    return render_template('project_dashboard.html')
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
