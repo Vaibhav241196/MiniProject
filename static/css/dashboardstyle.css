@@ -191,7 +191,7 @@ a#members-form-submit {
   color:white !important;
   font-size: 25px;
   margin: 4% 3% 4% 3%;
-  float:right;
+ 
 }
 
 #nav-bar-right
@@ -206,3 +206,18 @@ a#members-form-submit {
     display: none;
 }
 
+#rename-project
+{
+    width: 30%;
+}
+
+
+#renameModal
+{
+    padding-bottom: 0px;
+}
+
+.modal-trigger 
+{
+    clear: all;
+}
