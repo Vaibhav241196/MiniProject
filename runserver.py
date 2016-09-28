@@ -6,8 +6,8 @@ try:
 	port = int(port)
 	if __name__ == "__main__":
 		print "server at port ",port
-		app.run(host = 'localhost',port = port)
+		app.run(host = 'localhost',port = port,debug=True)
 except:
 	if __name__ == "__main__":
 		print ("server at port 8000")
-		app.run(host = 'localhost',port = 8000)
+		app.run(host = 'localhost',port = 8000,debug=True)

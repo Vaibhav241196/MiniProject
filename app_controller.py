@@ -3,7 +3,7 @@ from models.crud import *
 
 import json
 from sendmail import sendEmails
-from os import makedirs,chdir
+from os import makedirs,chdir,path,stat
 from subprocess import call
 
 app = Flask(__name__)
@@ -14,7 +14,6 @@ def index():
     response = {}
     if 'id' in session:
         userId = session['id']
-        response = {}
         response['message'] = "suhavan"
         proj_list = find({ "members" : userId } , 'project')
         return render_template('userdashboard.html',response=response)
@@ -154,6 +153,20 @@ def createProject():
 @app.route('/projectDashBoard')
 def projectDashBoard():
     return render_template('project_dashboard.html')
+
+
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = path.join(app.root_path,
+                                     endpoint, filename)
+            values['q'] = int(stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 

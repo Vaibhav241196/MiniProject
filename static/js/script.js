@@ -81,4 +81,10 @@ $(document).ready(function (){
                 console.log(err);
         });
     });
+
+    /*================ Adds single click functionality for project folder ======================= */
+
+    $(".single-project-listing").click(function(){
+       $(this).css("border","1px solid blue");
+    });
 });
