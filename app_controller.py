@@ -14,9 +14,9 @@ def index():
 	response = {}
 	if 'id' in session:
 		userId = session['id']
-		# response = {}
+		response = {}
 		response['message'] = "suhavan"
-		proj_list = find_project(userId, 'project')
+		proj_list = find({'members':(userId)},'project')
 		return render_template('userdashboard.html', proj_list=proj_list, response=response)
 
 	else:
