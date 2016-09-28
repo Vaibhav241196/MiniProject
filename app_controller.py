@@ -3,22 +3,21 @@ from models.crud import *
 
 import json
 from sendmail import sendEmails
-from os import makedirs,chdir
+from os import makedirs,chdir,path,stat
 from subprocess import call
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    response = {}
-    if 'id' in session:
-        userId = session['id']
-        response['message'] = "suhavan"
-        proj_list = find({ "members" : userId } , 'project')
-        return render_template('userdashboard.html',response=response)
-
-
+	response = {}
+	if 'id' in session:
+		userId = session['id']
+		response['message'] = "suhavan"
+		proj_list = find({ "members" : userId } , 'projects')
+		return render_template('userdashboard.html',response=response)
 	else:
 		return render_template("index.html")
 
@@ -131,15 +130,17 @@ def createProject():
 	print 'Hello'
 
 	document = request.get_json()
+	document['projectMembers'].append(session['id'])
+	document['owner'] = session['id']
 
 	project_id = insert(document,'projects').inserted_id
 
-    # for m in document['members']:
-
+	for i in document['projectMembers']:
+		temp_update = update(i,{"$push":{'projects':str(project_id)}},users)
+	
 	makedirs('projects/' + str(project_id))
 	chdir('projects/' + str(project_id))
 	call(['git','init'],shell=False);
-
 	return redirect(url_for('projectDashBoard',id=project_id))
 
 # @app.route('/projectDashBoard/<id>')
@@ -158,6 +159,19 @@ def projectDashBoard():
 @app.route('/rename',methods = ['POST'])
 def rename():
 	proj_name = request.form['proj_name']
+
+@app.context_processor
+def override_url_for():
+	return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+	if endpoint == 'static':
+		filename = values.get('filename', None)
+		if filename:
+			file_path = path.join(app.root_path,endpoint, filename)
+			values['q'] = int(stat(file_path).st_mtime)
+	return url_for(endpoint, **values)
+
 	
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
