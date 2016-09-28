@@ -149,9 +149,9 @@ def createProject():
 #     project = find_project_by_id(id)
 #     return render_template('project_dashboard.html',project=project)
 
-@app.route('/projectDashBoard')
-def projectDashBoard_1():
-    return render_template('project_dashboard.html')
+# @app.route('/projectDashBoard')
+# def projectDashBoard_1():
+#     return render_template('project_dashboard.html')
 
 @app.route('/projectDashBoard')
 def projectDashBoard():
