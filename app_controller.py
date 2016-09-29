@@ -21,7 +21,9 @@ def index():
 
         if 'projects' in current_user:
             for i in current_user['projects']:
-                proj_list.append(find_unique({'_id': ObjectId(i)}, 'projects'))
+                project = find_unique({'_id': ObjectId(i)}, 'projects')
+                if project != None:
+                    proj_list.append(project)
                 # proj_list = find({ "members" : userId } , 'projects')
         return render_template('userdashboard.html', user=current_user, proj_list=proj_list)
     else:
@@ -129,11 +131,13 @@ def check_members():
     m = find_unique({'userName': username}, 'users')
 
 
-    if str(m['_id']) == session['id']:
-        return json.dumps({"status": 1, "message": "You are the owner of the project"})
-
-    if m:
-        return json.dumps({"status": 0, "id": str(m['_id']), "message": "Member added successfully"})
+    
+	if m:
+		if str(m['_id']) == session['id']:
+			return json.dumps({"status": 1, "message": "You are the owner of the project"})
+		
+		return json.dumps({"status": 0, "id": str(m['_id']), "message": "Member added successfully"})
+    
     else:
         return json.dumps({"status": 2, "message": "No such user found"})
 
@@ -157,18 +161,18 @@ def create_project():
     return redirect(url_for('project_dashboard', id=project_id))
 
 
-# @app.route('/projectDashBoard/<id>')
-# def projectDashBoard(id):
-#     project = find_project_by_id(id)
-#     return render_template('project_dashboard.html',project=project)
+@app.route('/project_dashboard/<id>')
+def project_dashboard(id):
+    project = find_unique({ '_id': id },'projects')
+    return render_template('project_dashboard.html',project=project)
 
 # @app.route('/projectDashBoard')
 # def projectDashBoard_1():
 #     return render_template('project_dashboard.html')
 
-@app.route('/project_dashboard')
-def project_dashboard():
-    return render_template('project_dashboard.html')
+# @app.route('/project_dashboard')
+# def project_dashboard():
+#     return render_template('project_dashboard.html')
 
 
 @app.route('/rename', methods=['POST'])
@@ -176,41 +180,54 @@ def rename():  # yet to be integrated
     proj_id = request.form['proj_id']
     new_name = request.form['new_name']
     # update_project = find_unique({'_id':ObjectId(proj_id)},projects)
-    update_project = update(proj_id, {'$set': {'projectName': str(new_name)}}, projects)
-    userId = session['id']
-    current_user = find_unique({'_id': ObjectId(userId)}, 'users')
+    update_project = update(proj_id, {'$set': {'projectName': str(new_name)}}, 'projects')
 
-    proj_list = []
-
-    if 'projects' in current_user:
-        for i in current_user['projects']:
-            proj_list.append(find_unique({'_id': ObjectId(i)}, 'projects'))
-            # return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
-    return json.dumps({'user': current_user, 'proj_list': proj_list})
-
+    # userId = session['id']
+    # current_user = find_unique({'_id': ObjectId(userId)}, 'users')
+    #
+    # proj_list = []
+    #
+    # if 'projects' in current_user:
+    #     for i in current_user['projects']:
+    #         proj_list.append(find_unique({'_id': ObjectId(i)}, 'projects'))
+    #         # return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
+    # return json.dumps({'user': current_user, 'proj_list': proj_list})
+    return json.dumps({'status': 1, 'message': 'Successfully renamed' , 'new_name': new_name});
 
 @app.route('/delete', methods=['POST'])
 def remove():
     proj_id = request.form['proj_id']
-    temp = delete({'_id': ObjectId(proj_id)}, projects)
-
     userId = session['id']
-    current_user = find_unique({'_id': ObjectId(userId)}, 'users')
 
-    proj_list = []
+    response = {}
 
-    if 'projects' in current_user:
-        for i in current_user['projects']:
-            proj_list.append(find_unique({'_id': ObjectId(i)}, 'projects'))
-            # return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
-    return json.dumps({'user': current_user, 'proj_list': proj_list})
+    project = find_unique({ '_id' : ObjectId(proj_id) },'projects')
+
+    if project['owner'] == userId:
+        temp = delete({'_id': ObjectId(proj_id)}, 'projects')
+        response['status'] = 0
+        response['message'] = "Successfully deleted"
+
+    else:
+        response['status'] = 1
+        response['message'] = "Only owner can delete a project"
+
+
+    # proj_list = []
+
+    # if 'projects' in current_user:
+    #     for i in current_user['projects']:
+    #         proj_list.append(find_unique({'_id': ObjectId(i)}, 'projects'))
+    #         # return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
+
+    return json.dumps(response)
 
 
 # print app.config['MODELS']
 @app.route('/download', methods=['GET', 'POST'])
 def download():  # extension problem
     # print app.root_path
-    proj_id = request.form['proj_id']
+    proj_id = request.form['download-project-id']
     call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id)], shell=False)
 
     # tar -czvf name-of-archive.tar.gz /path/to/directory-or-file

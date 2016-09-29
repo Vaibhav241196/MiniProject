@@ -104,6 +104,7 @@ $(document).ready(function (){
             $(this).css("background-color","#BBDEFB");
             $("#nav-bar-right").css("display","block");
             clickedFolder = $(this);
+            $("#download-project-id").val(clickedFolder.attr('id'));
     });
 
     $(".content-main").click(function(evt) {
@@ -115,6 +116,60 @@ $(document).ready(function (){
             $("#nav-bar-right").css("display", "none");
         }
     });
+
+    $("#rename-project-form").submit(function(evt){
+        evt.preventDefault();
+
+        var data = {};
+        data.proj_id = clickedFolder.attr('id');
+        data.new_name = $("#new_project_name").val();
+
+        $.ajax({
+            url: '/rename',
+            method: 'POST',
+            data: data,
+            dataType: 'json'
+        }).
+            done(function(data) {
+                clickedFolder.parent().find("p").text(data.new_name);
+        }).
+            fail(function (err){
+                console.log(err);
+        });
+
+    });
+
+    $("#delete-project").click(function(evt){
+
+        console.log("In delete");
+        var data = {};
+        data.proj_id = clickedFolder.attr('id');
+
+        $.ajax({
+            url: '/delete',
+            method: 'POST',
+            data: data,
+            dataType: 'json'
+        }).
+            done(function(data){
+                if(data.status == 0) {
+                    clickedFolder.parent().remove();
+                    alert(data.message)
+                }
+
+                else if (data.status == 1) {
+                    alert(data.message)
+                }
+        }).
+            fail(function(err){
+            console.log(err)
+        });
+    });
+
+    $("#download-project").click(function (evt){
+        $("form#download-project-form").submit();
+    });
+
 
     folders.dblclick(function(){
         window.location.assign("project_dashboard");
