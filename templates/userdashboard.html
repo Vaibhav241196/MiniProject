@@ -49,17 +49,32 @@
 
             <div class = "row" id ="nav-bar-secondary">
                 <div class="col s10 m4 l3 offset-l2" >
-                    <a href="#" title = "new" ><i class=" waves-effect fa fa-plus " aria-hidden="true" id="new-logo"></i></a>
+                    <a href="#new-project" title = "new" class="modal-trigger"><i class=" waves-effect fa fa-plus " aria-hidden="true" id="new-logo"></i></a>
                 </div>
 
-                <div class="col s10 m4 l3 " id="nav-bar-right">
-                    <a href="#" title = "delete" ><i class=" waves-effect fa fa-trash " aria-hidden="true" id="logo"></i></a>
+                <div class="col s10 m4 l3 " id="nav-bar-right" style="float: right;">
+                    <a  title = "delete" ><i class=" waves-effect fa fa-trash " aria-hidden="true" id="logo"></i></a>
+                  
                     <a href="#" title = "download"><i class="waves-effect fa fa-download " aria-hidden="true" id="logo"></i></a>
-                    <a href="#" title = "rename" ><i class=" waves-effect fa fa-pencil-square-o " aria-hidden="true" id="logo"></i></a>
+                    <a href="#rename-project" title = "rename" class=" modal-trigger waves-effect waves-light" id="logoRename"><i class=" waves-effect fa fa-pencil-square-o " aria-hidden="true" id="logo"></i></a>
                 </div>
             </div>
 
-
+  <div id="rename-project" class="modal center-align">
+                       <div class="modal-content" id="renameModal">
+                            <h4 style="font-family: "EB garamond", sans-serif;" class="red-text">Rename Project</h4>
+                              <div class="row   center-align">
+                                <div class="input-field col s6 offset-s3">
+                                      <input  id="rename" type="text" class="validate">
+                                       <label class="active" for="rename">New Project Name</label>
+                                </div>
+                              </div>
+        
+                            </div>
+                       <div class="modal-footer center-align">
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat center-align">Agree</a>
+                     </div>
+  </div>
             
 
             <div class="content-main">
