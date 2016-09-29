@@ -32,11 +32,17 @@ $(document).ready(function (){
         }).
             done(function(res) {
 
-            if(res.status === true)
-                $("#member-list").append("<li value=" + res.id + " class='member'>"+ userName + "</li>");
+            if(res.status === 0) {
+                $("#member-list").append("<li value=" + res.id + " class='member'>" + userName + "</li>");
+                $("input#member-name").val("");
+            }
 
-            else
-                alert("No such user found");
+            else if (res.status === 1)
+                alert(res['message']);
+
+            else if(res.status === 2) {
+                alert(res['message'])
+            }
         }).
             fail(function (err) {
                 console.log(err);
