@@ -207,10 +207,10 @@ def remove():
         temp = delete({'_id': ObjectId(proj_id)}, 'projects')
         response['status'] = 0
         response['message'] = "Successfully deleted"
-        projectMembers = find({'projects': str(proj_id)}, 'users')
+        #projectMembers = find({'projects': str(proj_id)}, 'users')
 
-        for i in projectMembers
-            update_users = update(i['_id'], {'$pull' : {'projects' : str(proj_id)}} , 'users')
+        for i in project['members']:
+            update_users = update(i, {'$pull' : {'projects' : str(proj_id)}} , 'users')
     else:
         response['status'] = 1
         response['message'] = "Only owner can delete a project"
