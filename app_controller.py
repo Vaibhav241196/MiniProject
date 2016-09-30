@@ -130,9 +130,7 @@ def check_members():
     username = request.form['member_name'];
     m = find_unique({'userName': username}, 'users')
 
-
-    
-	if m:
+    if m:
 		if str(m['_id']) == session['id']:
 			return json.dumps({"status": 1, "message": "You are the owner of the project"})
 		

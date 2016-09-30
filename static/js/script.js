@@ -171,7 +171,9 @@ $(document).ready(function (){
     });
 
 
-    folders.dblclick(function(){
-        window.location.assign("project_dashboard");
+    folders.dblclick(function(evt){
+        var id = $(this).attr('id');
+        console.log(id);
+        window.location.assign("project_dashboard/" + id);
     });
 });
