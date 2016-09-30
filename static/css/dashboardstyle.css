@@ -41,6 +41,7 @@ nav {
     /*width: 100%;*/
     padding-left: 20%;
     padding-top: 40px;
+    min-height: 600px;
 }
 
 .spacer {
@@ -173,18 +174,17 @@ a#members-form-submit {
         
 
 #nav-bar-secondary {
-    /*/*height: 40px;*/ 
-    background-color: #00695C;
+    /*/*height: 40px;*/
     margin-bottom: 0;
-
 }
 
 #new-logo
 {
-  color:white !important;
-  font-size: 25px;
-  margin: 4% 3% 4% 3%;
-  float:left;
+    color:white !important;
+    font-size: 25px;
+  /*margin: 4% 3% 4% 3%;*/
+    float:left;
+    margin: auto;
 }   
 #logo
 {
@@ -196,15 +196,16 @@ a#members-form-submit {
 
 #nav-bar-right
 {
-    float:right;    
-    /*background-color:black;*/
+    /*float:right;*/
+    display: none;
+
+}
+
+#nav-bar-right a {
+    vertical-align: middle;
 }
 
 /* For right nav bar menus */
-
-#nav-bar-right {
-    display: none;
-}
 
 #rename-project
 {
@@ -217,7 +218,12 @@ a#members-form-submit {
     padding-bottom: 0px;
 }
 
-.modal-trigger 
-{
-    clear: all;
+#secondary-nav {
+    background-color: #00695C;
 }
+
+
+/*.modal-trigger */
+/*{*/
+    /*clear: both;*/
+/*}*/
