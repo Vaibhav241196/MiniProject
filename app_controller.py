@@ -202,14 +202,15 @@ def remove():
     response = {}
 
     project = find_unique({'_id': ObjectId(proj_id)}, 'projects')
-
+    print project['owner']
+    print userId
     if project['owner'] == userId:
         temp = delete({'_id': ObjectId(proj_id)}, 'projects')
         response['status'] = 0
         response['message'] = "Successfully deleted"
         #projectMembers = find({'projects': str(proj_id)}, 'users')
 
-        for i in project['members']:
+        for i in project['projectMembers']:
             update_users = update(i, {'$pull' : {'projects' : str(proj_id)}} , 'users')
     else:
         response['status'] = 1
