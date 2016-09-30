@@ -24,7 +24,7 @@ def index():
                 project = find_unique({'_id': ObjectId(i)}, 'projects')
                 if project != None:
                     proj_list.append(project)
-                # proj_list = find({ "members" : userId } , 'projects')
+                    # proj_list = find({ "members" : userId } , 'projects')
         return render_template('userdashboard.html', user=current_user, proj_list=proj_list)
     else:
         return render_template("index.html")
@@ -130,14 +130,12 @@ def check_members():
     username = request.form['member_name'];
     m = find_unique({'userName': username}, 'users')
 
+    if m:
+        if str(m['_id']) == session['id']:
+            return json.dumps({"status": 1, "message": "You are the owner of the project"})
 
-    
-	if m:
-		if str(m['_id']) == session['id']:
-			return json.dumps({"status": 1, "message": "You are the owner of the project"})
-		
-		return json.dumps({"status": 0, "id": str(m['_id']), "message": "Member added successfully"})
-    
+        return json.dumps({"status": 0, "id": str(m['_id']), "message": "Member added successfully"})
+
     else:
         return json.dumps({"status": 2, "message": "No such user found"})
 
@@ -163,8 +161,9 @@ def create_project():
 
 @app.route('/project_dashboard/<id>')
 def project_dashboard(id):
-    project = find_unique({ '_id': id },'projects')
-    return render_template('project_dashboard.html',project=project)
+    project = find_unique({'_id': id}, 'projects')
+    return render_template('project_dashboard.html', project=project)
+
 
 # @app.route('/projectDashBoard')
 # def projectDashBoard_1():
@@ -192,7 +191,8 @@ def rename():  # yet to be integrated
     #         proj_list.append(find_unique({'_id': ObjectId(i)}, 'projects'))
     #         # return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
     # return json.dumps({'user': current_user, 'proj_list': proj_list})
-    return json.dumps({'status': 1, 'message': 'Successfully renamed' , 'new_name': new_name});
+    return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name});
+
 
 @app.route('/delete', methods=['POST'])
 def remove():
@@ -201,16 +201,23 @@ def remove():
 
     response = {}
 
-    project = find_unique({ '_id' : ObjectId(proj_id) },'projects')
+    project = find_unique({'_id': ObjectId(proj_id)}, 'projects')
 
     if project['owner'] == userId:
         temp = delete({'_id': ObjectId(proj_id)}, 'projects')
         response['status'] = 0
         response['message'] = "Successfully deleted"
+        projectMembers = find({'projects': str(proj_id)}, 'users')
 
+        for i in projectMembers
+            update_users = update(i['_id'], {'$pull' : {'projects' : str(proj_id)}} , 'users')
     else:
         response['status'] = 1
         response['message'] = "Only owner can delete a project"
+
+
+
+
 
 
     # proj_list = []
