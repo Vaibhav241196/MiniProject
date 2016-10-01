@@ -197,6 +197,7 @@ def change_branch():
 # function to create new git branch input (project id,new branch name)
 # returns status and message
 # also make sures that the user is owner of the project
+# incomplete
 @app.route('/new_branch', methods=['POST'])
 def create_branch():
     proj_id = request.form['id']
@@ -233,34 +234,31 @@ def return_files():
 # function to delete the file or folder
 # input (project id,path)
 # path format is same as in the above function
+# incomplete
 @app.route('/delete_path', methods=['POST'])
 def delete_files():
     proj_id = request.form['id']
     path = request.form['path']
-    
-    try:
-        remove('projects/'+str(proj_id)+'/'+str(path))
-    except:
-        rmtree('projects/'+str(proj_id)+'/'+str(path))
+    current_project = find_unique({'_id':ObjectId(proj_id)}, projects)
+    current_user = find_unique({'_id':ObjectId(session['_id'])}, users)
+    if str(current_user['id']) == str(create_project['owner']):
+        try:
+            remove('projects/'+str(proj_id)+'/'+str(path))
+        except:
+            rmtree('projects/'+str(proj_id)+'/'+str(path))
+    elif str(current_user['id']) in current_project['projectMembers']:
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# function to download files and folder
+# input (project id,path)
+# path format is same as in the above functions
+@app.route('/download_path', methods = ['POST'])
+def download_path():
+    proj_id = request.form['id']
+    path = request.form['path']
+    call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id)+str(path)], shell=False)
+    temp_path = path.join(app.root_path + '/projects')
+    return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
 
 
 # @app.route('/projectDashBoard')
