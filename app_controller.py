@@ -290,11 +290,47 @@ def download_path():
 
 
 # function to commit the changes
-# input (project id)
+# input (project id,commnt message)
 @app.route('/commit', methods=['POST'])
 def commit_changes():
     proj_id = request.form['id']
+    message = request.form['message']
+    response = {}
     if check_access(proj_id):
+        call(['git', 'add', '.'], shell=False)
+        call(['git', 'commit', '-m', str(message)], shell=False)
+        sha_id = check_output(['git', 'rev-parse', 'HEAD'], shell=False)
+        if find_unique({'sha_id':sha_id},'commits'):
+            response['message'] = "Nothing to commit"
+            response['status'] = 1
+        else:
+            response['message'] = "Commit Successful"
+            response['status'] = 0
+            document = {
+                'sha_id': sha_id,
+                'branch': check_output(['git','rev-parse','--abbrev-ref','HEAD'],shell = False)[:-1],
+                'project': str(proj_id),
+                'comment': str(message)
+            }
+            insert(document, 'commits')
+    else:
+        response['message'] = "Permission denied"
+        response['status'] = 1
+    return json.dumps(response)
+
+
+# function to return the list of commit logs
+# input (project id)
+@app.route('/commit_log', methods=['POST'])
+def commit_log():
+    document = {
+        'proj_id': request.form['id'],
+        'branch': check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
+    }
+    log = find(document, 'commits')
+    return json.dumps(log)
+
+
 
 
 # @app.route('/projectDashBoard')
