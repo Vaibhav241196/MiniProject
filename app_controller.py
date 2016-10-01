@@ -270,6 +270,7 @@ def download_path():
 #     return render_template('project_dashboard.html')
 
 
+
 @app.route('/rename', methods=['POST'])
 def rename():  # yet to be integrated
     proj_id = request.form['proj_id']
