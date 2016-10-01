@@ -5,7 +5,7 @@ import json
 from sendmail import sendEmails
 from os import makedirs, chdir, path, stat, listdir, curdir, remove
 from shutil import rmtree
-from subprocess import call
+from subprocess import call, check_output
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
@@ -160,15 +160,20 @@ def create_project():
     return redirect(url_for('project_dashboard', id=project_id))
 
 
-# working properly with double click for initial loading of the project
-# i must also get the branch of the user
-@app.route('/project_dashboard/<id>')
-def project_dashboard(id):
-    project = find_unique({'_id': ObjectId(id)}, 'projects')
-    chdir('projects/' + str(id))
-    list_dir = return_list()
-    print list_dir
-    return render_template('project_dashboard.html', project=project, list_dir=list_dir)
+# function to return whether the user has access for the branch or not
+# 1 means he has the access
+# 0 means permission denied
+def check_access(proj_id):
+    user_id = session['id']
+    current_project = find_unique({'_id':ObjectId(proj_id)},projects)
+    current_user = find_unique({'_id':ObjectId(user_id)},users)
+    branch_name = check_output(['git','rev-parse','--abbrev-ref','HEAD'],shell = False)[:-1]
+    if str(user_id) == current_project['owner']:
+        return 1
+    elif str(user_id) in current_project['branch'][branch_name]:
+        return 1
+    else:
+        return 0
 
 
 # function to return the list of directories and files in the current directory
@@ -182,6 +187,17 @@ def return_list():
     return list_dir
 
 
+# working properly with double click for initial loading of the project
+# i must also get the branch of the user
+@app.route('/project_dashboard/<id>')
+def project_dashboard(id):
+    project = find_unique({'_id': ObjectId(id)}, 'projects')
+    chdir('projects/' + str(id))
+    list_dir = return_list()
+    print list_dir
+    return render_template('project_dashboard.html', project=project, list_dir=list_dir)
+
+
 # function to change branch input (project id,branch name)
 # returns the list of folders and files after git checkout
 @app.route('/checkout', methods=['POST'])
@@ -189,9 +205,16 @@ def change_branch():
     proj_id = request.form['id']
     change_branch = request.form['branch_name']
     chdir('projects/' + str(proj_id))
-    call(['git', 'checkout', str(change_branch)], shell=False)
+    temp = call(['git', 'checkout', str(change_branch)], shell=False)
+    response = {}
+    if temp == 1:
+        response['status'] = 1
+        response['message'] = 'Please, commit your changes or stash them before you can switch branches.'
+    else:
+        response['status'] = 0
+        response['message'] = 'Switching to '+str(change_branch)
     list_dir = return_list()
-    return json.dumps(list_dir)
+    return json.dumps(list_dir,response)
 
 
 # function to create new git branch input (project id,new branch name)
@@ -234,31 +257,44 @@ def return_files():
 # function to delete the file or folder
 # input (project id,path)
 # path format is same as in the above function
-# incomplete
 @app.route('/delete_path', methods=['POST'])
 def delete_files():
     proj_id = request.form['id']
     path = request.form['path']
     current_project = find_unique({'_id':ObjectId(proj_id)}, projects)
     current_user = find_unique({'_id':ObjectId(session['_id'])}, users)
-    if str(current_user['id']) == str(create_project['owner']):
+    response = {}
+    if check_access(proj_id):
         try:
             remove('projects/'+str(proj_id)+'/'+str(path))
         except:
             rmtree('projects/'+str(proj_id)+'/'+str(path))
-    elif str(current_user['id']) in current_project['projectMembers']:
+        response['status'] = 0
+        response['message'] = 'Successfully deleted'
+    else:
+        response['status'] = 1
+        response['message'] = 'Permission Denied'
+    return json.dumps(response)
 
 
 # function to download files and folder
 # input (project id,path)
 # path format is same as in the above functions
-@app.route('/download_path', methods = ['POST'])
+@app.route('/download_path', methods=['POST'])
 def download_path():
     proj_id = request.form['id']
     path = request.form['path']
     call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id)+str(path)], shell=False)
     temp_path = path.join(app.root_path + '/projects')
     return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
+
+
+# function to commit the changes
+# input (project id)
+@app.route('/commit', methods=['POST'])
+def commit_changes():
+    proj_id = request.form['id']
+    if check_access(proj_id):
 
 
 # @app.route('/projectDashBoard')
