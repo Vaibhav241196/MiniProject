@@ -4,33 +4,47 @@ from bson.objectid import ObjectId
 users = db.users
 projects = db.projects
 
-def insert(document,collection_name):
-	if collection_name == "projects":
-		return projects.insert_one(document)
-	else:
-		return users.insert_one(document)
 
-def find(document,collection_name):
-	if collection_name == "projects":
-		return projects.find(document)
-	else:
-		return users.find(document)
+def insert(document, collection_name):
+    if collection_name == "projects":
+        return projects.insert_one(document)
+    else:
+        return users.insert_one(document)
 
-def find_unique(document,collection_name):
-	if collection_name == "projects":
-		return projects.find_one(document)
-	else:
-		return users.find_one(document)
 
-def update(id,modify,collection_name):
-	if collection_name == "projects":
-		#upsert false will insert a new document is id not found
-		return projects.update({'_id':ObjectId(id)}, modify, upsert = False)
-	else:
-		return users.update({'_id':ObjectId(id)}, modify, upsert = False)
+def find(document, collection_name):
+    if collection_name == "projects":
+        return projects.find(document)
+    else:
+        return users.find(document)
 
-def delete(document,collection_name):
-	if collection_name == "projects":
-		return projects.delete_one(document)
-	else:
-		return users.delete_one(document)
+
+def find_unique(document, collection_name):
+    if collection_name == "projects":
+        return projects.find_one(document)
+    else:
+        return users.find_one(document)
+
+
+def update(id, modify, collection_name):
+    if collection_name == "projects":
+        # upsert false will insert a new document is id not found
+        return projects.update({'_id': ObjectId(id)}, modify, upsert=False)
+    else:
+        return users.update({'_id': ObjectId(id)}, modify, upsert=False)
+
+
+def delete(document, collection_name):
+    if collection_name == "projects":
+        return projects.delete_one(document)
+    else:
+        return users.delete_one(document)
+
+
+def aggregate(id, collection_name):
+    if collection_name == "projects":
+        return projects.aggregate([{'$match': {'owner': id}}, {'$group': {'_id': 'null', 'count': {'$sum': 1}}}])
+
+def aggregate_domain(id , collection_name):
+    if collection_name == "projects":
+        return projects.aggregate([{'$match' : {'projectMembers' : id}} , {'$group' : {'_id' : '$technology' , 'count' : {'$sum' : 1}}}])
