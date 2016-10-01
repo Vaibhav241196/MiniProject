@@ -222,7 +222,18 @@ a#members-form-submit {
     background-color: #00695C;
 }
 
+#dropdown1{
+    top: 64px !important;
 
+
+}
+
+#dropLogo
+{
+    color:darkslategrey;
+    font-size: 14px;
+    padding-right: 10px;
+}
 /*.modal-trigger */
 /*{*/
     /*clear: both;*/

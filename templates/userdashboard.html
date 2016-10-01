@@ -30,8 +30,17 @@
                       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                       <ul class="right hide-on-med-and-down">
                         <li><a href="#">Features</a></li>
-                        <li style="float:right;"><a href="#"><img src="{{ url_for('static' , filename='images/userimage.png')}}" class="responsive-img circle" id="userImage" /><span>Howdy {{ user['userName'] }}</span></a></li>
+                        <li style="float:right;"><a href="#" data-activates='dropdown1' class='dropdown-button '><img src="{{ url_for('static' , filename='images/userimage.png')}}" class="responsive-img circle" id="userImage" /><span>Howdy {{ user['userName'] }}</span></a></li>
+
                       </ul>
+
+                      <ul id='dropdown1' class='dropdown-content'>
+                              <li><a href="#!"><i class=" waves-effect fa fa-camera " aria-hidden="true" id="dropLogo"></i>Change Pic</a></li>
+                              <li><a href="#!"><i class=" waves-effect fa fa-cog " aria-hidden="true" id="dropLogo"></i>Settings</a></li>
+                              <li class="divider"></li>
+                              <li><a href="#!"><i class=" waves-effect fa fa-sign-out " aria-hidden="true" id="dropLogo"></i>Logout</a></li>
+                      </ul>
+
 
                       <ul class="side-nav default-primary-color" id="mobile-demo">
                         <li><a href="#"><img src="{{ url_for('static', filename='images/userimage.png') }}" class="responsive-img circle" id="userImage" /></a></li>
