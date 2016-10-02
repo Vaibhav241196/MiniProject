@@ -18,6 +18,9 @@ $(document).ready(function (){
     // For select buttons
     $('select').material_select();
 
+    // For chips
+    $('.chips').material_chip();
+
     $("a#members-form-submit").click(function(evt){
 
         console.log('Test');
