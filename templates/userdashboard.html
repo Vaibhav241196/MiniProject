@@ -1,217 +1,260 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title> User Dashboard </title>
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title> User Dashboard </title>
 
-{#        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">#}
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/materialize.min.css')}}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/palette.css')}}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/font-awesome.min.css')}}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/dashboardstyle.css')}}">
-        <link href='https://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
+    {#        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">#}
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/materialize.min.css')}}">
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/palette.css')}}">
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/font-awesome.min.css')}}">
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static' , filename='css/dashboardstyle.css')}}">
+            <link href='https://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
 
-    </head>
+        </head>
 
 
 
-    <body>
+        <body>
 
-        <div class="page-preloader">
+            <div class="page-preloader">
 
-        </div>
+            </div>
 
-        <div class="page-wrapper">
+            <div class="page-wrapper">
 
-            <!-- Navigation Bar -->
-            <div class="navbar-fixed">
-                <nav class="dark-primary-color">
-                    <div class="nav-wrapper">
-                      <a href="#!" class="brand-logo garamond"><strong>proHub</strong></a>
-                      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-                      <ul class="right hide-on-med-and-down">
-                        <li><a href="#">Features</a></li>
-                        <li style="float:right;"><a href="#" data-activates='dropdown1' class='dropdown-button '><img src="{{ url_for('static' , filename='images/userimage.png')}}" class="responsive-img circle" id="userImage" /><span><strong>Howdy {{ user['userName'] }}</strong></span></a></li>
+                <!-- Navigation Bar -->
+                <div class="navbar-fixed">
+                    <nav class="dark-primary-color">
+                        <div class="nav-wrapper">
+                          <a href="#!" class="brand-logo garamond"><strong>proHub</strong></a>
+                          <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                          <ul class="right hide-on-med-and-down">
+                            <li><a href="#">Features</a></li>
+                            <li style="float:right;"><a href="#" data-activates='dropdown1' class='dropdown-button '><img src="{{ url_for('static' , filename='images/userimage.png')}}" class="responsive-img circle" id="userImage" /><span><strong>Howdy {{ user['userName'] }}</strong></span></a></li>
 
-                      </ul>
+                          </ul>
 
-                      <ul id='dropdown1' class='dropdown-content'>
-                              <li><a href="#!"><i class=" waves-effect fa fa-camera " aria-hidden="true" id="dropLogo"></i>Change Pic</a></li>
-                              <li><a href="#!"><i class=" waves-effect fa fa-cog " aria-hidden="true" id="dropLogo"></i>Settings</a></li>
+                          <ul id='dropdown1' class='dropdown-content'>
+                                  <li><a href="#!"><i class=" waves-effect fa fa-camera " aria-hidden="true" id="dropLogo"></i>Change Pic</a></li>
+                                  <li><a href="#!"><i class=" waves-effect fa fa-cog " aria-hidden="true" id="dropLogo"></i>Settings</a></li>
+                                  <li class="divider"></li>
+                                  <li><a href="/logout"><i class=" waves-effect fa fa-sign-out " aria-hidden="true" id="dropLogo"></i>Logout</a></li>
+                          </ul>
+
+
+                          <ul class="side-nav default-primary-color" id="mobile-demo">
+                              <li> <a class="waves-effect white-text" href="#my-projects"> My Projects </a></li>
+                              <li> <a class="waves-effect white-text" href="#projects-shared" > Shared Projects </a></li>
+                              <li> <a class="waves-effect white-text" href="#new-project" > New Project </a></li>
+                              <li> <a class="waves-effect white-text" href="#">Features</a></li>
+                              <li><a href="#!" style="color: white"><i class=" waves-effect fa fa-cog " aria-hidden="true" id="dropLogo"></i>Settings</a></li>
                               <li class="divider"></li>
-                              <li><a href="/logout"><i class=" waves-effect fa fa-sign-out " aria-hidden="true" id="dropLogo"></i>Logout</a></li>
-                      </ul>
+                              <li><a href="/logout " style="color: white"><i class=" waves-effect fa fa-sign-out " aria-hidden="true" id="dropLogo"></i>Logout</a></li>
+                          </ul>
 
+                        </div>
+                    </nav>
 
-                      <ul class="side-nav default-primary-color" id="mobile-demo">
-                          <li> <a class="waves-effect white-text" href="#my-projects"> My Projects </a></li>
-                          <li> <a class="waves-effect white-text" href="#projects-shared" > Shared Projects </a></li>
-                          <li> <a class="waves-effect white-text" href="#new-project" > New Project </a></li>
-                          <li> <a class="waves-effect white-text" href="#">Features</a></li>
-                          <li><a href="#!" style="color: white"><i class=" waves-effect fa fa-cog " aria-hidden="true" id="dropLogo"></i>Settings</a></li>
-                          <li class="divider"></li>
-                          <li><a href="/logout " style="color: white"><i class=" waves-effect fa fa-sign-out " aria-hidden="true" id="dropLogo"></i>Logout</a></li>
-                      </ul>
+                </div>
 
+                <nav id="secondary-nav">
+                    <div class = "row nav-wrapper" id ="nav-bar-secondary">
+                        <div class="col s10 m4 l3 offset-l2" >
+                            <a href="#new-project" title = "New Project" class="modal-trigger"><i class=" waves-effect fa fa-plus " aria-hidden="true" id="new-logo"></i></a>
+                        </div>
+
+                        <ul class="right" id="nav-bar-right">
+                            <li><a title="Delete" class="right" id="delete-project"><i class=" waves-effect fa fa-trash " aria-hidden="true" id="logo"></i></a></li>
+                            <li>
+                                <form id="download-project-form" method="post" action="/download">
+                                    <input type="hidden" id="download-project-id" name="download-project-id" />
+                                </form>
+                                <a href="#" title = "Download" id="download-project" class="right"><i class="waves-effect fa fa-download " aria-hidden="true" id="logo"></i>
+                                </a>
+                            </li>
+                            <li><a href="#rename-project" title = "Rename" class=" modal-trigger waves-effect waves-light right" id="logoRename"><i class=" waves-effect fa fa-pencil-square-o " aria-hidden="true" id="logo"></i></a></li>
+                        </ul>
                     </div>
                 </nav>
 
-            </div>
+                <div id="rename-project" class="modal center-align">
+                       <div class="modal-content" id="renameModal">
+                            <h4 style="font-family: 'EB garamond', sans-serif;" class="red-text">Rename Project</h4>
+                              <div class="rowcenter-align">
+                                <form id="rename-project-form">
+                                    <div class="input-field col s6 offset-s3">
+                                      <input  id="new_project_name" name="new_project_name" type="text" class="validate">
+                                      <label class="active" for="rename">New Project Name</label>
+                                    </div>
+                                    <div class="input-field center-align">
+                                      <input type="submit" value="Submit" class=""/>
+                                    </div>
+                                </form>
+                              </div>
 
-            <nav id="secondary-nav">
-                <div class = "row nav-wrapper" id ="nav-bar-secondary">
-                    <div class="col s10 m4 l3 offset-l2" >
-                        <a href="#new-project" title = "New Project" class="modal-trigger"><i class=" waves-effect fa fa-plus " aria-hidden="true" id="new-logo"></i></a>
-                    </div>
+                            </div>
+                       <div class="modal-footer center-align">
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat center-align">Close</a>
+                     </div>
+                </div>
 
-                    <ul class="right" id="nav-bar-right">
-                        <li><a title="Delete" class="right" id="delete-project"><i class=" waves-effect fa fa-trash " aria-hidden="true" id="logo"></i></a></li>
-                        <li>
-                            <form id="download-project-form" method="post" action="/download">
-                                <input type="hidden" id="download-project-id" name="download-project-id" />
-                            </form>
-                            <a href="#" title = "Download" id="download-project" class="right"><i class="waves-effect fa fa-download " aria-hidden="true" id="logo"></i>
-                            </a>
-                        </li>
-                        <li><a href="#rename-project" title = "Rename" class=" modal-trigger waves-effect waves-light right" id="logoRename"><i class=" waves-effect fa fa-pencil-square-o " aria-hidden="true" id="logo"></i></a></li>
+
+                <div class="content-main">
+
+                    <ul class="side-nav tabs large-screen fixed default-primary-color">
+                        <li class="tab"> <a class="waves-effect white-text active" href="#all-projects"> All Projects </a></li>
+                        <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> My Projects </a></li>
+                        <li class="tab"> <a class="waves-effect white-text" href="#projects-shared" > Shared Projects </a></li>
+                        <li class="tab"> <a class="waves-effect white-text" href="#search-project"> Browse Projects</a> </li>
                     </ul>
-                </div>
-            </nav>
 
-            <div id="rename-project" class="modal center-align">
-                   <div class="modal-content" id="renameModal">
-                        <h4 style="font-family: 'EB garamond', sans-serif;" class="red-text">Rename Project</h4>
-                          <div class="rowcenter-align">
-                            <form id="rename-project-form">
-                                <div class="input-field col s6 offset-s3">
-                                  <input  id="new_project_name" name="new_project_name" type="text" class="validate">
-                                  <label class="active" for="rename">New Project Name</label>
-                                </div>
-                                <div class="input-field center-align">
-                                  <input type="submit" value="Submit" class=""/>
-                                </div>
-                            </form>
-                          </div>
+                     <div id="search-project" class="tab-content">
+                   <div class="row" style="background-color:darkslategrey; margin-right: 20px">
+                         <div class="col l2 m3 s12 center-align">
+                            <label style="color: white;">Domain</label>
+                       <select>
+                           <option value="1">Web Development</option>
+                           <option value="2">Machine Learning</option>
+                           <option value="3">Big Data</option>
+                           <option value="3">Information Security</option>
+                           <option value="3">3D Modelling</option>
+                           <option value="3">Big Data</option>
+                           <option value="3">Big Data</option>
+                           <option value="3">Big Data</option>
 
+                       </select>
+                             </div>
+                       <div class="col l3 m4 s12 center-align">
+                            <label style="color: white;">Technology</label>
+                                <select multiple>
+
+                                        <option value="1">Django</option>
+                                        <option value="2">Flask</option>
+                                        <option value="3">Pyramid</option>
+                                </select>
                         </div>
-                   <div class="modal-footer center-align">
-                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat center-align">Close</a>
-                 </div>
-            </div>
-            
+                         <div class="col l7 m5 s12">
 
-            <div class="content-main">
+                            <nav style="margin-top: 12px; background-color: white;">
+                                 <div class="nav-wrapper">
+                                     <form>
 
-                <ul class="side-nav tabs large-screen fixed default-primary-color">
-                    <li class="tab"> <a class="waves-effect white-text active" href="#all-projects"> All Projects </a></li>
-                    <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> My Projects </a></li>
-                    <li class="tab"> <a class="waves-effect white-text" href="#projects-shared" > Shared Projects </a></li>
-                    <li class="tab"> <a class="waves-effect white-text modal-trigger" href="#new-project"> Create New Project</a> </li>
-                </ul>
+                                         <div class="input-field">
+                                        <input id="search" type="search" required><label for="search"><i class="fa fa-search" style="font-size: 25px; color: black"></i></label>
+              <!-- I've put "red-text" class to emphasize -->
 
+                                        </div>
+                                     </form>
+                                 </div>
+                            </nav>
 
-
-                <div id="all-projects" class="tab-content">
-                    <div class="row">
-                        {% for i in proj_list %}
-                            <div class="col l2 m4 s6 offset-m1 center-align">
-                                <div class="single-project-listing center-align" id="{{ i['_id'] }}">
-                                    <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
-                                </div>
-                                <p>{{i['projectName']}}</p>
-                            </div>
-                        {% endfor %}
-{#                    {% endif %}#}
-                    </div>
-                </div>
+                         </div>
+                       </div>
 
 
-
-                <div id="my-projects" class="tab-content">
-                  <div class="row">
-
-                    {% for i in proj_list %}
-                        {% if ""~user['_id'] == i['owner'] %}
-                            <div class="col l2 m4 s6 offset-m1 center-align">
-                                <div class="single-project-listing center-align" id="{{ i['_id'] }}">
-                                    <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
-                                </div>
-                                <p>{{i['projectName']}}</p>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                  </div>
-                </div>
-
-
-
-               <div id="projects-shared" class="tab-content">
-                  <div class="row">
-{#                    {{ proj_list|length }}#}
-{#                    {% if proj_list != none %}#}
-{#                        {{ proj_list }}#}
-                        {% for i in proj_list %}
-                            {% if ""~user['_id'] != i['owner']%}
+                   </div>
+                    <div id="all-projects" class="tab-content">
+                        <div class="row">
+                            {% for i in proj_list %}
                                 <div class="col l2 m4 s6 offset-m1 center-align">
                                     <div class="single-project-listing center-align" id="{{ i['_id'] }}">
                                         <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
                                     </div>
-                                    <p>{{ i['projectName'] }}</p>
+                                    <p>{{i['projectName']}}</p>
+                                </div>
+                            {% endfor %}
+    {#                    {% endif %}#}
+                        </div>
+                    </div>
+
+
+
+                    <div id="my-projects" class="tab-content">
+                      <div class="row">
+
+                        {% for i in proj_list %}
+                            {% if ""~user['_id'] == i['owner'] %}
+                                <div class="col l2 m4 s6 offset-m1 center-align">
+                                    <div class="single-project-listing center-align" id="{{ i['_id'] }}">
+                                        <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
+                                    </div>
+                                    <p>{{i['projectName']}}</p>
                                 </div>
                             {% endif %}
                         {% endfor %}
-{#                    {% endif %}#}
-                	</div>
-                </div>
-
-                <div id="new-project" class="modal">
-                    <div class="modal-content">
-                          <div class="row">
-                              <form class="col s12" id="new_project">
-
-                                  <h2 class="center-align heading red-text"> Add New Project </h2>
-
-                                  <div class="row">
-                                      <div class="input-field col s10 offset-s1">
-                                        <input placeholder="Placeholder" id="project-name" name="project-name" type="text" class="validate" />
-                                        <label for="first_name">Project Name</label>
-                                      </div>
-                                      <div class="input-field col s10 offset-s1">
-                                        <input id="project-description" type="text" name="project-description" class="validate" placeholder="Description" />
-                                        <label for="project-description">Project Description</label>
-                                      </div>
-                                  </div>
-
-                                  <div class="row">
-                                      <div class="input-field col s10 offset-s1">
-
-                                          <ul id="member-list">
-                                          </ul>
-
-                                          <input type="text" name="member-name" id="member-name"  placeholder="Username"/>
-                                          <label for="member-name">Members</label>
-                                          <a id="members-form-submit" class="btn-floating btn-large waves-effect waves-light red" href="#"> <i class="fa fa-2x fa-user-plus white-text    "></i> </a>
-
-                                      </div>
-                                  </div>
-
-                                  <div class="row center-align">
-                                    <input type="submit" value="Submit" class="btn waves-effect waves-light" />
-                                  </div>
-                              </form>
-                          </div>
+                      </div>
                     </div>
+
+
+
+                   <div id="projects-shared" class="tab-content">
+                      <div class="row">
+    {#                    {{ proj_list|length }}#}
+    {#                    {% if proj_list != none %}#}
+    {#                        {{ proj_list }}#}
+                            {% for i in proj_list %}
+                                {% if ""~user['_id'] != i['owner']%}
+                                    <div class="col l2 m4 s6 offset-m1 center-align">
+                                        <div class="single-project-listing center-align" id="{{ i['_id'] }}">
+                                            <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
+                                        </div>
+                                        <p>{{ i['projectName'] }}</p>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+    {#                    {% endif %}#}
+                        </div>
+                    </div>
+
+                    <div id="new-project" class="modal">
+                        <div class="modal-content">
+                              <div class="row">
+                                  <form class="col s12" id="new_project">
+
+                                      <h2 class="center-align heading red-text"> Add New Project </h2>
+
+                                      <div class="row">
+                                          <div class="input-field col s10 offset-s1">
+                                            <input placeholder="Placeholder" id="project-name" name="project-name" type="text" class="validate" />
+                                            <label for="first_name">Project Name</label>
+                                          </div>
+                                          <div class="input-field col s10 offset-s1">
+                                            <input id="project-description" type="text" name="project-description" class="validate" placeholder="Description" />
+                                            <label for="project-description">Project Description</label>
+                                          </div>
+                                      </div>
+
+                                      <div class="row">
+                                          <div class="input-field col s10 offset-s1">
+
+                                              <ul id="member-list">
+                                              </ul>
+
+                                              <input type="text" name="member-name" id="member-name"  placeholder="Username"/>
+                                              <label for="member-name">Members</label>
+                                              <a id="members-form-submit" class="btn-floating btn-large waves-effect waves-light red" href="#"> <i class="fa fa-2x fa-user-plus white-text    "></i> </a>
+
+                                          </div>
+                                      </div>
+
+                                      <div class="row center-align">
+                                        <input type="submit" value="Submit" class="btn waves-effect waves-light" />
+                                      </div>
+                                  </form>
+                              </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
-
-
 
             </div>
 
-        </div>
 
+            <script rel="script" type="text/javascript" src="{{ url_for( 'static' , filename='js/jquery-3.1.0.min.js') }}" ></script>
+            <script rel="script" type="text/javascript" src="{{ url_for ('static', filename='js/materialize.min.js') }} "></script>
+            <script rel="script" type="text/javascript" src="{{  url_for('static' , filename='js/script.js') }}"></script>
 
-        <script rel="script" type="text/javascript" src="{{ url_for( 'static' , filename='js/jquery-3.1.0.min.js') }}" ></script>
-        <script rel="script" type="text/javascript" src="{{ url_for ('static', filename='js/materialize.min.js') }} "></script>
-        <script rel="script" type="text/javascript" src="{{  url_for('static' , filename='js/script.js') }}"></script>
-
-    </body>
-</html>
+        </body>
+    </html>
