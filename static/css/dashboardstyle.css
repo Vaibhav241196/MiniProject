@@ -222,8 +222,11 @@ a#members-form-submit {
     background-color: #00695C;
 }
 
+/* For chips part in input modal */
+.chips input {
+    margin: 0;
+}
 
-/*.modal-trigger */
-/*{*/
-    /*clear: both;*/
-/*}*/
+.chip-label {
+    font-size: 0.8rem;
+}

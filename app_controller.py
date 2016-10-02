@@ -140,7 +140,7 @@ def check_members():
     else:
         return json.dumps({"status": 2, "message": "No such user found"})
 
-
+# creates new project and redirects to the project home page
 @app.route('/create_project', methods=['POST'])
 def create_project():
     print 'Hello'

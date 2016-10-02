@@ -19,7 +19,10 @@ $(document).ready(function (){
     $('select').material_select();
 
     // For chips
-    $('.chips').material_chip();
+    $('.chips-placeholder').material_chip({
+        placeholder: "More...",
+        secondaryPlaceholder: "Enter a technology",
+    });
 
     $("a#members-form-submit").click(function(evt){
 
@@ -62,6 +65,13 @@ $(document).ready(function (){
         projectData.projectName = $("input#project-name").val();
         projectData.projectDescription = $("input#project-description").val();
         projectData.projectMembers = [];
+        projectData.projectTags = [];
+
+        projectTags = $(".chips-placeholder").material_chip('data');
+
+        for(p in projectTags) {
+            projectData.projectTags.push(projectTags[p].tag);
+        }
 
         var members = $("#member-list li");
 
