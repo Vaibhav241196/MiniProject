@@ -68,7 +68,7 @@ nav {
     height: auto;
     width: 12%;
     vertical-align: center;
-    padding-top: 10px;
+    padding-top: 18px;
     float: left;
 
 }
@@ -229,4 +229,25 @@ a#members-form-submit {
 
 .chip-label {
     font-size: 0.8rem;
+
 }
+
+/* For dropdown  */
+
+#dropdown1{
+    top: 64px !important;
+
+
+}
+
+#dropLogo
+{
+    color:darkslategrey;
+    font-size: 14px;
+    padding-right: 10px;
+}
+/*.modal-trigger */
+/*{*/
+    /*clear: both;*/
+/*}*/
+

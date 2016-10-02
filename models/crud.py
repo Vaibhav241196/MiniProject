@@ -9,8 +9,10 @@ commits = db.commits
 def insert(document, collection_name):
     if collection_name == "projects":
         return projects.insert_one(document)
+
     elif collection_name == "commits":
         return commits.insert_one(document)
+
     else:
         return users.insert_one(document)
 
@@ -27,8 +29,10 @@ def find(document, collection_name):
 def find_unique(document, collection_name):
     if collection_name == "projects":
         return projects.find_one(document)
+
     elif collection_name == "commits":
         return commits.find_one(document)
+
     else:
         return users.find_one(document)
 
@@ -37,6 +41,7 @@ def update(id, modify, collection_name):
     if collection_name == "projects":
         # upsert false will insert a new document is id not found
         return projects.update({'_id': ObjectId(id)}, modify, upsert=False)
+
     elif collection_name == "commits":
         return commits.update({'_id': ObjectId(id)}, modify, upsert=False)
     else:
@@ -46,7 +51,18 @@ def update(id, modify, collection_name):
 def delete(document, collection_name):
     if collection_name == "projects":
         return projects.delete_one(document)
+
     elif collection_name == "commits":
         return users.delete_one(document)
     else:
         return users.delete_one(document)
+
+
+def aggregate(id, collection_name):
+    if collection_name == "projects":
+        return projects.aggregate([{'$match': {'owner': id}}, {'$group': {'_id': 'null', 'count': {'$sum': 1}}}])
+
+def aggregate_domain(id , collection_name):
+    if collection_name == "projects":
+        return projects.aggregate([{'$match' : {'projectMembers' : id}} , {'$group' : {'_id' : '$technology' , 'count' : {'$sum' : 1}}}])
+

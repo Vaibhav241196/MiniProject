@@ -19,14 +19,38 @@ def index():
         current_user = find_unique({'_id': ObjectId(userId)}, 'users')
         response['message'] = current_user['userName']
         proj_list = []
-
+        count = {}
         if 'projects' in current_user:
             for i in current_user['projects']:
                 project = find_unique({'_id': ObjectId(i)}, 'projects')
                 if project != None:
                     proj_list.append(project)
+
                     # proj_list = find({ "members" : userId } , 'projects')
-        return render_template('userdashboard.html', user=current_user, proj_list=proj_list)
+
+        #allProjects = proj_list[].__len__()
+
+        value_myProjects = 0
+        value_totalProjects = len(proj_list)
+
+        myProjects = aggregate(str(userId),'projects')
+
+        for j in myProjects:
+            value_myProjects = j['count']
+
+        count['allProjects'] = value_totalProjects
+        count['myProjects'] = value_myProjects
+        count['sharedProjects'] = value_totalProjects - value_myProjects
+
+        myProjects_domain = aggregate_domain(str(userId), 'projects')
+
+        for i in myProjects_domain:
+            count.update({i['_id'] : i['count']})
+
+        print count
+
+        return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count = count)
+
     else:
         return render_template("index.html")
 
@@ -191,6 +215,7 @@ def return_list():
 # i must also get the branch of the user
 @app.route('/project_dashboard/<id>')
 def project_dashboard(id):
+
     project = find_unique({'_id': ObjectId(id)}, 'projects')
     chdir('projects/' + str(id))
     list_dir = return_list()
@@ -330,9 +355,6 @@ def commit_log():
     log = find(document, 'commits')
     return json.dumps(log)
 
-
-
-
 # @app.route('/projectDashBoard')
 # def projectDashBoard_1():
 #     return render_template('project_dashboard.html')
@@ -351,6 +373,19 @@ def rename():  # yet to be integrated
     return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name});
 
 # we havent deleted the follder
+
+    # userId = session['id']
+    # current_user = find_unique({'_id': ObjectId(userId)}, 'users')
+    #
+    # proj_list = []
+    #
+    # if 'projects' in current_user:
+    #     for i in current_user['projects']:
+    #         proj_list.append(find_unique({'_id': ObjectId(i)}, 'projects'))
+    #         # return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
+    # return json.dumps({'user': current_user, 'proj_list': proj_list})
+    return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name});
+
 @app.route('/delete', methods=['POST'])
 def remove():
     proj_id = request.form['proj_id']
@@ -359,6 +394,8 @@ def remove():
     response = {}
 
     project = find_unique({'_id': ObjectId(proj_id)}, 'projects')
+    print project['owner']
+    print userId
 
     if project['owner'] == userId:
         for i in project['projectMembers']:
@@ -366,7 +403,10 @@ def remove():
         temp = delete({'_id': ObjectId(proj_id)}, 'projects')
         response['status'] = 0
         response['message'] = "Successfully deleted"
+        #projectMembers = find({'projects': str(proj_id)}, 'users')
 
+        for i in project['projectMembers']:
+            update_users = update(i, {'$pull' : {'projects' : str(proj_id)}} , 'users')
     else:
         response['status'] = 1
         response['message'] = "Only owner can delete a project"
