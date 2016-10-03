@@ -155,9 +155,17 @@ def create_project():
         temp_update = update(i, {"$push": {'projects': str(project_id)}}, 'users')
 
     makedirs('projects/' + str(project_id))
-    chdir('projects/' + str(project_id))
+    chdir(app.root_path+'projects/' + str(project_id))
     call(['git', 'init'], shell=False)
     return redirect(url_for('project_dashboard', id=project_id))
+
+
+# function to return the dictionary with the given branch name
+def return_members(branch_dict, branch_name):
+    if branch_dict['name'] == branch_name:
+        return branch_dict['members']
+    else:
+        return
 
 
 # function to return whether the user has access for the branch or not
@@ -165,12 +173,13 @@ def create_project():
 # 0 means permission denied
 def check_access(proj_id):
     user_id = session['id']
-    current_project = find_unique({'_id':ObjectId(proj_id)},projects)
-    current_user = find_unique({'_id':ObjectId(user_id)},users)
-    branch_name = check_output(['git','rev-parse','--abbrev-ref','HEAD'],shell = False)[:-1]
+    current_project = find_unique({'_id': ObjectId(proj_id)}, projects)
+    current_user = find_unique({'_id': ObjectId(user_id)}, users)
+    branch_name = check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
+    branch_members = filter(lambda x: return_members(x, branch_name), current_project['branch'])
     if str(user_id) == current_project['owner']:
         return 1
-    elif str(user_id) in current_project['branch'][branch_name]:
+    elif str(user_id) in branch_members:
         return 1
     else:
         return 0
@@ -192,7 +201,7 @@ def return_list():
 @app.route('/project_dashboard/<id>')
 def project_dashboard(id):
     project = find_unique({'_id': ObjectId(id)}, 'projects')
-    chdir('projects/' + str(id))
+    chdir(app.root_path+'projects/' + str(id))
     list_dir = return_list()
     print list_dir
     return render_template('project_dashboard.html', project=project, list_dir=list_dir)
@@ -204,7 +213,7 @@ def project_dashboard(id):
 def change_branch():
     proj_id = request.form['id']
     change_branch = request.form['branch_name']
-    chdir('projects/' + str(proj_id))
+    chdir(app.root_path+'projects/' + str(proj_id))
     temp = call(['git', 'checkout', str(change_branch)], shell=False)
     response = {}
     if temp == 1:
@@ -212,9 +221,9 @@ def change_branch():
         response['message'] = 'Please, commit your changes or stash them before you can switch branches.'
     else:
         response['status'] = 0
-        response['message'] = 'Switching to '+str(change_branch)
+        response['message'] = 'Switching to ' + str(change_branch)
     list_dir = return_list()
-    return json.dumps(list_dir,response)
+    return json.dumps(list_dir, response)
 
 
 # function to create new git branch input (project id,new branch name)
@@ -228,7 +237,7 @@ def create_branch():
     project = find_unique({'_id': ObjectId(proj_id)}, projects)
     response = {}
     if project['owner'] == session['id']:
-        chdir('projects/' + str(proj_id))
+        chdir(app.root_path+'projects/' + str(proj_id))
         temp = call(['git', 'branch', str(change_branch)], shell=False)
         if temp == 0:
             response['status'] = 0
@@ -249,7 +258,7 @@ def create_branch():
 def return_files():
     proj_id = request.form['id']
     path = request.form['path']
-    chdir('projects/' + str(proj_id) + '/' + path)
+    chdir(app.root_path+'projects/' + str(proj_id) + '/' + path)
     list_dir = return_list()
     return json.dumps(list_dir)
 
@@ -261,14 +270,14 @@ def return_files():
 def delete_files():
     proj_id = request.form['id']
     path = request.form['path']
-    current_project = find_unique({'_id':ObjectId(proj_id)}, projects)
-    current_user = find_unique({'_id':ObjectId(session['_id'])}, users)
+    current_project = find_unique({'_id': ObjectId(proj_id)}, projects)
+    current_user = find_unique({'_id': ObjectId(session['_id'])}, users)
     response = {}
     if check_access(proj_id):
         try:
-            remove('projects/'+str(proj_id)+'/'+str(path))
+            remove('projects/' + str(proj_id) + '/' + str(path))
         except:
-            rmtree('projects/'+str(proj_id)+'/'+str(path))
+            rmtree('projects/' + str(proj_id) + '/' + str(path))
         response['status'] = 0
         response['message'] = 'Successfully deleted'
     else:
@@ -284,7 +293,7 @@ def delete_files():
 def download_path():
     proj_id = request.form['id']
     path = request.form['path']
-    call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id)+str(path)], shell=False)
+    call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id) + str(path)], shell=False)
     temp_path = path.join(app.root_path + '/projects')
     return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
 
@@ -300,7 +309,7 @@ def commit_changes():
         call(['git', 'add', '.'], shell=False)
         call(['git', 'commit', '-m', str(message)], shell=False)
         sha_id = check_output(['git', 'rev-parse', 'HEAD'], shell=False)
-        if find_unique({'sha_id':sha_id},'commits'):
+        if find_unique({'sha_id': sha_id}, 'commits'):
             response['message'] = "Nothing to commit"
             response['status'] = 1
         else:
@@ -308,7 +317,7 @@ def commit_changes():
             response['status'] = 0
             document = {
                 'sha_id': sha_id,
-                'branch': check_output(['git','rev-parse','--abbrev-ref','HEAD'],shell = False)[:-1],
+                'branch': check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1],
                 'project': str(proj_id),
                 'comment': str(message)
             }
@@ -331,6 +340,43 @@ def commit_log():
     return json.dumps(log)
 
 
+# function to return the contents of file
+# input (project id,path)
+@app.route('/edit', methods=['POST'])
+def edit_file():
+    proj_id = request.form['id']
+    path = request.form['path']
+    location = app.root_path + '/projects' + str(proj_id) + str(path)
+
+    fileobject = open(location, "r")
+    loadbuffer = fileobject.read()
+    fileobject.close()
+    return json.dumps(loadbuffer)
+
+
+# function to save the contents of the file
+# input (project id, path, content of the file)
+@app.route('/save', methods=['POST'])
+def save_file():
+    proj_id = request.form['id']
+    path = request.form['path']
+    code = request.form['user_code']
+    response = {}
+    if check_access(proj_id):
+        location = app.root_path + '/projects' + str(proj_id) + str(path)
+        fileobject = open(location, "w")
+        fileobject.write(code)
+        fileobject.close()
+        reponse = {
+            'status': 0,
+            'message': 'Successfully overwritten '
+        }
+    else:
+        reponse = {
+            'status': 1,
+            'message': 'Permission Denied'
+        }
+    return json.dumps(response)
 
 
 # @app.route('/projectDashBoard')
@@ -342,13 +388,13 @@ def commit_log():
 #     return render_template('project_dashboard.html')
 
 
-
 @app.route('/rename', methods=['POST'])
 def rename():  # yet to be integrated
     proj_id = request.form['proj_id']
     new_name = request.form['new_name']
     update_project = update(proj_id, {'$set': {'projectName': str(new_name)}}, 'projects')
     return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name});
+
 
 # we havent deleted the follder
 @app.route('/delete', methods=['POST'])
