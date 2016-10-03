@@ -102,9 +102,9 @@
                 <div class="content-main">
 
                     <ul class="side-nav tabs large-screen fixed default-primary-color">
-                        <li class="tab"> <a class="waves-effect white-text active" href="#all-projects"> All Projects </a></li>
-                        <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> My Projects </a></li>
-                        <li class="tab"> <a class="waves-effect white-text" href="#projects-shared" > Shared Projects </a></li>
+                        <li class="tab"> <a class="waves-effect white-text active" href="#all-projects"> All Projects({{ count['allProjects']}}) </a></li>
+                        <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> My Projects ({{count['myProjects'] }})</a></li>
+                        <li class="tab"> <a class="waves-effect white-text" href="#projects-shared" > Shared Projects ({{count['sharedProjects'] }})</a></li>
                         <li class="tab"> <a class="waves-effect white-text" href="#search-project"> Browse Projects</a> </li>
                     </ul>
 
@@ -155,13 +155,21 @@
                    </div>
                     <div id="all-projects" class="tab-content">
                         <div class="row">
-                            {% for i in proj_list %}
+
+                            {% for i in aggregate %}
+                                <div class = "col l12 m12 s12">
+                                <h4 style="font-family: EB garamond, sans-serif; text-decoration: underline; text-transform: capitalize">{{i['_id']}}</h4>
+                                </div>
+
+                                {% for j in range((i['projectName']|length)) %}
+
                                 <div class="col l2 m4 s6 offset-m1 center-align">
-                                    <div class="single-project-listing center-align" id="{{ i['_id'] }}">
+                                    <div class="single-project-listing center-align" id="{{ i['projectId'][j] }}">
                                         <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
                                     </div>
-                                    <p>{{i['projectName']}}</p>
-                                </div>
+                                    <p>{{i['projectName'][j]}}</p>
+                                    </div>
+                                 {% endfor%}
                             {% endfor %}
     {#                    {% endif %}#}
                         </div>
@@ -234,6 +242,22 @@
                                               <label for="member-name">Members</label>
                                               <a id="members-form-submit" class="btn-floating btn-large waves-effect waves-light red" href="#"> <i class="fa fa-2x fa-user-plus white-text    "></i> </a>
 
+                                          </div>
+                                      </div>
+
+                                      <div class = "row center-align" style="margin-bottom: 50px;">
+                                          <div class="input-field col s10 offset-s1">
+                                                <form action="#">
+
+                                                    <p  style="display: inline; margin-right: 20px;">
+                                                        <input name="group1" type="radio" id="test1" />
+                                                        <label for="test1">Private Repository</label>
+                                                    </p>
+                                                    <p  style="display: inline">
+                                                         <input name="group1" type="radio" id="test2" />
+                                                         <label for="test2">Public Repository</label>
+                                                     </p>
+                                                </form>
                                           </div>
                                       </div>
 

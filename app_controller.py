@@ -18,6 +18,7 @@ def index():
         current_user = find_unique({'_id': ObjectId(userId)}, 'users')
         response['message'] = current_user['userName']
         proj_list = []
+        proj_aggregate = []
         count = {}
         if 'projects' in current_user:
             for i in current_user['projects']:
@@ -42,13 +43,19 @@ def index():
         count['sharedProjects'] = value_totalProjects - value_myProjects
 
         myProjects_domain = aggregate_domain(str(userId), 'projects')
+        projects_aggregated = aggregateFunc(str(userId), 'projects')
+
+        for i in projects_aggregated:
+            proj_aggregate.append(i)
+
+        print proj_aggregate
 
         for i in myProjects_domain:
             count.update({i['_id'] : i['count']})
 
         print count
 
-        return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count = count)
+        return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count = count , aggregate = proj_aggregate)
     else:
         return render_template("index.html")
 
