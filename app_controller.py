@@ -26,7 +26,8 @@ def index():
                 if project != None:
                     proj_list.append(project)
                     # proj_list = find({ "members" : userId } , 'projects')
-        return render_template('userdashboard.html', user=current_user, proj_list=proj_list)
+        notify_list = notify_user()
+        return render_template('userdashboard.html', user=current_user, proj_list=proj_list, notify_list=notify_list)
     else:
         return render_template("index.html")
 
@@ -473,6 +474,30 @@ def accept_decline():
         response['status'] = 0
         response['message'] = 'request accepted'
     return json.dumps(response)
+
+
+# function to return the list of notifications
+# input none
+# output list of dictionaries with keys projectname and username
+def notify_user():
+    user_id = session['id']
+    proj_list = find({'owner': str(user_id)}, 'projects')
+    notify_list = []
+    for i in proj_list:
+        try:
+            projectName = find_unique({'_id': ObjectId(i['_id'])}, 'projects')['projectName']
+            for j in i['requests']:
+                document = {
+                    'userName': find_unique({'_id':ObjectId(j)}, 'users')['userName'],
+                    'projectName': projectName
+                }
+                notify_list.append(document)
+        except:
+            print "no requests in the current project"
+
+    return notify_list
+
+
 
 
 @app.context_processor
