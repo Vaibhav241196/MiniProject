@@ -3,7 +3,7 @@ from models.crud import *
 
 import json
 from sendmail import sendEmails
-from os import makedirs, chdir, path, stat, listdir, curdir, remove
+from os import makedirs, chdir, path, stat, listdir, curdir, remove, getcwd, mknod
 from shutil import rmtree
 from subprocess import call, check_output
 from bson.objectid import ObjectId
@@ -11,48 +11,58 @@ from bson.objectid import ObjectId
 app = Flask(__name__)
 
 
+# function for home page route using session for automatic log in
 @app.route('/')
 def index():
-    response = {}
     if 'id' in session:
-        userId = session['id']
-        current_user = find_unique({'_id': ObjectId(userId)}, 'users')
-        response['message'] = current_user['userName']
-        proj_list = []
-        count = {}
-        if 'projects' in current_user:
-            for i in current_user['projects']:
-                project = find_unique({'_id': ObjectId(i)}, 'projects')
-                if project != None:
-                    proj_list.append(project)
-
-                    # proj_list = find({ "members" : userId } , 'projects')
-
-        #allProjects = proj_list[].__len__()
-
-        value_myProjects = 0
-        value_totalProjects = len(proj_list)
-
-        myProjects = aggregate(str(userId),'projects')
-
-        for j in myProjects:
-            value_myProjects = j['count']
-
-        count['allProjects'] = value_totalProjects
-        count['myProjects'] = value_myProjects
-        count['sharedProjects'] = value_totalProjects - value_myProjects
-
-        myProjects_domain = aggregate_domain(str(userId), 'projects')
-
-        for i in myProjects_domain:
-            count.update({i['_id'] : i['count']})
-
-        print count
-
-        return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count = count)
-
+        return redirect(url_for('user_dashboard'))
     else:
         return render_template("index.html")
+
+# function for rendering user dashboard page
+# using user id for getting the logged in user
+@app.route('/user_dashboard')
+def user_dashboard():
+
+    print "Hello in user dashboard"
+    userId = session['id']
+    current_user = find_unique({'_id': ObjectId(userId)}, 'users')
+
+    response = {}
+    response['message'] = current_user['userName']
+
+    proj_list = []
+    count = {}
+    if 'projects' in current_user:
+        for i in current_user['projects']:
+            project = find_unique({'_id': ObjectId(i)}, 'projects')
+            if project != None:
+                proj_list.append(project)
+
+                # proj_list = find({ "members" : userId } , 'projects')
+
+    # allProjects = proj_list[].__len__()
+
+    value_myProjects = 0
+    value_totalProjects = len(proj_list)
+
+    myProjects = aggregate(str(userId), 'projects')
+
+    for j in myProjects:
+        value_myProjects = j['count']
+
+    count['allProjects'] = value_totalProjects
+    count['myProjects'] = value_myProjects
+    count['sharedProjects'] = value_totalProjects - value_myProjects
+
+    myProjects_domain = aggregate_domain(str(userId), 'projects')
+
+    for i in myProjects_domain:
+        count.update({i['_id']: i['count']})
+
+    print count
+    print "Hello"
+    return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -183,6 +193,25 @@ def create_project():
     call(['git', 'init'], shell=False)
     return redirect(url_for('project_dashboard', id=project_id))
 
+# function to create new folder
+@app.route('/create_folder/<folder_name>')
+def create_folder(folder_name):
+    makedirs(folder_name)
+    return json.dumps({'status': 0 , 'message': "Directory created successfully" })
+
+# function to create new file
+@app.route('/create_new', methods=['POST'])
+def create_file():
+    name = request.form['name']
+    type = request.form['type']
+
+    if type == 'new-folder':
+        makedirs(name)
+
+    elif type == 'new-file':
+        mknod(name)
+
+    return json.dumps({'status': 0 , 'message': "File created successfully" })
 
 # function to return whether the user has access for the branch or not
 # 1 means he has the access
@@ -203,11 +232,18 @@ def check_access(proj_id):
 # function to return the list of directories and files in the current directory
 def return_list():
     curr_files = listdir(curdir)  # list of files and directories
+
+    print curr_files
+
     list_dir = {
         'files': filter(path.isfile, curr_files),  # list of files
         'directories': filter(path.isdir, curr_files),
     }
     list_dir['directories'].remove('.git')
+
+    list_dir['directories'].sort()
+    list_dir['files'].sort()
+
     return list_dir
 
 
@@ -217,10 +253,17 @@ def return_list():
 def project_dashboard(id):
 
     project = find_unique({'_id': ObjectId(id)}, 'projects')
-    chdir('projects/' + str(id))
+
+    members = []
+
+    for m in project['projectMembers']:
+        user = find_unique({ '_id': ObjectId(m) },'users')
+        members.append(user)
+
+    chdir(path.join(app.root_path,'projects', id ))
     list_dir = return_list()
     print list_dir
-    return render_template('project_dashboard.html', project=project, list_dir=list_dir)
+    return render_template('project_dashboard.html', project=project, members=members , list_dir=list_dir)
 
 
 # function to change branch input (project id,branch name)

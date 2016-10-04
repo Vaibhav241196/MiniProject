@@ -12,8 +12,6 @@
 
     </head>
 
-
-
     <body>
 
         <div class="page-preloader">
@@ -64,15 +62,15 @@
                     </div>
 
                     <ul class="right" id="nav-bar-right">
-                        <li><a title="Delete" class="right" id="delete-project"><i class=" waves-effect fa fa-trash " aria-hidden="true" id="logo"></i></a></li>
+                        <li><a title="Delete" class="right" id="delete-project"><i class=" waves-effect fa fa-trash logo" aria-hidden="true"></i></a></li>
                         <li>
                             <form id="download-project-form" method="post" action="/download">
                                 <input type="hidden" id="download-project-id" name="download-project-id" />
                             </form>
-                            <a href="#" title = "Download" id="download-project" class="right"><i class="waves-effect fa fa-download " aria-hidden="true" id="logo"></i>
+                            <a href="#" title = "Download" id="download-project" class="right"><i class="waves-effect fa fa-download " aria-hidden="true"></i>
                             </a>
                         </li>
-                        <li><a href="#rename-project" title = "Rename" class=" modal-trigger waves-effect waves-light right" id="logoRename"><i class=" waves-effect fa fa-pencil-square-o " aria-hidden="true" id="logo"></i></a></li>
+                        <li><a href="#rename-project" title = "Rename" class=" modal-trigger waves-effect waves-light right" id="logoRename"><i class=" waves-effect fa fa-pencil-square-o logo" aria-hidden="true"></i></a></li>
                     </ul>
                 </div>
             </nav>
@@ -176,7 +174,7 @@
                                         <label for="project-name">Project Name</label>
                                       </div>
                                       <div class="input-field col s10 offset-s1">
-                                        <input id="project-description" type="text" name="project-description" class="validate" placeholder="Description" />
+                                        <textarea id="project-description" class="materialize-textarea validate" type="text" name="project-description" placeholder="Description" ></textarea>
                                         <label for="project-description">Project Description</label>
                                       </div>
                                   </div>
@@ -198,12 +196,12 @@
                                       </div>
                                   </div>
 
-                                      <div class="row">
-                                          <div class="col s10 offset-s1 input-field">
-                                              <span class="chip-label"> Technologies used </span>
-                                              <div class="chips chips-placeholder" id="technologies"></div>
-                                          </div>
+                                  <div class="row">
+                                      <div class="col s10 offset-s1 input-field">
+                                          <span class="chip-label"> Technologies used </span>
+                                          <div class="chips chips-placeholder" id="technologies"></div>
                                       </div>
+                                  </div>
 
 
                                   <div class="row">

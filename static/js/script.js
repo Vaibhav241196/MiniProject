@@ -24,6 +24,9 @@ $(document).ready(function (){
         secondaryPlaceholder: "Enter a technology",
     });
 
+    console.log($('.chips.focus').prev());
+    $('.chips.focus').prev().css('color','red');
+
     $("a#members-form-submit").click(function(evt){
 
         console.log('Test');
@@ -63,7 +66,7 @@ $(document).ready(function (){
         var projectData = {};
 
         projectData.projectName = $("input#project-name").val();
-        projectData.projectDescription = $("input#project-description").val();
+        projectData.projectDescription = $("#project-description").val();
         projectData.projectMembers = [];
         projectData.projectTags = [];
 

@@ -57,10 +57,8 @@ nav {
     margin: 20px auto;
     background-color: white;
     -webkit-box-shadow: 7.5px 0 5px -2px #888;
-          box-shadow: 7.5px 0 5px -2px #888;
+    box-shadow: 7.5px 0 5px -2px #888;
 
-     -webkit-box-shadow: 7.5px 7.5px 5px -2px #888;
-          box-shadow: 7.5px 7.5px 5px -2px #888;
 }
 
 #userImage
@@ -149,18 +147,18 @@ a#members-form-submit {
 
  /*label focus color */
 
-.input-field input[type=text]:focus + label {
- color: red;
+.input-field input[type=text]:focus + label, .input-field textarea:focus + label {
+ color: red !important;
 }
 /* label underline focus color */
-.input-field input[type=text]:focus {
- border-bottom: 1px solid red;
- box-shadow: 0 1px 0 0 red;
+.input-field input[type=text]:focus, .input-field textarea:focus {
+ border-bottom: 1px solid red !important;
+ box-shadow: 0 1px 0 0 red !important;
 }
 /* valid color */
 .input-field input[type=text].valid {
- border-bottom: 1px solid red;
- box-shadow: 0 1px 0 0 red;
+ border-bottom: 1px solid red !important;
+ box-shadow: 0 1px 0 0 red !important;
 }
 /* invalid color */
 .input-field input[type=text].invalid {
@@ -169,8 +167,18 @@ a#members-form-submit {
 }
 /* icon prefix focus color */
 .input-field .prefix.active {
- color: red;
+    color: red;
 }
+
+.chips.focus {
+    border-bottom: 1px solid red !important;
+    box-shadow: 0 1px 0 0 red !important;
+}
+
+.chips.focus  {
+    color : red !important;
+}
+
         
 
 #nav-bar-secondary {
@@ -186,7 +194,7 @@ a#members-form-submit {
     float:left;
     margin: auto;
 }   
-#logo
+.logo
 {
   color:white !important;
   font-size: 25px;
