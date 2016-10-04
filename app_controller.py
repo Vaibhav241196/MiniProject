@@ -189,7 +189,7 @@ def create_project():
         temp_update = update(i, {"$push": {'projects': str(project_id)}}, 'users')
 
     makedirs('projects/' + str(project_id))
-    chdir('projects/' + str(project_id))
+    chdir(app.root_path+'projects/' + str(project_id))
     call(['git', 'init'], shell=False)
     return redirect(url_for('project_dashboard', id=project_id))
 
@@ -213,17 +213,26 @@ def create_file():
 
     return json.dumps({'status': 0 , 'message': "File created successfully" })
 
+# function to return the dictionary with the given branch name
+def return_members(branch_dict, branch_name):
+    if branch_dict['name'] == branch_name:
+        return branch_dict['members']
+    else:
+        return
+
+
 # function to return whether the user has access for the branch or not
 # 1 means he has the access
 # 0 means permission denied
 def check_access(proj_id):
     user_id = session['id']
-    current_project = find_unique({'_id':ObjectId(proj_id)},projects)
-    current_user = find_unique({'_id':ObjectId(user_id)},users)
-    branch_name = check_output(['git','rev-parse','--abbrev-ref','HEAD'],shell = False)[:-1]
+    current_project = find_unique({'_id': ObjectId(proj_id)}, projects)
+    current_user = find_unique({'_id': ObjectId(user_id)}, users)
+    branch_name = check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
+    branch_members = filter(lambda x: return_members(x, branch_name), current_project['branch'])
     if str(user_id) == current_project['owner']:
         return 1
-    elif str(user_id) in current_project['branch'][branch_name]:
+    elif str(user_id) in branch_members:
         return 1
     else:
         return 0
@@ -253,7 +262,6 @@ def return_list():
 def project_dashboard(id):
 
     project = find_unique({'_id': ObjectId(id)}, 'projects')
-
     members = []
 
     for m in project['projectMembers']:
@@ -261,6 +269,7 @@ def project_dashboard(id):
         members.append(user)
 
     chdir(path.join(app.root_path,'projects', id ))
+
     list_dir = return_list()
     print list_dir
     return render_template('project_dashboard.html', project=project, members=members , list_dir=list_dir)
@@ -272,7 +281,7 @@ def project_dashboard(id):
 def change_branch():
     proj_id = request.form['id']
     change_branch = request.form['branch_name']
-    chdir('projects/' + str(proj_id))
+    chdir(app.root_path+'projects/' + str(proj_id))
     temp = call(['git', 'checkout', str(change_branch)], shell=False)
     response = {}
     if temp == 1:
@@ -280,9 +289,9 @@ def change_branch():
         response['message'] = 'Please, commit your changes or stash them before you can switch branches.'
     else:
         response['status'] = 0
-        response['message'] = 'Switching to '+str(change_branch)
+        response['message'] = 'Switching to ' + str(change_branch)
     list_dir = return_list()
-    return json.dumps(list_dir,response)
+    return json.dumps(list_dir, response)
 
 
 # function to create new git branch input (project id,new branch name)
@@ -296,7 +305,7 @@ def create_branch():
     project = find_unique({'_id': ObjectId(proj_id)}, projects)
     response = {}
     if project['owner'] == session['id']:
-        chdir('projects/' + str(proj_id))
+        chdir(app.root_path+'projects/' + str(proj_id))
         temp = call(['git', 'branch', str(change_branch)], shell=False)
         if temp == 0:
             response['status'] = 0
@@ -317,7 +326,7 @@ def create_branch():
 def return_files():
     proj_id = request.form['id']
     path = request.form['path']
-    chdir('projects/' + str(proj_id) + '/' + path)
+    chdir(app.root_path+'projects/' + str(proj_id) + '/' + path)
     list_dir = return_list()
     return json.dumps(list_dir)
 
@@ -329,14 +338,14 @@ def return_files():
 def delete_files():
     proj_id = request.form['id']
     path = request.form['path']
-    current_project = find_unique({'_id':ObjectId(proj_id)}, projects)
-    current_user = find_unique({'_id':ObjectId(session['_id'])}, users)
+    current_project = find_unique({'_id': ObjectId(proj_id)}, projects)
+    current_user = find_unique({'_id': ObjectId(session['_id'])}, users)
     response = {}
     if check_access(proj_id):
         try:
-            remove('projects/'+str(proj_id)+'/'+str(path))
+            remove('projects/' + str(proj_id) + '/' + str(path))
         except:
-            rmtree('projects/'+str(proj_id)+'/'+str(path))
+            rmtree('projects/' + str(proj_id) + '/' + str(path))
         response['status'] = 0
         response['message'] = 'Successfully deleted'
     else:
@@ -352,7 +361,7 @@ def delete_files():
 def download_path():
     proj_id = request.form['id']
     path = request.form['path']
-    call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id)+str(path)], shell=False)
+    call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id) + str(path)], shell=False)
     temp_path = path.join(app.root_path + '/projects')
     return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
 
@@ -368,7 +377,7 @@ def commit_changes():
         call(['git', 'add', '.'], shell=False)
         call(['git', 'commit', '-m', str(message)], shell=False)
         sha_id = check_output(['git', 'rev-parse', 'HEAD'], shell=False)
-        if find_unique({'sha_id':sha_id},'commits'):
+        if find_unique({'sha_id': sha_id}, 'commits'):
             response['message'] = "Nothing to commit"
             response['status'] = 1
         else:
@@ -376,7 +385,7 @@ def commit_changes():
             response['status'] = 0
             document = {
                 'sha_id': sha_id,
-                'branch': check_output(['git','rev-parse','--abbrev-ref','HEAD'],shell = False)[:-1],
+                'branch': check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1],
                 'project': str(proj_id),
                 'comment': str(message)
             }
@@ -398,6 +407,44 @@ def commit_log():
     log = find(document, 'commits')
     return json.dumps(log)
 
+# function to return the contents of file
+# input (project id,path)
+@app.route('/edit', methods=['POST'])
+def edit_file():
+    proj_id = request.form['id']
+    path = request.form['path']
+    location = app.root_path + '/projects' + str(proj_id) + str(path)
+
+    fileobject = open(location, "r")
+    loadbuffer = fileobject.read()
+    fileobject.close()
+    return json.dumps(loadbuffer)
+
+
+# function to save the contents of the file
+# input (project id, path, content of the file)
+@app.route('/save', methods=['POST'])
+def save_file():
+    proj_id = request.form['id']
+    path = request.form['path']
+    code = request.form['user_code']
+    response = {}
+    if check_access(proj_id):
+        location = app.root_path + '/projects' + str(proj_id) + str(path)
+        fileobject = open(location, "w")
+        fileobject.write(code)
+        fileobject.close()
+        reponse = {
+            'status': 0,
+            'message': 'Successfully overwritten '
+        }
+    else:
+        reponse = {
+            'status': 1,
+            'message': 'Permission Denied'
+        }
+    return json.dumps(response)
+
 # @app.route('/projectDashBoard')
 # def projectDashBoard_1():
 #     return render_template('project_dashboard.html')
@@ -407,13 +454,13 @@ def commit_log():
 #     return render_template('project_dashboard.html')
 
 
-
 @app.route('/rename', methods=['POST'])
 def rename():  # yet to be integrated
     proj_id = request.form['proj_id']
     new_name = request.form['new_name']
     update_project = update(proj_id, {'$set': {'projectName': str(new_name)}}, 'projects')
-    return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name});
+    return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name})
+
 
 # we havent deleted the follder
 
@@ -427,7 +474,7 @@ def rename():  # yet to be integrated
     #         proj_list.append(find_unique({'_id': ObjectId(i)}, 'projects'))
     #         # return render_template('userdashboard.html',user=current_user,proj_list = proj_list)
     # return json.dumps({'user': current_user, 'proj_list': proj_list})
-    return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name});
+    # return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name})
 
 @app.route('/delete', methods=['POST'])
 def remove():
@@ -471,6 +518,69 @@ def download():  # extension problem
     call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id)], shell=False)
     temp_path = path.join(app.root_path + '/projects')
     return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
+
+
+# function to send request for project
+# function will be called when the user sends the request to show his/her interest in the project while searching
+# input(project id)
+@app.route('/apply', methods=['POST'])
+def apply_proj():
+    proj_id = request.form['proj_id']
+    user_id = session['id']
+    current_project = find_unique({'_id': ObjectId(proj_id)}, 'projects')
+    response = {}
+    if user_id not in current_project['projectMembers']:
+        update(proj_id, {'$push': {'requests': str(user_id)}}, 'projects')
+        response['status'] = 0
+        response['message'] = 'Request successfully sent'
+    else:
+        request['status'] = 1
+        request['message'] = 'Already a member'
+    return json.dumps(request)
+
+
+# function to accept or decline the notifications
+# input (project_id, status,user id)
+# status 1 then accept
+@app.route('/notify', methods=['POST'])
+def accept_decline():
+    proj_id = request.form['proj_id']
+    status = str(request.form['status'])
+    user_id = request.form['user_id']
+    update(proj_id, {'$pull': {'requests': str(user_id)}}, 'projects')
+    response = {}
+    if status == str(0):
+        response['message'] = 'request not accepted'
+        response['status'] = 0
+    else:
+        update(proj_id, {'$push': {'projectMembers': str(user_id)}}, 'projects')
+        response['status'] = 0
+        response['message'] = 'request accepted'
+    return json.dumps(response)
+
+
+# function to return the list of notifications
+# input none
+# output list of dictionaries with keys projectname and username
+def notify_user():
+    user_id = session['id']
+    proj_list = find({'owner': str(user_id)}, 'projects')
+    notify_list = []
+    for i in proj_list:
+        try:
+            projectName = find_unique({'_id': ObjectId(i['_id'])}, 'projects')['projectName']
+            for j in i['requests']:
+                document = {
+                    'userName': find_unique({'_id':ObjectId(j)}, 'users')['userName'],
+                    'projectName': projectName
+                }
+                notify_list.append(document)
+        except:
+            print "no requests in the current project"
+
+    return notify_list
+
+
 
 
 @app.context_processor
