@@ -436,6 +436,45 @@ def download():  # extension problem
     return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
 
 
+# function to send request for project
+# function will be called when the user sends the request to show his/her interest in the project while searching
+# input(project id)
+@app.route('/apply', methods=['POST'])
+def apply_proj():
+    proj_id = request.form['proj_id']
+    user_id = session['id']
+    current_project = find_unique({'_id': ObjectId(proj_id)}, 'projects')
+    response = {}
+    if user_id not in current_project['projectMembers']:
+        update(proj_id, {'$push': {'requests': str(user_id)}}, 'projects')
+        response['status'] = 0
+        response['message'] = 'Request successfully sent'
+    else:
+        request['status'] = 1
+        request['message'] = 'Already a member'
+    return json.dumps(request)
+
+
+# function to accept or decline the notifications
+# input (project_id, status,user id)
+# status 1 then accept
+@app.route('/notify', methods=['POST'])
+def accept_decline():
+    proj_id = request.form['proj_id']
+    status = str(request.form['status'])
+    user_id = request.form['user_id']
+    update(proj_id, {'$pull': {'requests': str(user_id)}}, 'projects')
+    response = {}
+    if status == str(0):
+        response['message'] = 'request not accepted'
+        response['status'] = 0
+    else:
+        update(proj_id, {'$push': {'projectMembers': str(user_id)}}, 'projects')
+        response['status'] = 0
+        response['message'] = 'request accepted'
+    return json.dumps(response)
+
+
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
