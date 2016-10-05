@@ -248,7 +248,9 @@ def return_list():
         'files': filter(path.isfile, curr_files),  # list of files
         'directories': filter(path.isdir, curr_files),
     }
-    list_dir['directories'].remove('.git')
+
+    if '.git' in list_dir['directories']:
+        list_dir['directories'].remove('.git')
 
     list_dir['directories'].sort()
     list_dir['files'].sort()
@@ -258,21 +260,35 @@ def return_list():
 
 # working properly with double click for initial loading of the project
 # i must also get the branch of the user
-@app.route('/project_dashboard/<id>')
+@app.route('/project_dashboard/<id>', methods=['GET','POST'])
 def project_dashboard(id):
 
-    project = find_unique({'_id': ObjectId(id)}, 'projects')
-    members = []
+    print "Hello"
 
-    for m in project['projectMembers']:
-        user = find_unique({ '_id': ObjectId(m) },'users')
-        members.append(user)
+    project_path = path.join(app.root_path,'projects', id)
 
-    chdir(path.join(app.root_path,'projects', id ))
+    if request.method == 'GET':
+        project = find_unique({'_id': ObjectId(id)}, 'projects')
+        members = []
 
-    list_dir = return_list()
-    print list_dir
-    return render_template('project_dashboard.html', project=project, members=members , list_dir=list_dir)
+        for m in project['projectMembers']:
+            user = find_unique({ '_id': ObjectId(m) },'users')
+            members.append(user)
+
+        chdir(project_path)
+
+        list_dir = return_list()
+        return render_template('project_dashboard.html', project=project, members=members , list_dir=list_dir)
+
+    elif request.method == 'POST':
+        dir_path = request.form['dir_path']
+        chdir(dir_path)
+        list_dir = return_list()
+
+        l = len(project_path)
+        list_dir['current'] = getcwd()[l:]
+
+        return json.dumps(list_dir)
 
 
 # function to change branch input (project id,branch name)

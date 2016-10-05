@@ -15,6 +15,8 @@
 
 <body>
 
+    <div id="proj_id">{{ project['_id'] }}</div>
+
     <div class="navbar-fixed">
         <nav class="dark-primary-color">
             <div class="nav-wrapper">
@@ -94,7 +96,6 @@
 
                   <input type="text" name="member-name" id="member-name"  placeholder="Add User ... "/>
                   <a id="members-form-submit" class="btn-floating btn-large waves-effect waves-light red" href="#"> <i class="fa fa-2x fa-user-plus white-text    "></i> </a>
-
               </div>
             </div>
         </div>
@@ -124,23 +125,33 @@
                 <ul class="collapsible collapsible-accordion">
                   <li>
                   <a class="waves-effect white-text collapsible-header" href="#my-projects">BRANCHES</a>
-                    <div class="collapsible-body">
+                    <div class="collapsible-body" id="my-projects">
                       <ul>
-                        <li class="tab"> <a class="waves-effect white-text" href="#my-projects">Master</a></li>
-                        <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Tejas</a></li>
-                        <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Vaibhav</a></li>
-                        <li class="tab"> <a class="waves-effect white-text" href="#my-projects"> |--Suhavan</a></li>
+                        <li class="tab"> <a class="waves-effect white-text" >Master</a></li>
+                        <li class="tab"> <a class="waves-effect white-text"> |--Tejas</a></li>
+                        <li class="tab"> <a class="waves-effect white-text"> |--Vaibhav</a></li>
+                        <li class="tab"> <a class="waves-effect white-text"> |--Suhavan</a></li>
                       </ul>
                     </div>
                   </li>
                 </ul>
             </li>
-            <li class="tab"> <a class="waves-effect white-text" href="#my-projects">Add Member</a></li>
-            <li class="tab"> <a class="waves-effect white-text" href="#projects-shared" >Remove Member</a></li>
+            <li class="divider"></li>
+            <li class="tab"> <a class="waves-effect white-text modal-trigger" href="#new-branch">Create New Branch</a></li>
         </ul>
 
         <div class="row">
             <div id="source-code" class="col s12">
+
+            <nav>
+                <div class="nav-wrapper">
+                    <div class="col s12 breadcrumbs-div">
+                        <a href="" class="breadcrumb"> {{ project['projectName'] }} </a>
+                    </div>
+                </div>
+            </nav>
+
+
                 <table class="bordered highlight responsive-table project-directory">
                     <tbody>
                         {% for d in list_dir['directories'] %}
@@ -226,6 +237,35 @@
 
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="new-branch">
+        <div class="modal-content">
+            <div class="row">
+                <h3 class="center-align"> Create New Branch </h3>
+
+                <form name="add-new-branch" id="add-new-branch">
+                    <div class="input-field col s10 offset-s1">
+                        <input placeholder="Branch Name" name="branch-name" id="branch-name" type="text" class="validate">
+                        <label for="branch-name">Branch Name</label>
+                    </div>
+
+                    <div class="input-field col s10 offset-s1 select-members">
+                        <select multiple name="members" id="members">
+                            <option value="" disabled selected class="col s6">Select Members</option>
+                            {% for m in members  %}
+                                <option value="{{ m['_id'] }}" class="col s6">{{ m['userName'] }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <label>Select Members</label>
+                    </div>
+                </form>
+                <div class="center-align">
+                    <input type="submit" name="submit" class="btn waves-effect waves-light" value="Submit" />
+                </div>
             </div>
         </div>
     </div>

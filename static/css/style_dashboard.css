@@ -144,3 +144,24 @@ div.member-panel:hover {
     cursor: pointer;
 }
 
+.breadcrumb {
+    color: rgba(0,0,0,0.5);
+
+}
+
+.breadcrumb:last-child {
+    color: #000;
+}
+
+.breadcrumb::before {
+    color: rgba(0,0,0,0.5);
+}
+
+/* Create new branch modal */
+
+.select-members ul li{
+    width: 50%;
+    float: left;
+    clear: none;
+}
+

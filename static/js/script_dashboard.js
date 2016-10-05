@@ -4,7 +4,10 @@
 
 
 $(document).ready(function(){
-    
+
+    // For select input
+    $('select').material_select();
+
     var commit_log_open = false;                // flag varible for commit log
     $('ul.tabs').tabs();
 
@@ -116,7 +119,102 @@ $(document).ready(function(){
 
     });
 
-    $(".folders").dblclick(function(){
+    $(document).on('dblclick','.folders',function(){
+
+        var dir_path = $(this).find('p').text().slice(0,-1);
+
+        changeDir(dir_path,function(){
+            $(".breadcrumbs-div").append('<a href="#!" class="breadcrumb">' + dir_path + '</a>');
+        });
+    });
+
+    $(document).on('click','.breadcrumb',function(evt){
+        evt.preventDefault();
+        var breadcrumbs = $('.breadcrumb');
+        var back_times;
+        var dir_path = "";
+        var i;
+
+        l = breadcrumbs.length;
+
+        for (i in breadcrumbs) {
+            if(evt.target === breadcrumbs[i]) {
+                back_times = l-i-1;
+                break;
+            }
+        }
+
+        for(i=0; i< back_times; i++ )
+            dir_path = dir_path + "../"
+
+        changeDir(dir_path,function() {
+
+            for(i=0; i<back_times; i++)
+                $(".breadcrumb:last-child").remove();
+        });
+    });
+
+    /* ====================== For add new branch form ===================================== */
+
+    $("form#add-new-branch").submit(function (evt) {
+        evt.preventDefault();
+
+        var post_data = {};
+
+        post_data.branch_name = $(evt.target).find('[name="branch-name"]');
+        post_data.members = $(evt.target).find('[name="members"]');
+        post_data.id = $("#project_id").text();
+
+        $.ajax({
+
+            url: '/new-branch',
+            method: 'POST',
+            data: post_data,
+            dataType: 'json',
+        }).
+            done(function(res) {
+                alert(res.message);
+
+                if (!res.status)
+
+                else
+
+
+        });
 
     });
+
 });
+
+function changeDir(dir_path,callback){
+    console.log("Hello");
+    var data = { dir_path: dir_path };
+
+    $.ajax({
+        url: window.location.href,
+        method: 'POST',
+        data: data,
+        dataType: 'json',
+    }).
+    done(function(res){
+
+        var table = $("table.project-directory tbody");
+        table.html("");
+
+        for (d in res.directories){
+            table.append('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + res.directories[d] + '/</p> </td></tr>')
+       }
+
+       for (f in res.files){
+            table.append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + res.files[f] + '</p> </td></tr>')
+       }
+
+       callback(res);
+    }).
+
+    fail(function(err) {
+        console.log(err);
+    });
+
+
+}
