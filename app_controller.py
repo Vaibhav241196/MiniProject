@@ -338,6 +338,7 @@ def commit_log():
         'branch': check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
     }
     log = find(document, 'commits')
+    log = list(log)
     return json.dumps(log)
 
 
