@@ -499,6 +499,34 @@ def notify_user():
     return notify_list
 
 
+# function to merge two branches
+# input (project_id,parent_branch,child_branch)
+# parent_branch - branch in which the child_branch will be merged
+# check the output check_output it may have error in files_list
+app.route('/merge', methods=['POST'])
+def merge_branch():
+    parent_branch = request.form['parent_branch']
+    child_branch = request.form['child_branch']
+    project_id = request.form['proj_id']
+    id = session['_id']
+    current_project = find_unique({'_id':ObjectId(project_id)},'projects')
+    response = {}
+    if id == current_project['owner']:
+        chdir(app.route_path+'/projects/'+str(project_id))
+        call(['git', 'checkout', str(parent_branch)], shell=False)
+        temp = call(['git', 'merge', str(child_branch)], shell=False)
+        if temp == 0:
+            response['status'] = 0
+            response['message'] = 'merge successful'
+        else:
+            files_list = check_output(['git', 'diff', '--name-only', '--diff-filter=U'], shell=False)
+            files_list.split('\n')
+            response['status'] = 1
+            response['message'] = files_list
+    else:
+        response['status'] = 1
+        response['mesage'] = 'permission denied'
+    return json.dumps(response)
 
 
 @app.context_processor
@@ -530,3 +558,6 @@ def down():
 	app.run()
 	print __name__
 	print app"""
+
+
+# git diff --name-only --diff-filter=U
