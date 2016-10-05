@@ -52,3 +52,10 @@ def aggregate_domain(id , collection_name):
 def aggregateFunc(id, collection_name):
     if collection_name == "projects":
         return projects.aggregate([{'$match' : {'projectMembers' : id}} , {'$group' : {'_id': '$technology', 'projectName' : {'$push' : '$projectName'}, 'projectDescription' : {'$push': '$projectDescription'}, 'projectId' : {'$push' : '$_id'}, 'projectOwner' : {'$push' : '$owner'}}}])
+
+def searchFunc(chips):
+    projects.create_index([('chips', 'text'),('technology' , 'text')])
+    cursor =  projects.find({'$text' : {'$search' :chips}})
+    #cursor = db.command('text','chips',search=chips)
+    #projects.drop_indexes()
+    return  cursor

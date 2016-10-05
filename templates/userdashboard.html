@@ -108,51 +108,78 @@
                         <li class="tab"> <a class="waves-effect white-text" href="#search-project"> Browse Projects</a> </li>
                     </ul>
 
+
                      <div id="search-project" class="tab-content">
                    <div class="row" style="background-color:darkslategrey; margin-right: 20px">
-                         <div class="col l2 m3 s12 center-align">
+                         <form id="searchForm">
+                       <div class="col l4 m4 s12 center-align">
                             <label style="color: white;">Domain</label>
-                       <select>
-                           <option value="1">Web Development</option>
-                           <option value="2">Machine Learning</option>
-                           <option value="3">Big Data</option>
-                           <option value="3">Information Security</option>
-                           <option value="3">3D Modelling</option>
-                           <option value="3">Big Data</option>
-                           <option value="3">Big Data</option>
-                           <option value="3">Big Data</option>
+                                <select multiple id="multiselection">
 
-                       </select>
-                             </div>
-                       <div class="col l3 m4 s12 center-align">
-                            <label style="color: white;">Technology</label>
-                                <select multiple>
+                                        <option value="Networking">Networking</option>
+                                        <option value="Database">Database</option>
+                                        <option value="Datawarehouse & Datamining">Datawarehouse & Datamining</option>
+                                        <option value="Mobile Computing">Mobile Computing</option>
+                                        <option value="Cloud Computing">Cloud Computing</option>
+                                        <option value="Internet of things6">Internet of things</option>
+                                        <option value="Network Security">Network Security</option>
+                                        <option value="Information Security">Information Security</option>
+                                        <option value="Operating Systems">Operating Systems</option>
+                                        <option value="Distributed and parallel OS">Distributed and parallel OS</option>
+                                        <option value="Web Mining">Web Mining</option>
+                                        <option value="Soft Computing">Soft Computing</option>
+                                        <option value="Embedded & Real Time">Embedded & Real Time</option>
+                                        <option value="Digital Signal/Image/Pattern Recognition">Digital Signal/Image/Pattern Recognition</option>
+                                        <option value="Software Engineering">Software Engineering</option>
+                                        <option value="GIS">GIS</option>
+                                        <option value="Multimedia & Animation">Multimedia & Animation</option>
+                                        <option value="BioInformatics">BioInformatics</option>
+                                        <option value="Machine Learning/NLP">Machine Learning/NLP</option>
+                                        <option value="Wireless Sensor Networks">Wireless Sensor Networks</option>
+                                        <option value="Software Testing">Software Testing</option>
+                                        <option value="Software Architecture">Software Architecture</option>
+                                        <option value="Service Oriented Architecture">Service Oriented Architecture</option>
+                                        <option value="Artificial Intelligence /Neural Networks">Artificial Intelligence /Neural Networks</option>
+                                        <option value="3D Modelling">3D Modelling</option>
+                                        <option value="Big Data Analysis">Big Data Analysis</option>
+                                        <option value="Usability Engineering">Usability Engineering</option>
+                                        <option value="Information Retrieval & Storage">Information Retrieval & Storage</option>
+                                        <option value="Data Analytic">Data Analytic</option>
+                                        <option value="Content based image/video retrieval">Content based image/video retrieval</option>
+                                        <option value="Web Engineering">Web Engineering</option>
+                                        <option value="Robotics Programming">Robotics Programming</option>
 
-                                        <option value="1">Django</option>
-                                        <option value="2">Flask</option>
-                                        <option value="3">Pyramid</option>
+
                                 </select>
                         </div>
-                         <div class="col l7 m5 s12">
+                         <div class="col l6 m6 s12" style="padding-right: 0px;">
 
                             <nav style="margin-top: 12px; background-color: white;">
                                  <div class="nav-wrapper">
-                                     <form>
+
 
                                          <div class="input-field">
                                         <input id="search" type="search" required><label for="search"><i class="fa fa-search" style="font-size: 25px; color: black"></i></label>
               <!-- I've put "red-text" class to emphasize -->
 
                                         </div>
-                                     </form>
+
                                  </div>
                             </nav>
 
-                         </div>
-                       </div>
 
+                         </div>
+                       <div class = "col l2 m2 s12 " style="padding-left: 0px">
+                           <input type="submit" value="submit" id="submitButton" class="btn" style="margin-top: 7%; height: 64px; border-radius: 0px;">
+                          </div>
+                             </form>
+                       </div>
+                    <div class="row" id="foundResults">
+
+                    </div>
 
                    </div>
+
                     <div id="all-projects" class="tab-content">
                         <div class="row">
 

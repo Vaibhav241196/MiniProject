@@ -294,11 +294,38 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 def down():
     return render_template('test.html')
 
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    requestData = request.get_json()
+    print "tejas"
+    print requestData
+    domainSearch = []
+    chipsSearch = []
+    domainSearch = requestData['domainSearch']
+    chipsSearch = requestData['chipSearch']
+    chipsSearch = chipsSearch+domainSearch
+    temp = []
+    count_temp = []
+    for i in chipsSearch:
+        tSearch_pointer = searchFunc(i)
+        #temp = list(set().union(temp,list(tSearch_pointer)))
+        for j in list(tSearch_pointer):
+            if j not in temp:
+                temp = temp+[j]
+                count_temp.append(1)
 
-"""if __name__ == "__main__":
-	print __name__
-	print app
-	print Flask
-	app.run()
-	print __name__
-	print app"""
+            else:
+                print temp.index(j)
+                count_temp[temp.index(j)] +=1
+                print "hello"
+    print count_temp
+    for i in temp:
+        i['_id'] = str(i['_id'])
+    return_list = []
+    length = len(temp)
+    for i in range(length):
+        return_list = return_list+[temp[(count_temp.index(max(count_temp)))]]
+        temp.remove(temp[(count_temp.index(max(count_temp)))])
+        count_temp.remove(max(count_temp))
+
+    return json.dumps({'array':return_list})
