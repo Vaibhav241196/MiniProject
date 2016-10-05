@@ -316,13 +316,18 @@ def change_branch():
 # incomplete
 @app.route('/new_branch', methods=['POST'])
 def create_branch():
-    proj_id = request.form['id']
-    new_branch = request.form['branch_name']
+
+    branch_data = request.get_json()
+    proj_id = branch_data.pop('id',None)
+
     project = find_unique({'_id': ObjectId(proj_id)}, projects)
     response = {}
+
     if project['owner'] == session['id']:
         chdir(app.root_path+'projects/' + str(proj_id))
         temp = call(['git', 'branch', str(change_branch)], shell=False)
+        update(proj_id,{'$push' : { 'branches' : branch_data }},'projects')
+
         if temp == 0:
             response['status'] = 0
             response['message'] = 'Branch successfully created'

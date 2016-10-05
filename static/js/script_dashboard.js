@@ -171,15 +171,16 @@ $(document).ready(function(){
             method: 'POST',
             data: post_data,
             dataType: 'json',
+            contentType: 'application/json'
         }).
             done(function(res) {
                 alert(res.message);
 
-                if (!res.status)
+                if (!res.status){
+                    $("#projects-branches ul").append('<li class="tab"> <a class="waves-effect white-text">' + post_data.branch_name +'</a></li>')
+                }
 
-                else
-
-
+                alert(res.message);
         });
 
     });

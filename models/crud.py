@@ -44,6 +44,7 @@ def update(id, modify, collection_name):
 
     elif collection_name == "commits":
         return commits.update({'_id': ObjectId(id)}, modify, upsert=False)
+
     else:
         return users.update({'_id': ObjectId(id)}, modify, upsert=False)
 
