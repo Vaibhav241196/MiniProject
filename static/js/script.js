@@ -140,7 +140,7 @@ $(document).ready(function (){
                 for(var i =0;i < data.length-1;i++)
                 {
                     console.log(i);
-                    $('#foundResults').append('<div class = "col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align" id='+data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projName+'</p></div>')
+                    $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align" id='+ data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projName+'</p></div>')
 
                 }
                // data.array[i].projectName
