@@ -182,24 +182,21 @@ def create_project():
     document = request.get_json()
     document['projectMembers'].append(session['id'])
     document['owner'] = session['id']
+    document['branches'] = [{'branch_name' : 'master' , 'members' : [ session['id'] ] }]
 
     project_id = insert(document, 'projects').inserted_id
 
     for i in document['projectMembers']:
         temp_update = update(i, {"$push": {'projects': str(project_id)}}, 'users')
 
-    makedirs('projects/' + str(project_id))
-    chdir(app.root_path+'projects/' + str(project_id))
+    makedirs(path.join(app.root_path,'../projects', str(project_id) ))
+    chdir(path.join(app.root_path,'../projects', str(project_id) ))
     call(['git', 'init'], shell=False)
-    return redirect(url_for('project_dashboard', id=project_id))
+    call(['git','commit','--allow-empty','-m','"Initial Empty Commit"'],shell=False)
 
-# function to create new folder
-@app.route('/create_folder/<folder_name>')
-def create_folder(folder_name):
-    makedirs(folder_name)
-    return json.dumps({'status': 0 , 'message': "Directory created successfully" })
+    return json.dumps({ 'id': str(project_id) } )
 
-# function to create new file
+# function to create new file and folders
 @app.route('/create_new', methods=['POST'])
 def create_file():
     name = request.form['name']
@@ -215,7 +212,7 @@ def create_file():
 
 # function to return the dictionary with the given branch name
 def return_members(branch_dict, branch_name):
-    if branch_dict['name'] == branch_name:
+    if branch_dict['branch_name'] == branch_name:
         return branch_dict['members']
     else:
         return
@@ -226,10 +223,11 @@ def return_members(branch_dict, branch_name):
 # 0 means permission denied
 def check_access(proj_id):
     user_id = session['id']
-    current_project = find_unique({'_id': ObjectId(proj_id)}, projects)
-    current_user = find_unique({'_id': ObjectId(user_id)}, users)
+    print proj_id
+    current_project = find_unique({'_id': ObjectId(proj_id)},'projects')
+    current_user = find_unique({'_id': ObjectId(user_id)},'users')
     branch_name = check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
-    branch_members = filter(lambda x: return_members(x, branch_name), current_project['branch'])
+    branch_members = filter(lambda x: return_members(x, branch_name), current_project['branches'])
     if str(user_id) == current_project['owner']:
         return 1
     elif str(user_id) in branch_members:
@@ -241,7 +239,6 @@ def check_access(proj_id):
 # function to return the list of directories and files in the current directory
 def return_list():
     curr_files = listdir(curdir)  # list of files and directories
-
     print curr_files
 
     list_dir = {
@@ -258,14 +255,15 @@ def return_list():
     return list_dir
 
 
-# working properly with double click for initial loading of the project
-# i must also get the branch of the user
+# Function to render project dashboard home page on get request and
+# to traverse through files and folders and post request
+
 @app.route('/project_dashboard/<id>', methods=['GET','POST'])
 def project_dashboard(id):
 
     print "Hello"
 
-    project_path = path.join(app.root_path,'projects', id)
+    project_path = path.join(app.root_path,'../projects', id)
 
     if request.method == 'GET':
         project = find_unique({'_id': ObjectId(id)}, 'projects')
@@ -295,19 +293,20 @@ def project_dashboard(id):
 # returns the list of folders and files after git checkout
 @app.route('/checkout', methods=['POST'])
 def change_branch():
-    proj_id = request.form['id']
+    proj_id = request.form['proj_id']
     change_branch = request.form['branch_name']
-    chdir(app.root_path+'projects/' + str(proj_id))
+    chdir(path.join(app.root_path,'../projects',str(proj_id)))
     temp = call(['git', 'checkout', str(change_branch)], shell=False)
     response = {}
     if temp == 1:
         response['status'] = 1
-        response['message'] = 'Please, commit your changes or stash them before you can switch branches.'
+        response['message'] = 'Please, commit your changes before you can switch branches.'
     else:
         response['status'] = 0
         response['message'] = 'Switching to ' + str(change_branch)
+
     list_dir = return_list()
-    return json.dumps(list_dir, response)
+    return json.dumps({'list_dir': list_dir, 'response': response })
 
 
 # function to create new git branch input (project id,new branch name)
@@ -317,15 +316,19 @@ def change_branch():
 @app.route('/new_branch', methods=['POST'])
 def create_branch():
 
+    print "In create branch"
     branch_data = request.get_json()
     proj_id = branch_data.pop('id',None)
 
-    project = find_unique({'_id': ObjectId(proj_id)}, projects)
+    print proj_id
+    project = find_unique({'_id': ObjectId(proj_id)},'projects')
+    print project
+    print branch_data
     response = {}
 
     if project['owner'] == session['id']:
-        chdir(app.root_path+'projects/' + str(proj_id))
-        temp = call(['git', 'branch', str(change_branch)], shell=False)
+        chdir(path.join(app.root_path,'../projects', proj_id))
+        temp = call(['git', 'branch', str(branch_data['branch_name'])], shell=False)
         update(proj_id,{'$push' : { 'branches' : branch_data }},'projects')
 
         if temp == 0:
@@ -337,6 +340,7 @@ def create_branch():
     else:
         response['status'] = 1
         response['message'] = 'Permission denied'
+
     return json.dumps(response)
 
 
@@ -347,7 +351,7 @@ def create_branch():
 def return_files():
     proj_id = request.form['id']
     path = request.form['path']
-    chdir(app.root_path+'projects/' + str(proj_id) + '/' + path)
+    chdir(path.join(app.root_path,'../projects',str(proj_id),path))
     list_dir = return_list()
     return json.dumps(list_dir)
 
@@ -364,9 +368,9 @@ def delete_files():
     response = {}
     if check_access(proj_id):
         try:
-            remove('projects/' + str(proj_id) + '/' + str(path))
+            remove(path.join(app.root_path,'../projects' ,str(proj_id),str(path)))
         except:
-            rmtree('projects/' + str(proj_id) + '/' + str(path))
+            rmtree(path.join(app.root_path,'../projects' ,str(proj_id),str(path)))
         response['status'] = 0
         response['message'] = 'Successfully deleted'
     else:
@@ -382,8 +386,8 @@ def delete_files():
 def download_path():
     proj_id = request.form['id']
     path = request.form['path']
-    call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id) + str(path)], shell=False)
-    temp_path = path.join(app.root_path + '/projects')
+    call(['tar', '-czvf', path.join(app.root_path , '../projects', str(proj_id) ,'.tar.gz'), path.join(app.root_path,'../projects',str(proj_id) , str(path))], shell=False)
+    temp_path = path.join(app.root_path , '../projects')
     return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
 
 
@@ -432,35 +436,36 @@ def commit_log():
 # input (project id,path)
 @app.route('/edit', methods=['POST'])
 def edit_file():
-    proj_id = request.form['id']
+    # proj_id = request.form['id']
     path = request.form['path']
-    location = app.root_path + '/projects' + str(proj_id) + str(path)
+    location =  str(path)
 
     fileobject = open(location, "r")
     loadbuffer = fileobject.read()
     fileobject.close()
-    return json.dumps(loadbuffer)
+    return loadbuffer
 
 
 # function to save the contents of the file
 # input (project id, path, content of the file)
 @app.route('/save', methods=['POST'])
 def save_file():
-    proj_id = request.form['id']
+    proj_id = request.form['proj_id']
     path = request.form['path']
-    code = request.form['user_code']
+    code = request.form['code']
     response = {}
+
     if check_access(proj_id):
-        location = app.root_path + '/projects' + str(proj_id) + str(path)
+        location =  str(path)
         fileobject = open(location, "w")
         fileobject.write(code)
         fileobject.close()
-        reponse = {
+        response = {
             'status': 0,
             'message': 'Successfully overwritten '
         }
     else:
-        reponse = {
+        response = {
             'status': 1,
             'message': 'Permission Denied'
         }
@@ -536,8 +541,8 @@ def remove():
 @app.route('/download', methods=['GET', 'POST'])
 def download():  # extension problem
     proj_id = request.form['download-project-id']
-    call(['tar', '-czvf', 'projects/' + str(proj_id) + '.tar.gz', 'projects/' + str(proj_id)], shell=False)
-    temp_path = path.join(app.root_path + '/projects')
+    call(['tar', '-czvf', path.join(app.root_path,'../projects' , str(proj_id) ,'.tar.gz') , path.join(app.root_path,'../projects',str(proj_id)) ] ,shell=False)
+    temp_path = path.join(app.root_path + '../projects')
     return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
 
 
@@ -619,11 +624,6 @@ def dated_url_for(endpoint, **values):
 
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
-
-@app.route('/down', methods=['GET', 'POST'])
-def down():
-    return render_template('test.html')
 
 
 """if __name__ == "__main__":

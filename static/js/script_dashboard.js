@@ -87,7 +87,7 @@ $(document).ready(function(){
                             if(a.indexOf(b) == 0)
                                 return 1;
                             else if(b.indexOf(a) == 0)
-                                return -1
+                                return -1;
 
                             else
                                 return a-b;
@@ -102,14 +102,17 @@ $(document).ready(function(){
                             if (i > 0)
                                 $(".folders:nth-child(" + i + ")").after('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> </td></tr>');
                             else
-                                $(".folders:first-child").before('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> </td></tr>');
+                                // $(".folders:first-child").before('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> </td></tr>');
+                                $("tbody").prepend('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> </td></tr>');
+
                         }
 
                         else if (type == 'new-file') {
                              if (i > 0)
-                                $(".files:nth-child(" + i + ")").after('<tr class="folders"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
+                                $(".files:nth-child(" + i + ")").after('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
                              else
-                                $(".files:first-child").before('<tr class="folders"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
+                                // $(".files:first-child").before('<tr class="folders"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
+                                $("tbody").append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
                         }
             }
         }).
@@ -158,18 +161,17 @@ $(document).ready(function(){
 
     $("form#add-new-branch").submit(function (evt) {
         evt.preventDefault();
-
+        console.log("Form submit");
         var post_data = {};
 
-        post_data.branch_name = $(evt.target).find('[name="branch-name"]');
-        post_data.members = $(evt.target).find('[name="members"]');
+        post_data.branch_name = $(evt.target).find('[name="branch-name"]').val();
+        post_data.members = $(evt.target).find('[name="members"]').val();
         post_data.id = $("#project_id").text();
 
         $.ajax({
-
-            url: '/new-branch',
+            url: '/new_branch',
             method: 'POST',
-            data: post_data,
+            data: JSON.stringify(post_data),
             dataType: 'json',
             contentType: 'application/json'
         }).
@@ -179,12 +181,88 @@ $(document).ready(function(){
                 if (!res.status){
                     $("#projects-branches ul").append('<li class="tab"> <a class="waves-effect white-text">' + post_data.branch_name +'</a></li>')
                 }
-
-                alert(res.message);
+        }).
+            fail(function(err){
+                console.log(err);
         });
 
     });
 
+    /* ============= For branch checkout ========================================= */
+
+    $(".branches").click(function(evt){
+        evt.preventDefault();
+
+        var proj_id = $("#project_id").text();
+        var branch_name = $(this).text();
+
+        var post_data = { proj_id : proj_id, branch_name : branch_name };
+
+        $.ajax({
+            url: '/checkout',
+            method: 'POST',
+            data: post_data,
+            dataType: 'json',
+        }).
+            done(function(res){
+
+            if(!res.response.status)
+                displayDirStructure(res.list_dir);
+
+            alert(res.response.message)
+        }).
+            fail(function(err){
+            console.log(err);
+        })
+    });
+
+    /* ============================ For editing ================================= */
+
+    $(".edit").click(function(){
+        var path = $(this).parent().find("p").text();
+
+        $.ajax({
+            url: '/edit',
+            method: 'POST',
+            data: { path : path },
+            dataType: 'text',
+        }).
+            done(function(res){
+                $(".modal #file-path").text(path);
+                $(".modal #code").text(res);
+                editor.setValue(res);
+
+        }).
+            fail(function(err){
+                console.log("In fail");
+                console.log(err);
+        });
+    });
+
+    /* =========================== For saving file ============================= */
+    $(".save").click(function(){
+
+        var post_data = {};
+        post_data.proj_id = $("#project_id").text();
+        post_data.path = $(".modal #file-path").text();
+        post_data.code = editor.getValue();
+
+        $.ajax({
+            url : '/save',
+            method: 'post',
+            data: post_data,
+            dataType: 'json',
+        }).
+            done(function(res){
+                if(res.status)
+                    editor.setValue($(".modal #code").text());
+
+                alert(res.message);
+        }).
+            fail(function(err){
+            console.log(err);
+        })
+    });
 });
 
 function changeDir(dir_path,callback){
@@ -199,23 +277,28 @@ function changeDir(dir_path,callback){
     }).
     done(function(res){
 
-        var table = $("table.project-directory tbody");
-        table.html("");
-
-        for (d in res.directories){
-            table.append('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + res.directories[d] + '/</p> </td></tr>')
-       }
-
-       for (f in res.files){
-            table.append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + res.files[f] + '</p> </td></tr>')
-       }
-
+       displayDirStructure(res);
        callback(res);
     }).
 
     fail(function(err) {
         console.log(err);
     });
+}
 
+
+// =========================== Display the directory structure fetched from server =================================
+
+function displayDirStructure(res){
+    var table = $("table.project-directory tbody");
+    table.html("");
+
+    for (d in res.directories){
+        table.append('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + res.directories[d] + '/</p> </td></tr>')
+    }
+
+    for (f in res.files){
+        table.append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + res.files[f] + '</p> </td></tr>')
+    }
 
 }

@@ -15,7 +15,7 @@
 
 <body>
 
-    <div id="proj_id">{{ project['_id'] }}</div>
+    <div id="project_id" class="hide">{{ project['_id'] }}</div>
 
     <div class="navbar-fixed">
         <nav class="dark-primary-color">
@@ -124,13 +124,12 @@
             <li class="no-padding">
                 <ul class="collapsible collapsible-accordion">
                   <li>
-                  <a class="waves-effect white-text collapsible-header" href="#my-projects">BRANCHES</a>
-                    <div class="collapsible-body" id="projects-branches">
+                  <a class="waves-effect white-text collapsible-header" href="#project-branches">BRANCHES</a>
+                    <div class="collapsible-body" id="project-branches">
                       <ul>
-                        <li class="tab"> <a class="waves-effect white-text" >Master</a></li>
-                        <li class="tab"> <a class="waves-effect white-text"> |--Tejas</a></li>
-                        <li class="tab"> <a class="waves-effect white-text"> |--Vaibhav</a></li>
-                        <li class="tab"> <a class="waves-effect white-text"> |--Suhavan</a></li>
+                          {%  for b in project['branches'] %}
+                            <li class="tab"> <a class="waves-effect white-text branches">{{ b['branch_name'] }}</a></li>
+                          {% endfor %}
                       </ul>
                     </div>
                   </li>
@@ -156,13 +155,22 @@
                     <tbody>
                         {% for d in list_dir['directories'] %}
                             <tr class="folders">
-                                <td> <i class="fa fa-folder"></i> <p>{{ d }}/</p> </td>
+                                <td> <i class="fa fa-folder"></i> <p>{{ d }}/</p>
+                                    <a class="download right" href="">Download</a>
+                                    <a class="delete right" href="">Delete</a>
+                                    <a class="edit right modal-trigger" href="#edit-modal">Edit</a>
+                                </td>
                             </tr>
                         {% endfor %}
 
                         {% for f in list_dir['files'] %}
                             <tr class="files">
-                                <td> <i class="fa fa-file-code-o"></i> <p>{{ f }}</p> </td>
+                                <td>
+                                    <i class="fa fa-file-code-o"></i> <p>{{ f }}</p>
+                                        <a class="download right" href="">Download</a>
+                                        <a class="delete right" href="">Delete</a>
+                                        <a class="edit right modal-trigger" href="#edit-modal">Edit</a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -241,6 +249,7 @@
         </div>
     </div>
 
+{#   Add New branch modal #}
     <div class="modal" id="new-branch">
         <div class="modal-content">
             <div class="row">
@@ -262,11 +271,24 @@
 
                         <label>Select Members</label>
                     </div>
+
+                    <div class="center-align">
+                        <input type="submit" name="submit" class="btn waves-effect waves-light" value="Submit" />
+                    </div>
                 </form>
-                <div class="center-align">
-                    <input type="submit" name="submit" class="btn waves-effect waves-light" value="Submit" />
-                </div>
             </div>
+        </div>
+    </div>
+
+{#  Editor modal  #}
+    <div class="modal" id="edit-modal">
+        <div id="file-path" class="hide"></div>
+        <div id="code" class="hide"></div>
+        <div class="small-nav fixed">
+            <a class="btn waves-effect waves-light save">SAVE</a>
+        </div>
+
+        <div id="editor" style="height: 400px">
         </div>
     </div>
 
@@ -280,6 +302,12 @@
 
     <script rel="script" type="text/javascript" src="{{ url_for('static' , filename='js/jquery-3.1.0.min.js') }}" ></script>
     <script rel="script" type="text/javascript" src="{{ url_for('static' , filename='js/materialize.min.js' ) }}"></script>
+    <script src="{{ url_for('static', filename='js/ace-builds-master/src-noconflict/ace.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/javascript");
+    </script>
     <script rel="script" type="text/javascript" src="{{ url_for('static' , filename='js/script_dashboard.js' ) }}"></script>
 
 </body>
