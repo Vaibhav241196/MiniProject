@@ -76,4 +76,4 @@ def searchFunc(chips):
     cursor =  projects.find({'$text' : {'$search' :chips}})
     #cursor = db.command('text','chips',search=chips)
     #projects.drop_indexes()
-    return  cursor
+    return cursor

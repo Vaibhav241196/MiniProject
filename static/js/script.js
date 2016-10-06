@@ -152,12 +152,13 @@ $(document).ready(function (){
             $.ajax({
                 url: '/search',
                 method: 'POST' ,
-                data: data,
+                data: JSON.stringify(data),
                 dataType: 'json',
-                contentType: 'json',
+                contentType: 'application/json',
 
             }).done(function (data) {
 
+                console.log(data);
                 for(var i =0;i < data.array.length-1;i++)
                 {
                     console.log(i);
