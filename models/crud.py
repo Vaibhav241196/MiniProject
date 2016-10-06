@@ -4,6 +4,7 @@ from bson.objectid import ObjectId
 users = db.users
 projects = db.projects
 commits = db.commits
+projects.create_index([('chips', 'text'),('technology' , 'text'), ('projectDescription','text')])
 
 
 def insert(document, collection_name):
@@ -72,8 +73,8 @@ def aggregateFunc(id, collection_name):
         return projects.aggregate([{'$match' : {'projectMembers' : id}} , {'$group' : {'_id': '$technology', 'projectName' : {'$push' : '$projectName'}, 'projectDescription' : {'$push': '$projectDescription'}, 'projectId' : {'$push' : '$_id'}, 'projectOwner' : {'$push' : '$owner'}}}])
 
 def searchFunc(chips):
-    projects.create_index([('chips', 'text'),('technology' , 'text')])
+
     cursor =  projects.find({'$text' : {'$search' :chips}})
     #cursor = db.command('text','chips',search=chips)
-    #projects.drop_indexes()
+   # projects.drop_indexes()
     return cursor

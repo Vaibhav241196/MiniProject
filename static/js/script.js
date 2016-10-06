@@ -146,7 +146,6 @@ $(document).ready(function (){
             data = { domainSearch: domainSearch, chipSearch: chipSearch};
            // alert(data.domainSearch)
             //alert(multiselect);
-            alert(chipSearch[2])
             $.ajax({
                 url: '/search',
                 method: 'POST' ,
@@ -157,10 +156,14 @@ $(document).ready(function (){
             }).done(function (data) {
 
                 console.log(data);
-                for(var i =0;i < data.array.length-1;i++)
+                console.log(data.array.length);
+                $('#foundResults').empty();
+                $('#foundResults').append(' <h5>Following Results found:</h5>');
+                for(var i =0;i < data.array.length;i++)
                 {
                     console.log(i);
-                    $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align" id='+ data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projName+'</p></div>')
+
+                    $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align searchResults modal-trigger" id='+ data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projectName+'</p></div>');
 
                 }
                // data.array[i].projectName
@@ -173,6 +176,14 @@ $(document).ready(function (){
 
             });
         });
+
+
+    $(".searchResults").onclick(function(evt){
+        evt.preventDefault();
+        $('#foundResults').openModal();
+
+
+    });
     //
     // <div class="row">
     //
