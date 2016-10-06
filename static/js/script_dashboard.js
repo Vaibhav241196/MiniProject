@@ -5,6 +5,8 @@
 
 $(document).ready(function(){
 
+    current_branch = $("#current_branch").text();
+
     // For select input
     $('select').material_select();
 
@@ -232,8 +234,7 @@ $(document).ready(function(){
                 $(".modal #code").text(res);
                 editor.setValue(res);
 
-        }).
-            fail(function(err){
+        }).fail(function(err){
                 console.log("In fail");
                 console.log(err);
         });
@@ -263,8 +264,149 @@ $(document).ready(function(){
             console.log(err);
         })
     });
+
+    /* =========================== For deleting file folder =================== */
+    $(".delete-path").click(function(evt){
+        evt.preventDefault();
+
+        var target = $(this).parent().parent();
+        var data = {};
+        var flag = false;
+        data.proj_id = $("#project_id").text();
+        data.path = $(this).parent().find('p').text();
+
+        if (data.path[-1] == '/')
+            data.path = data.path.slice(0,-1);
+
+        $.ajax({
+            url: '/delete_path',
+            method: 'POST',
+            data: data,
+            dataType: 'json'
+        }).
+            done(function(data){
+                alert(data.message);
+
+                if(!data.status)
+                    target.remove();
+
+        }).
+            fail(function(err){
+            console.log(err)
+        });
+    });
+
+    /* =========================== For committing changes ====================== */
+    $("form#commit-changes-form").submit(function(evt){
+
+        evt.preventDefault();
+        var post_data = { proj_id : $("#project_id").text() , message : $(evt.target).find("[name='commit-message']").val() };
+
+        $.ajax({
+            url: '/commit',
+            method: 'post',
+            data: post_data,
+            dataType: 'json',
+        }).
+            done(function(res){
+                alert(res.message);
+
+                if(res.status != 1 && res.status != 3)
+                    displayDirStructure(res.list_dir);
+
+        }).
+            fail(function(err){
+                console.log(err);
+        });
+
+    });
+
+    /* =========================== For merging changes to master ========================= */
+    $("#merge").click(function(){
+        var post_data = { proj_id : $("#project_id").text() , parent_branch : 'master' , child_branch: current_branch };
+
+        $.ajax({
+            url: '/merge',
+            method: 'post',
+            data: post_data,
+            dataType: 'json',
+        }).
+            done(function(res){
+                alert(res.message);
+        }).
+            fail(function(err){
+                console.log(err);
+        });
+    });
+
+
+    /* ========================= For adding new member to project ======================== */
+    $("a#members-form-submit").click(function(evt){
+
+        console.log('Test');
+        evt.preventDefault();
+        var userName = $("input#member-name").val();
+
+        $.ajax({
+            url: '/add_members',
+            method: 'post',
+            data : { member_name: userName , proj_id : $("#project_id").text()},
+            dataType : 'json',
+        }).
+            done(function(res) {
+
+            if(res.status === 0) {
+
+                var member_panel = $(".member-panel:last-of-type");
+
+                if(member_panel.length == 0) {
+                    console.log("In if");
+                    member_panel.after("<div class='member-panel' id=" + res.member.id + ">" + res.member.userName + "<i class='fa fa-close right'></i> </div>");
+                }
+                else {
+                    console.log("In else");
+                    $(".project-members input").before("<div class='member-panel' id=" + res.member.id + ">" + res.member.userName + "<i class='fa fa-close right'></i> </div>")
+                }
+                $("input#member-name").val("");
+            }
+
+            else if (res.status === 1 || res.status === 2)
+                alert(res['message']);
+
+        }).
+            fail(function (err) {
+                console.log(err);
+        });
+
+    });
+
+    $(".remove").click(function(evt){
+        evt.preventDefault();
+
+        console.log($(this).parent().attr('id'));
+        var post_data = { proj_id : $("#project_id").text() , member_id : $(this).parent().attr('id') };
+        var target = $(this);
+
+        $.ajax({
+            url: '/remove_members',
+            method: 'post',
+            data: post_data,
+            dataType: 'json',
+        }).
+            done(function(res) {
+                if(res.status === 0)
+                    target.parent().remove();
+                alert(res.message);
+
+        }).
+            fail(function(err) {
+                console.log(err);
+        })
+    });
 });
 
+
+/* =========================== Change the current directory ==================== */
 function changeDir(dir_path,callback){
     console.log("Hello");
     var data = { dir_path: dir_path };
@@ -288,7 +430,6 @@ function changeDir(dir_path,callback){
 
 
 // =========================== Display the directory structure fetched from server =================================
-
 function displayDirStructure(res){
     var table = $("table.project-directory tbody");
     table.html("");
@@ -300,5 +441,4 @@ function displayDirStructure(res){
     for (f in res.files){
         table.append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + res.files[f] + '</p> </td></tr>')
     }
-
 }

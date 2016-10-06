@@ -15,8 +15,9 @@
 
 <body>
 
+{######################################## Hidden Fields ###############################################}
     <div id="project_id" class="hide">{{ project['_id'] }}</div>
-
+    <div id="current_branch" class="hide">{{ current_branch }}</div>
     <div class="navbar-fixed">
         <nav class="dark-primary-color">
             <div class="nav-wrapper">
@@ -91,15 +92,15 @@
 
             <div class="col s10 offset-s1 project-members">
                 {% for m in members %}
-                    <div class="member-panel" id="{{ m['_id'] }}">{{ m['userName'] }} <i class="fa fa-close right"></i> </div>
+                    <div class="member-panel" id="{{ m['_id'] }}">{{ m['userName'] }} <i class="fa fa-close right remove"></i> </div>
                 {% endfor %}
 
                   <input type="text" name="member-name" id="member-name"  placeholder="Add User ... "/>
                   <a id="members-form-submit" class="btn-floating btn-large waves-effect waves-light red" href="#"> <i class="fa fa-2x fa-user-plus white-text    "></i> </a>
-              </div>
             </div>
         </div>
     </div>
+
 
 
 
@@ -137,6 +138,8 @@
             </li>
             <li class="divider"></li>
             <li class="tab"> <a class="waves-effect white-text modal-trigger" href="#new-branch">Create New Branch</a></li>
+            <li class="tab"> <a class="waves-effect white-text modal-trigger" href="#commit-changes">Commit Changes</a></li>
+            <li class="tab"> <a class="waves-effect white-text" id="merge">Merge to Master</a></li>
         </ul>
 
         <div class="row">
@@ -156,8 +159,8 @@
                         {% for d in list_dir['directories'] %}
                             <tr class="folders">
                                 <td> <i class="fa fa-folder"></i> <p>{{ d }}/</p>
-                                    <a class="download right" href="">Download</a>
-                                    <a class="delete right" href="">Delete</a>
+                                    <a class="download-path right" href="">Download</a>
+                                    <a class="delete-path right" href="">Delete</a>
                                     <a class="edit right modal-trigger" href="#edit-modal">Edit</a>
                                 </td>
                             </tr>
@@ -167,8 +170,8 @@
                             <tr class="files">
                                 <td>
                                     <i class="fa fa-file-code-o"></i> <p>{{ f }}</p>
-                                        <a class="download right" href="">Download</a>
-                                        <a class="delete right" href="">Delete</a>
+                                        <a class="download-path right" href="">Download</a>
+                                        <a class="delete-path right" href="">Delete</a>
                                         <a class="edit right modal-trigger" href="#edit-modal">Edit</a>
                                 </td>
                             </tr>
@@ -289,6 +292,21 @@
         </div>
 
         <div id="editor" style="height: 400px">
+        </div>
+    </div>
+
+    <div class="modal" id="commit-changes">
+        <div class="modal-content">
+            <form id="commit-changes-form">
+                <h3 class="center-align">Commit</h3>
+                <div class="col s10 input-field">
+                    <input type="text" name="commit-message" placeholder="Commit Message" />
+                </div>
+
+                <div class="input-field center-align">
+                    <input type="submit" name="submit" value="Commit" />
+                </div>
+            </form>
         </div>
     </div>
 

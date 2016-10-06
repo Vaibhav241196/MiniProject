@@ -77,4 +77,3 @@ def searchFunc(chips):
     #cursor = db.command('text','chips',search=chips)
     #projects.drop_indexes()
     return  cursor
-

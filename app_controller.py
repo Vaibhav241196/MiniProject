@@ -169,6 +169,7 @@ def log_out():
 def check_members():
     username = request.form['member_name'];
     m = find_unique({'userName': username}, 'users')
+    response = {}
 
     if m:
         if str(m['_id']) == session['id']:
@@ -178,6 +179,51 @@ def check_members():
 
     else:
         return json.dumps({"status": 2, "message": "No such user found"})
+
+@app.route('/add_members',methods=['POST'])
+def add_members():
+    proj_id = request.form['proj_id']
+    username = request.form['member_name']
+
+    m = find_unique({'userName': username}, 'users')
+    project = find_unique({'_id' : ObjectId(proj_id) },'projects')
+
+    if m:
+        if str(m['_id']) in project['projectMembers']:
+            response = {"status": 1, "message": "Already a member of the project"}
+
+        else:
+            member = { 'id': str(m['_id']), 'userName': m['userName'] }
+            update(proj_id,{'$push' : { 'projectMembers' : str(m['_id']) }},'projects')
+            response = {"status": 0, "member": member, "message": "Member added successfully"}
+
+    else:
+        response = {"status": 2, "message": "No such user found"}
+
+    return json.dumps(response)
+
+
+@app.route('/remove_members',methods=['POST'])
+def remove_members():
+    proj_id = request.form['proj_id']
+    userId = request.form['member_id']
+
+    m = find_unique({'_id': ObjectId(userId) }, 'users')
+    project = find_unique({'_id' : ObjectId(proj_id) },'projects')
+
+    if m:
+        if str(m['_id']) in project['projectMembers']:
+            update(proj_id, {'$pull': {'projectMembers': str(m['_id'])}},'projects')
+            response = {"status": 0, "message": "Member successfully removed"}
+
+        else:
+            response = {"status": 1,  "message": "No such member found in project"}
+
+    else:
+        response = {"status": 2, "message": "No such user found"}
+
+    return json.dumps(response)
+
 
 # creates new project and redirects to the project home page
 @app.route('/create_project', methods=['POST'])
@@ -278,9 +324,11 @@ def project_dashboard(id):
             members.append(user)
 
         chdir(project_path)
-
         list_dir = return_list()
-        return render_template('project_dashboard.html', project=project, members=members , list_dir=list_dir)
+        current_branch = check_output(['git','rev-parse','--abbrev-ref','HEAD'],shell=False)
+        current_branch = current_branch[:-1]
+
+        return render_template('project_dashboard.html', project=project, members=members , list_dir=list_dir,current_branch=current_branch)
 
     elif request.method == 'POST':
         dir_path = request.form['dir_path']
@@ -333,11 +381,11 @@ def create_branch():
     if project['owner'] == session['id']:
         chdir(path.join(app.root_path,'../projects', proj_id))
         temp = call(['git', 'branch', str(branch_data['branch_name'])], shell=False)
-        update(proj_id,{'$push' : { 'branches' : branch_data }},'projects')
 
         if temp == 0:
             response['status'] = 0
             response['message'] = 'Branch successfully created'
+            update(proj_id, {'$push': {'branches': branch_data}}, 'projects')
         else:
             response['status'] = 1
             response['message'] = 'Choose another name'
@@ -365,16 +413,15 @@ def return_files():
 # path format is same as in the above function
 @app.route('/delete_path', methods=['POST'])
 def delete_files():
-    proj_id = request.form['id']
-    path = request.form['path']
-    current_project = find_unique({'_id': ObjectId(proj_id)}, projects)
-    current_user = find_unique({'_id': ObjectId(session['_id'])}, users)
+    proj_id = request.form['proj_id']
+    delete_path = request.form['path']
+
     response = {}
     if check_access(proj_id):
         try:
-            remove(path.join(app.root_path,'../projects' ,str(proj_id),str(path)))
+            remove(path.join(app.root_path,'../projects',str(proj_id),str(delete_path)))
         except:
-            rmtree(path.join(app.root_path,'../projects' ,str(proj_id),str(path)))
+            rmtree(path.join(app.root_path,'../projects' ,str(proj_id),str(delete_path)))
         response['status'] = 0
         response['message'] = 'Successfully deleted'
     else:
@@ -399,7 +446,7 @@ def download_path():
 # input (project id,commnt message)
 @app.route('/commit', methods=['POST'])
 def commit_changes():
-    proj_id = request.form['id']
+    proj_id = request.form['proj_id']
     message = request.form['message']
     response = {}
     if check_access(proj_id):
@@ -616,29 +663,45 @@ def notify_user():
 # input (project_id,parent_branch,child_branch)
 # parent_branch - branch in which the child_branch will be merged
 # check the output check_output it may have error in files_list
-app.route('/merge', methods=['POST'])
+@app.route('/merge', methods=['POST'])
 def merge_branch():
     parent_branch = request.form['parent_branch']
     child_branch = request.form['child_branch']
     project_id = request.form['proj_id']
-    id = session['_id']
+    id = session['id']
     current_project = find_unique({'_id':ObjectId(project_id)},'projects')
     response = {}
+
     if id == current_project['owner']:
-        chdir(app.route_path+'/projects/'+str(project_id))
-        call(['git', 'checkout', str(parent_branch)], shell=False)
-        temp = call(['git', 'merge', str(child_branch)], shell=False)
-        if temp == 0:
-            response['status'] = 0
-            response['message'] = 'merge successful'
-        else:
-            files_list = check_output(['git', 'diff', '--name-only', '--diff-filter=U'], shell=False)
-            files_list.split('\n')
+        chdir(path.join(app.root_path,'../projects',str(project_id) ))
+        checkout_result = call(['git', 'checkout', str(parent_branch)], shell=False)
+
+        if checkout_result == 1:
             response['status'] = 1
-            response['message'] = files_list
+            response['message'] = "Please commit your changes to your local branch first"
+
+        else:
+
+            temp = call(['git', 'merge', str(child_branch)], shell=False)
+            list_dir = return_list()
+
+            if temp == 0:
+                response['status'] = 0
+                response['message'] = 'merge successful'
+                response['list_dir'] = list_dir
+            else:
+                files_list = check_output(['git', 'diff', '--name-only', '--diff-filter=U'], shell=False)
+                # files_list.split('\n')
+                response['status'] = 2
+                response['message'] = "There are merge conflicts in following files \n " + files_list + "\nYou will have to manually remove them"
+
+                files_list.split('\n')
+                response['conflicts'] = files_list
+                response['list_dir'] = list_dir
     else:
-        response['status'] = 1
-        response['mesage'] = 'permission denied'
+        response['status'] = 3
+        response['mesage'] = 'Permission Denied'
+
     return json.dumps(response)
 
 
@@ -678,7 +741,7 @@ def search():
 
     return json.dumps({'array':return_list})
 
-############################### Static file cache bursting code #####################################################
+################################# Static file cache bursting code #####################################################
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
