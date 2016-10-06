@@ -4,7 +4,6 @@
 
 $(document).ready(function (){
 
-
     var clickedFolder = null;
 
     // Navbar collapsible dropdown button initialization for mobile
@@ -132,11 +131,10 @@ $(document).ready(function (){
             $("#nav-bar-right").css("display", "none");
         }
     });
-    // $("#searchForm").submit()(function (evt) {
-        $('#submitButton').click(function(evt) {
 
+    $("#searchForm").submit(function (evt) {
+       // $('#submitButton').click(function(evt) {
             evt.preventDefault();
-
             var domainSearch = [];
             domainSearch = $('#multiselection').val();
             console.log(domainSearch);
@@ -148,7 +146,7 @@ $(document).ready(function (){
             data = { domainSearch: domainSearch, chipSearch: chipSearch};
            // alert(data.domainSearch)
             //alert(multiselect);
-            //alert(chipSearch[2])
+            alert(chipSearch[2])
             $.ajax({
                 url: '/search',
                 method: 'POST' ,

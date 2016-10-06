@@ -26,10 +26,11 @@
                           <a href="#!" class="brand-logo garamond"><strong>proHub</strong></a>
                           <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                           <ul class="right hide-on-med-and-down">
-                            <li><a href="#">Features</a></li>
+                           <li><a href="#notificationModal" class="modal-trigger"><i class=" fa fa-envelope" aria-hidden="true" id="dropLogo" style="color: white; font-size: 28px;"></i></a> </li>
                             <li style="float:right;"><a href="#" data-activates='dropdown1' class='dropdown-button '><img src="{{ url_for('static' , filename='images/userimage.png')}}" class="responsive-img circle" id="userImage" /><span><strong>Howdy {{ user['userName'] }}</strong></span></a></li>
 
                           </ul>
+
 
                           <ul id='dropdown1' class='dropdown-content'>
                                   <li><a href="#!"><i class=" waves-effect fa fa-camera " aria-hidden="true" id="dropLogo"></i>Change Pic</a></li>
@@ -39,11 +40,11 @@
                           </ul>
 
 
-                          <ul class="side-nav default-primary-color" id="mobile-demo">
+                          <ul class="side-nav" id="mobile-demo">
                               <li> <a class="waves-effect white-text" href="#my-projects"> My Projects </a></li>
                               <li> <a class="waves-effect white-text" href="#projects-shared" > Shared Projects </a></li>
                               <li> <a class="waves-effect white-text" href="#new-project" > New Project </a></li>
-                              <li> <a class="waves-effect white-text" href="#">Features</a></li>
+                              <li> <i class="waves-effect fa fa-envelope" aria-hidden="true" id="dropLogo"></i></li>
                               <li><a href="#!" style="color: white"><i class=" waves-effect fa fa-cog " aria-hidden="true" id="dropLogo"></i>Settings</a></li>
                               <li class="divider"></li>
                               <li><a href="/logout " style="color: white"><i class=" waves-effect fa fa-sign-out " aria-hidden="true" id="dropLogo"></i>Logout</a></li>
@@ -95,7 +96,29 @@
                      </div>
                 </div>
 
+                 <div id="notificationModal" class="modal">
+                    <div class="modal-content">
+                        <div class="row">
+                              <div class="s12 center-align" style="padding-bottom: 20px;"><h4>New Notifications</h4></div>
+                              <div class="s12" style="margin-bottom: 15px;">
+                                  <h6 style="display: inline"> {{ "USERNAME" }} wants to contribute to {{ "PROJECT" }}</h6>
+                                  <p style="display: inline;margin-left: 30%;"><a>Accept</a></p>
+                                   <p style="display: inline;margin-left: 2%" ><a>Decline</a></p><br><hr>
+                              </div>
+                               <div class="s12" style="margin-bottom: 15px;">
+                                  <h6 style="display: inline"> {{ "USERNAME" }} wants to contribute to {{ "PROJECT" }}</h6>
+                                  <p style="display: inline;margin-left: 30%;"><a>Accept</a></p>
+                                   <p style="display: inline;margin-left: 2%" ><a>Decline</a></p><br><hr>
+                              </div>
+                               <div class="s12" style="margin-bottom: 15px;">
+                                  <h6 style="display: inline"> {{ "USERNAME" }} wants to contribute to {{ "PROJECT" }}</h6>
+                                  <p style="display: inline;margin-left: 30%;"><a>Accept</a></p>
+                                   <p style="display: inline;margin-left: 2%" ><a>Decline</a></p><br><hr>
+                              </div>
 
+                        </div>
+                    </div>
+                </div>
 
                 <div class="content-main">
 

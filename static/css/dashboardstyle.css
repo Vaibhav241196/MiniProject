@@ -80,6 +80,7 @@ nav {
 /* For side nav */
 .side-nav.large-screen {
     top: 64px;
+
 }
 
 ul.tabs {
@@ -258,4 +259,6 @@ a#members-form-submit {
 /*{*/
     /*clear: both;*/
 /*}*/
+
+.modal { max-height: 95% !important } /* increase the width and height! */
 
