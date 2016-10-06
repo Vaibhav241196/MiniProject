@@ -23,15 +23,12 @@ def index():
 # using user id for getting the logged in user
 @app.route('/user_dashboard')
 def user_dashboard():
-
-    print "Hello in user dashboard"
+    response = {}
     userId = session['id']
     current_user = find_unique({'_id': ObjectId(userId)}, 'users')
-
-    response = {}
     response['message'] = current_user['userName']
-
     proj_list = []
+    proj_aggregate = []
     count = {}
     if 'projects' in current_user:
         for i in current_user['projects']:
@@ -46,7 +43,12 @@ def user_dashboard():
     value_myProjects = 0
     value_totalProjects = len(proj_list)
 
+
     myProjects = aggregate(str(userId), 'projects')
+
+    myProjects_domain = aggregate_domain(str(userId), 'projects')
+    projects_aggregated = aggregateFunc(str(userId), 'projects')
+
 
     for j in myProjects:
         value_myProjects = j['count']
@@ -55,7 +57,10 @@ def user_dashboard():
     count['myProjects'] = value_myProjects
     count['sharedProjects'] = value_totalProjects - value_myProjects
 
-    myProjects_domain = aggregate_domain(str(userId), 'projects')
+    for i in projects_aggregated:
+        proj_aggregate.append(i)
+
+    print proj_aggregate
 
     for i in myProjects_domain:
         count.update({i['_id']: i['count']})
@@ -260,7 +265,6 @@ def return_list():
 
 @app.route('/project_dashboard/<id>', methods=['GET','POST'])
 def project_dashboard(id):
-
     print "Hello"
 
     project_path = path.join(app.root_path,'../projects', id)
@@ -638,6 +642,43 @@ def merge_branch():
     return json.dumps(response)
 
 
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    requestData = request.get_json()
+    print "tejas"
+    print requestData
+    domainSearch = []
+    chipsSearch = []
+    domainSearch = requestData['domainSearch']
+    chipsSearch = requestData['chipSearch']
+    chipsSearch = chipsSearch+domainSearch
+    temp = []
+    count_temp = []
+    for i in chipsSearch:
+        tSearch_pointer = searchFunc(i)
+        #temp = list(set().union(temp,list(tSearch_pointer)))
+        for j in list(tSearch_pointer):
+            if j not in temp:
+                temp = temp+[j]
+                count_temp.append(1)
+
+            else:
+                print temp.index(j)
+                count_temp[temp.index(j)] +=1
+                print "hello"
+    print count_temp
+    for i in temp:
+        i['_id'] = str(i['_id'])
+    return_list = []
+    length = len(temp)
+    for i in range(length):
+        return_list = return_list+[temp[(count_temp.index(max(count_temp)))]]
+        temp.remove(temp[(count_temp.index(max(count_temp)))])
+        count_temp.remove(max(count_temp))
+
+    return json.dumps({'array':return_list})
+
+############################### Static file cache bursting code #####################################################
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
@@ -653,15 +694,3 @@ def dated_url_for(endpoint, **values):
 
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
-
-"""if __name__ == "__main__":
-	print __name__
-	print app
-	print Flask
-	app.run()
-	print __name__
-	print app"""
-
-
-# git diff --name-only --diff-filter=U
