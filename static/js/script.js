@@ -134,45 +134,46 @@ $(document).ready(function (){
 
     $("#searchForm").submit(function (evt) {
        // $('#submitButton').click(function(evt) {
-            evt.preventDefault();
-            var domainSearch = [];
-            domainSearch = $('#multiselection').val();
-            console.log(domainSearch);
-            var chipSearch = [];
-            var str = $('#search').val();
-            chipSearch = str.split(" ");
+        evt.preventDefault();
+        var domainSearch = [];
+        domainSearch = $('#multiselection').val();
+        console.log(domainSearch);
+        var chipSearch = [];
+        var str = $('#search').val();
+        console.log(str);
+        chipSearch = str.split(" ");
 
-            var data = {};
-            data = { domainSearch: domainSearch, chipSearch: chipSearch};
-           // alert(data.domainSearch)
-            //alert(multiselect);
-            alert(chipSearch[2])
-            $.ajax({
-                url: '/search',
-                method: 'POST' ,
-                data: JSON.stringify(data),
-                dataType: 'json',
-                contentType: 'application/json',
+        var data = {};
+        data = { domainSearch: domainSearch, chipSearch: chipSearch};
+       // alert(data.domainSearch)
+        //alert(multiselect);
+        alert(chipSearch[1]);
+        $.ajax({
+            url: '/search',
+            method: 'POST' ,
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
 
-            }).done(function (data) {
+        }).done(function (data) {
 
-                console.log(data);
-                for(var i =0;i < data.array.length-1;i++)
-                {
-                    console.log(i);
-                    $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align" id='+ data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projName+'</p></div>')
+            console.log(data);
+            for(var i =0;i < data.array.length-1;i++)
+            {
+                console.log(i);
+                $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align" id='+ data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projName+'</p></div>')
 
-                }
-               // data.array[i].projectName
+            }
+           // data.array[i].projectName
 
-              //  '<div class="" id=' + data.array[i]._id + ''
+          //  '<div class="" id=' + data.array[i]._id + ''
 
 
-            }).fail(function (err) {
-                console.log(err);
+        }).fail(function (err) {
+            console.log(err);
 
-            });
         });
+    });
     //
     // <div class="row">
     //
@@ -218,7 +219,6 @@ $(document).ready(function (){
     });
 
     $("#delete-project").click(function(evt){
-
         evt.preventDefault();
         console.log("In delete");
         var data = {};

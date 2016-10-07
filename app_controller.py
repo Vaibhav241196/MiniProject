@@ -69,7 +69,6 @@ def user_dashboard():
     print "Hello"
     return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count)
 
-
 @app.route('/signup', methods=['GET', 'POST'])
 def accept_signup():
     response = {}
@@ -339,6 +338,20 @@ def project_dashboard(id):
         list_dir['current'] = getcwd()[l:]
 
         return json.dumps(list_dir)
+
+
+@app.route('/get_commits',methods=['POST'])
+def get_commits():
+    project = request.form['proj_id']
+    branch  = request.form['branch']
+
+    commits = find({'project': project , 'branch' : branch },'commits')
+    commits = list(commits)
+
+    for c in commits:
+        c['_id'] = str(c['_id'])
+
+    return json.dumps({ 'commits' : list(commits) })
 
 
 # function to change branch input (project id,branch name)

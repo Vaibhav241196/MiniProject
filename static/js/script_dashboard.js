@@ -21,6 +21,34 @@ $(document).ready(function(){
             $('.project-directory').animate(({width: "70%"}));
             $('.commit-log-div').css('border-left','2px solid #888888');
             commit_log_open = true;
+
+            $.ajax({
+                url : '/get_commits',
+                method: 'post',
+                data : {  proj_id : $("#project_id").text() , branch : $("#current_branch").text()  },
+                dataType: 'json',
+
+            }).done(function(res){
+
+                console.log(res);
+
+                $(".commit-log-div").empty();
+                var commit_card = '<div class="card blue-grey darken-1"> <div class="card-content white-text"> <p class="commit-message"></p> \
+                    <p class="author"></p> <p class="date-time" </div> <div class="card-action"> \
+                    <a href="#">This is a link</a> <a href="#">This is a link</a> </div></div>'
+
+                var commits = res.commits;
+
+                for (c in commits) {
+                    $(".commit-log-div").append(commit_card);
+                    $(".commit-log-div .card:last-of-type .commit-message").text(commits[c].comment);
+                    $(".commit-log-div .card:last-of-type .author").text(commits[c].user);
+                    $(".commit-log-div .card:last-of-type .date-time").text(commits[c].date);
+                }
+            }).
+                fail(function(err){
+                    console.log(err);
+            })
         }
         
         else {
