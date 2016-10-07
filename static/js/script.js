@@ -2,7 +2,7 @@
  * Created by lite on 12/8/16.
  */
 
-$(document).ready(function (){
+$(document).ready(function() {
 
     var clickedFolder = null;
 
@@ -24,9 +24,9 @@ $(document).ready(function (){
     });
 
     console.log($('.chips.focus').prev());
-    $('.chips.focus').prev().css('color','red');
+    $('.chips.focus').prev().css('color', 'red');
 
-    $("a#members-form-submit").click(function(evt){
+    $("a#members-form-submit").click(function (evt) {
 
         console.log('Test');
         evt.preventDefault();
@@ -35,12 +35,11 @@ $(document).ready(function (){
         $.ajax({
             url: '/check_members',
             method: 'POST',
-            data : { member_name: userName },
-            dataType : 'json',
-        }).
-            done(function(res) {
+            data: {member_name: userName},
+            dataType: 'json',
+        }).done(function (res) {
 
-            if(res.status === 0) {
+            if (res.status === 0) {
                 $("#member-list").append("<li value=" + res.id + " class='member'>" + userName + "</li>");
                 $("input#member-name").val("");
             }
@@ -48,17 +47,16 @@ $(document).ready(function (){
             else if (res.status === 1)
                 alert(res['message']);
 
-            else if(res.status === 2) {
+            else if (res.status === 2) {
                 alert(res['message'])
             }
-        }).
-            fail(function (err) {
-                console.log(err);
+        }).fail(function (err) {
+            console.log(err);
         });
 
     });
 
-    $("form#new_project").submit(function(evt){
+    $("form#new_project").submit(function (evt) {
 
         evt.preventDefault();
         console.log('Test');
@@ -71,7 +69,7 @@ $(document).ready(function (){
 
         projectTags = $(".chips-placeholder").material_chip('data');
 
-        for(p in projectTags) {
+        for (p in projectTags) {
             projectData.projectTags.push(projectTags[p].tag);
         }
 
@@ -86,7 +84,7 @@ $(document).ready(function (){
 
         console.log(members);
 
-        $.each($("#member-list li"),function (index,value){
+        $.each($("#member-list li"), function (index, value) {
             projectData.projectMembers.push($(value).attr('value'));
         });
 
@@ -94,15 +92,13 @@ $(document).ready(function (){
         $.ajax({
             url: '/create_project',
             method: 'POST',
-            data : JSON.stringify(projectData),
+            data: JSON.stringify(projectData),
             contentType: 'application/json',
-            dataType : 'html',
-        }).
-            done(function(res) {
-                document.write(res);
-        }).
-            fail(function (err) {
-                console.log(err);
+            dataType: 'html',
+        }).done(function (res) {
+            document.write(res);
+        }).fail(function (err) {
+            console.log(err);
         });
     });
 
@@ -110,21 +106,21 @@ $(document).ready(function (){
 
     var folders = $(".single-project-listing");
 
-    folders.click(function(){
+    folders.click(function () {
 
         console.log("In single project listing");
         if (clickedFolder)
-                clickedFolder.css("background-color","white");
+            clickedFolder.css("background-color", "white");
 
-            $(this).css("background-color","#BBDEFB");
-            $("#nav-bar-right").css("display","block");
-            clickedFolder = $(this);
-            $("#download-project-id").val(clickedFolder.attr('id'));
+        $(this).css("background-color", "#BBDEFB");
+        $("#nav-bar-right").css("display", "block");
+        clickedFolder = $(this);
+        $("#download-project-id").val(clickedFolder.attr('id'));
     });
 
-    $(".content-main").click(function(evt) {
+    $(".content-main").click(function (evt) {
 
-        if(! ( $(evt.target).hasClass('single-project-listing') || $(evt.target).hasClass('fa') ) ){
+        if (!( $(evt.target).hasClass('single-project-listing') || $(evt.target).hasClass('fa') )) {
             if (clickedFolder)
                 clickedFolder.css("background-color", "white");
 
@@ -132,25 +128,26 @@ $(document).ready(function (){
         }
     });
 
+
+
     $("#searchForm").submit(function (evt) {
-       // $('#submitButton').click(function(evt) {
+        // $('#submitButton').click(function(evt) {
         evt.preventDefault();
         var domainSearch = [];
         domainSearch = $('#multiselection').val();
         console.log(domainSearch);
         var chipSearch = [];
         var str = $('#search').val();
-        console.log(str);
         chipSearch = str.split(" ");
 
         var data = {};
-        data = { domainSearch: domainSearch, chipSearch: chipSearch};
-       // alert(data.domainSearch)
+        data = {domainSearch: domainSearch, chipSearch: chipSearch};
+        // alert(data.domainSearch)
         //alert(multiselect);
-        alert(chipSearch[1]);
+
         $.ajax({
             url: '/search',
-            method: 'POST' ,
+            method: 'POST',
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: 'application/json',
@@ -158,21 +155,25 @@ $(document).ready(function (){
         }).done(function (data) {
 
             console.log(data);
-            for(var i =0;i < data.array.length-1;i++)
-            {
+            console.log(data.array.length);
+            $('#foundResults').empty();
+            $('#foundResults').append(' <h5>Following Results found:</h5>');
+            for (var i = 0; i < data.array.length; i++) {
                 console.log(i);
-                $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align" id='+ data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projName+'</p></div>')
-
+                $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align searchResults modal-trigger" id=' + data.array[i]._id + '><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>' + data.array[i].projectName + '</p></div>');
             }
-           // data.array[i].projectName
-
-          //  '<div class="" id=' + data.array[i]._id + ''
-
+            // data.array[i].projectName
+            //  '<div class="" id=' + data.array[i]._id + ''
 
         }).fail(function (err) {
             console.log(err);
-
         });
+    });
+
+    $(".searchResults").onclick(function (evt) {
+        evt.preventDefault();
+        $('#foundResults').openModal();
+
     });
     //
     // <div class="row">
@@ -196,7 +197,7 @@ $(document).ready(function (){
     //                     </div>/
     //
 
-    $("#rename-project-form").submit(function(evt){
+    $("#rename-project-form").submit(function (evt) {
         evt.preventDefault();
 
         var data = {};
@@ -208,17 +209,15 @@ $(document).ready(function (){
             method: 'POST',
             data: data,
             dataType: 'json'
-        }).
-            done(function(data) {
-                clickedFolder.parent().find("p").text(data.new_name);
-        }).
-            fail(function (err){
-                console.log(err);
+        }).done(function (data) {
+            clickedFolder.parent().find("p").text(data.new_name);
+        }).fail(function (err) {
+            console.log(err);
         });
 
     });
 
-    $("#delete-project").click(function(evt){
+    $("#delete-project").click(function (evt) {
         evt.preventDefault();
         console.log("In delete");
         var data = {};
@@ -229,47 +228,49 @@ $(document).ready(function (){
             method: 'POST',
             data: data,
             dataType: 'json'
-        }).
-            done(function(data){
-                if(data.status == 0) {
-                    clickedFolder.parent().remove();
-                    alert(data.message)
-                }
+        }).done(function (data) {
+            if (data.status == 0) {
+                clickedFolder.parent().remove();
+                alert(data.message)
+            }
 
-                else if (data.status == 1) {
-                    alert(data.message)
-                }
-        }).
-            fail(function(err){
+            else if (data.status == 1) {
+                alert(data.message)
+            }
+        }).fail(function (err) {
             console.log(err)
         });
     });
 
-    $("#download-project").click(function (evt){
+    $("#download-project").click(function (evt) {
         $("form#download-project-form").submit();
     });
 
 
-    folders.dblclick(function(evt){
+    folders.dblclick(function (evt) {
         var id = $(this).attr('id');
         console.log(id);
         window.location.assign("project_dashboard/" + id);
     });
-});
 
-$(document).ready(function () {
-    $('select').material_select();
-    $('select').change(function(){
-        var newValuesArr = [],
-            select = $(this),
-            ul = select.prev();
+
+    $('select').change(function () {
+        var newValuesArr = [];
+        var select = $(this);
+        var ul = select.prev();
+
         ul.children('li').toArray().forEach(function (li, i) {
             if ($(li).hasClass('active')) {
                 newValuesArr.push(select.children('option').toArray()[i].value);
             }
         });
+
         select.val(newValuesArr);
-           console.log(newValuesArr);
+        console.log(newValuesArr);
     });
 
 });
+
+
+
+

@@ -721,12 +721,14 @@ def merge_branch():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     requestData = request.get_json()
-    print "tejas"
-    print requestData
-    domainSearch = []
-    chipsSearch = []
+    #print "tejas"
+   # print requestData
+    #domainSearch = ['WebMining', '"web development"']
+    #chipsSearch = ['python','django']
     domainSearch = requestData['domainSearch']
     chipsSearch = requestData['chipSearch']
+    print domainSearch
+    print chipsSearch
     chipsSearch = chipsSearch+domainSearch
     temp = []
     count_temp = []
