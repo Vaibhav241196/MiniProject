@@ -317,7 +317,7 @@ def return_list():
 def project_dashboard(id):
     print "Hello"
 
-    project_path = path.join(app.root_path,'../projects', id)
+    project_path = path.join(app.root_path, '../projects', id)
 
     if request.method == 'GET':
         project = find_unique({'_id': ObjectId(id)}, 'projects')
