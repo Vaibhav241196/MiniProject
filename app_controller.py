@@ -7,6 +7,7 @@ from os import makedirs, chdir, path, stat, listdir, curdir, remove, getcwd, mkn
 from shutil import rmtree
 from subprocess import call, check_output
 from bson.objectid import ObjectId
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -232,6 +233,7 @@ def create_project():
     document = request.get_json()
     document['projectMembers'].append(session['id'])
     document['owner'] = session['id']
+    document['date_created'] = datetime.now().date()
     document['branches'] = [{'branch_name' : 'master' , 'members' : [ session['id'] ] }]
 
     project_id = insert(document, 'projects').inserted_id
@@ -258,7 +260,8 @@ def create_file():
     elif type == 'new-file':
         mknod(name)
 
-    return json.dumps({'status': 0 , 'message': "File created successfully" })
+    return json.dumps({'status': 0, 'message': "File created successfully" })
+
 
 # function to return the dictionary with the given branch name
 def return_members(branch_dict, branch_name):
@@ -274,8 +277,8 @@ def return_members(branch_dict, branch_name):
 def check_access(proj_id):
     user_id = session['id']
     print proj_id
-    current_project = find_unique({'_id': ObjectId(proj_id)},'projects')
-    current_user = find_unique({'_id': ObjectId(user_id)},'users')
+    current_project = find_unique({'_id': ObjectId(proj_id)}, 'projects')
+    current_user = find_unique({'_id': ObjectId(user_id)}, 'users')
     branch_name = check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
     branch_members = filter(lambda x: return_members(x, branch_name), current_project['branches'])
     if str(user_id) == current_project['owner']:
@@ -752,7 +755,7 @@ def search():
         temp.remove(temp[(count_temp.index(max(count_temp)))])
         count_temp.remove(max(count_temp))
 
-    return json.dumps({'array':return_list})
+    return json.dumps({'array': return_list})
 
 ################################# Static file cache bursting code #####################################################
 @app.context_processor
