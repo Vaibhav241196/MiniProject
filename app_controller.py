@@ -360,6 +360,7 @@ def get_commits():
 
     commits = find({'project': project , 'branch' : branch },'commits')
     commits = list(commits)
+    commits.reverse()
 
     for c in commits:
         c['_id'] = str(c['_id'])
@@ -475,6 +476,8 @@ def commit_changes():
     proj_id = request.form['proj_id']
     message = request.form['message']
     response = {}
+
+    userId = session['id']
     if check_access(proj_id):
         call(['git', 'add', '.'], shell=False)
         call(['git', 'commit', '-m', str(message)], shell=False)
@@ -489,7 +492,8 @@ def commit_changes():
                 'sha_id': sha_id,
                 'branch': check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1],
                 'project': str(proj_id),
-                'author': session['id'],
+                'authorId': userId,
+                'authorName': find_unique({ '_id' : ObjectId(userId)},'users')['userName'],
                 'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
                 'comment': str(message)
             }
