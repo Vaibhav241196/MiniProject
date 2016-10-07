@@ -487,8 +487,11 @@ def commit_changes():
             response['status'] = 1
         else:
 
-            print getcwd()
-            print check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
+            # print getcwd()
+            # print check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
+
+            chdir(path.join(app.root_path,'../projects',proj_id))
+            
             response['message'] = "Commit Successful"
             response['status'] = 0
             document = {
