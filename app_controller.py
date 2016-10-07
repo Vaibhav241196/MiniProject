@@ -483,7 +483,7 @@ def accept_decline():
 def notify_user():
     user_id = session['id']
     proj_list = find({'owner': str(user_id)}, 'projects')
-    notify_list = []
+    notify_list = []+
     for i in proj_list:
         try:
             projectName = find_unique({'_id': ObjectId(i['_id'])}, 'projects')['projectName']
@@ -561,3 +561,4 @@ def down():
 
 
 # git diff --name-only --diff-filter=U
+# just checking in
