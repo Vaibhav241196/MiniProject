@@ -5,7 +5,7 @@ users = db.users
 projects = db.projects
 commits = db.commits
 
-
+db.projects.create_index([('projectTags', 'text'), ('domain', 'text')])
 def insert(document, collection_name):
     if collection_name == "projects":
         return projects.insert_one(document)
@@ -75,5 +75,5 @@ def aggregateFunc(id, collection_name):
 
 
 def searchFunc(chips):
-    cursor = projects.find([{'$match': {'type': 'public'}}, {'$text': {'$search': chips}}])
+    cursor = projects.find({'$text': {'$search': chips}})
     return cursor

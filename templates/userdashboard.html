@@ -151,7 +151,7 @@
 
                 {% for i in aggregate %}
                     <div class="col l12 m12 s12">
-                        <h4 style="font-family: EB garamond, sans-serif; text-decoration: underline; text-transform: capitalize">{{ i['_id'] }}</h4>
+                        <h4 style="font-family: EB garamond, sans-serif; text-decoration: underline; text-transform: capitalize">{{ i['_id'] }}({{ i['projectName']|length }})</h4>
                     </div>
 
                     {% for j in range((i['projectName']|length)) %}
