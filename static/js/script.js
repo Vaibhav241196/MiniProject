@@ -175,10 +175,17 @@ $(document).ready(function() {
         });
     });
 
-    $(".searchResults").click(function (evt) {
+    $(document).on('click' ,'.searchResults' , function (evt) {
         evt.preventDefault();
-        $('#foundResults').openModal();
 
+        if (clickedFolder)
+            clickedFolder.css("background-color", "white");
+
+        $(this).css("background-color", "#BBDEFB");
+        $("#nav-bar-right").css("display", "block");
+        clickedFolder = $(this);
+
+        $('#foundResults').openModal();
     });
     //
     // <div class="row">
