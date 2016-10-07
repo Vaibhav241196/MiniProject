@@ -42,7 +42,7 @@ $(document).ready(function(){
                 for (c in commits) {
                     $(".commit-log-div").append(commit_card);
                     $(".commit-log-div .card:last-of-type .commit-message").text(commits[c].comment);
-                    $(".commit-log-div .card:last-of-type .author").text(commits[c].user);
+                    $(".commit-log-div .card:last-of-type .author").text(commits[c].author);
                     $(".commit-log-div .card:last-of-type .date-time").text(commits[c].date);
                 }
             }).

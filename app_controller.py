@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, redirect, url_for, escape, re
 from models.crud import *
 
 import json
+import datetime
 from sendmail import sendEmails
 from os import makedirs, chdir, path, stat, listdir, curdir, remove, getcwd, mknod
 from shutil import rmtree
@@ -480,6 +481,8 @@ def commit_changes():
                 'sha_id': sha_id,
                 'branch': check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1],
                 'project': str(proj_id),
+                'author': session['id'],
+                'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
                 'comment': str(message)
             }
             insert(document, 'commits')
