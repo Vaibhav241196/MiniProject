@@ -53,11 +53,11 @@ ul.tabsnew {
 /* Right Scrren */
 
 .content-main {
-    width: 80%;
-    margin-left: 20%;
     padding-top: 40px;
+    margin-left: 15%;
 }
 /* For side nav */
+
 .side-nav.large-screen {
     top: 64px;
 }
@@ -81,7 +81,88 @@ ul.tabsnew {
 }
 
 .side-nav.tabs li a.active {
-    background-color: #eeeeee; 
+    background-color: #eeeeee;
     color:black !important;
     border-right: 4px solid white;
 }
+
+/* For secondary nav-bar */
+
+#new-logo
+{
+    color:white !important;
+    font-size: 25px;
+  /*margin: 4% 3% 4% 3%;*/
+    float:left;
+    margin: auto;
+}
+.logo
+{
+  color:white !important;
+  font-size: 25px;
+  margin: 4% 3% 4% 3%;
+
+}
+#secondary-nav {
+    background-color: #00695C;
+}
+#secondary-nav h4 {
+    margin-top: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    display: inline;
+}
+
+#secondary-nav i {
+    display: inline;
+    font-size: 25px;
+}
+
+#secondary-nav a.project-description {
+    display: block;
+    height: 64px;
+}
+
+#secondary-nav a.project-description:hover {
+    background-color: #00b8d4;
+}
+
+
+/* Project description modal */
+input#member-name {
+    width: 80%;
+    margin-right: 5%;
+    float: left;
+}
+
+div.member-panel {
+    padding: 2% 5%
+}
+
+div.member-panel:hover {
+    background-color: rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.breadcrumb {
+    color: rgba(0,0,0,0.5);
+
+}
+
+.breadcrumb:last-child {
+    color: #000;
+}
+
+.breadcrumb::before {
+    color: rgba(0,0,0,0.5);
+}
+
+/* Create new branch modal */
+
+.select-members ul li{
+    width: 50%;
+    float: left;
+    clear: none;
+}
+

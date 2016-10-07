@@ -4,7 +4,6 @@
 
 $(document).ready(function (){
 
-
     var clickedFolder = null;
 
     // Navbar collapsible dropdown button initialization for mobile
@@ -17,6 +16,15 @@ $(document).ready(function (){
 
     // For select buttons
     $('select').material_select();
+
+    // For chips
+    $('.chips-placeholder').material_chip({
+        placeholder: "More...",
+        secondaryPlaceholder: "Enter a technology",
+    });
+
+    console.log($('.chips.focus').prev());
+    $('.chips.focus').prev().css('color','red');
 
     $("a#members-form-submit").click(function(evt){
 
@@ -57,8 +65,15 @@ $(document).ready(function (){
         var projectData = {};
 
         projectData.projectName = $("input#project-name").val();
-        projectData.projectDescription = $("input#project-description").val();
+        projectData.projectDescription = $("#project-description").val();
         projectData.projectMembers = [];
+        projectData.projectTags = [];
+
+        projectTags = $(".chips-placeholder").material_chip('data');
+
+        for(p in projectTags) {
+            projectData.projectTags.push(projectTags[p].tag);
+        }
 
         var members = $("#member-list li");
 
@@ -117,6 +132,70 @@ $(document).ready(function (){
         }
     });
 
+    $("#searchForm").submit(function (evt) {
+       // $('#submitButton').click(function(evt) {
+        evt.preventDefault();
+        var domainSearch = [];
+        domainSearch = $('#multiselection').val();
+        console.log(domainSearch);
+        var chipSearch = [];
+        var str = $('#search').val();
+        console.log(str);
+        chipSearch = str.split(" ");
+
+        var data = {};
+        data = { domainSearch: domainSearch, chipSearch: chipSearch};
+       // alert(data.domainSearch)
+        //alert(multiselect);
+        alert(chipSearch[1]);
+        $.ajax({
+            url: '/search',
+            method: 'POST' ,
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+
+        }).done(function (data) {
+
+            console.log(data);
+            for(var i =0;i < data.array.length-1;i++)
+            {
+                console.log(i);
+                $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align" id='+ data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projName+'</p></div>')
+
+            }
+           // data.array[i].projectName
+
+          //  '<div class="" id=' + data.array[i]._id + ''
+
+
+        }).fail(function (err) {
+            console.log(err);
+
+        });
+    });
+    //
+    // <div class="row">
+    //
+    //                         {% for i in aggregate %}
+    //                             <div class = "col l12 m12 s12">
+    //                             <h4 style="font-family: EB garamond, sans-serif; text-decoration: underline; text-transform: capitalize">{{i['_id']}}</h4>
+    //                             </div>
+    //
+    //                             {% for j in range((i['projectName']|length)) %}
+    //
+    //                             <div class="col l2 m4 s6 offset-m1 center-align">
+    //                                 <div class="single-project-listing center-align" id="{{ i['projectId'][j] }}">
+    //                                     <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
+    //                                 </div>
+    //                                 <p>{{i['projectName'][j]}}</p>
+    //                                 </div>
+    //                              {% endfor%}
+    //                         {% endfor %}
+    // {#                    {% endif %}#}
+    //                     </div>/
+    //
+
     $("#rename-project-form").submit(function(evt){
         evt.preventDefault();
 
@@ -140,7 +219,7 @@ $(document).ready(function (){
     });
 
     $("#delete-project").click(function(evt){
-
+        evt.preventDefault();
         console.log("In delete");
         var data = {};
         data.proj_id = clickedFolder.attr('id');
@@ -176,4 +255,21 @@ $(document).ready(function (){
         console.log(id);
         window.location.assign("project_dashboard/" + id);
     });
+});
+
+$(document).ready(function () {
+    $('select').material_select();
+    $('select').change(function(){
+        var newValuesArr = [],
+            select = $(this),
+            ul = select.prev();
+        ul.children('li').toArray().forEach(function (li, i) {
+            if ($(li).hasClass('active')) {
+                newValuesArr.push(select.children('option').toArray()[i].value);
+            }
+        });
+        select.val(newValuesArr);
+           console.log(newValuesArr);
+    });
+
 });
