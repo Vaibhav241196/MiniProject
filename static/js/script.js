@@ -184,30 +184,11 @@ $(document).ready(function() {
         $(this).css("background-color", "#BBDEFB");
         $("#nav-bar-right").css("display", "block");
         clickedFolder = $(this);
+        $("#searched-project-id").text($(this).attr('id'));
 
         $('#requestJoin').openModal();
     });
-    //
-    // <div class="row">
-    //
-    //                         {% for i in aggregate %}
-    //                             <div class = "col l12 m12 s12">
-    //                             <h4 style="font-family: EB garamond, sans-serif; text-decoration: underline; text-transform: capitalize">{{i['_id']}}</h4>
-    //                             </div>
-    //
-    //                             {% for j in range((i['projectName']|length)) %}
-    //
-    //                             <div class="col l2 m4 s6 offset-m1 center-align">
-    //                                 <div class="single-project-listing center-align" id="{{ i['projectId'][j] }}">
-    //                                     <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
-    //                                 </div>
-    //                                 <p>{{i['projectName'][j]}}</p>
-    //                                 </div>
-    //                              {% endfor%}
-    //                         {% endfor %}
-    // {#                    {% endif %}#}
-    //                     </div>/
-    //
+
 
     $("#rename-project-form").submit(function (evt) {
         evt.preventDefault();
@@ -259,13 +240,62 @@ $(document).ready(function() {
     });
 
 
-    folders.dblclick(function (evt) {
+
+    $(document).on('dblclick','.single-project-listing',function (evt) {
         var id = $(this).attr('id');
         console.log(id);
+        console.log("Test");
         window.location.assign("project_dashboard/" + id);
     });
 
-    $('select').material_select();
+    /* ====================== For sending contribution request ============================== */
+
+    $(".send-request").click(function(evt){
+        evt.preventDefault();
+        var id = $("#searched-project-id").text();
+        console.log(id);
+
+        $.ajax({
+            url: '/apply',
+            method: 'post',
+            data: {proj_id : id},
+            dataType: 'json',
+        }).
+            done(function(data){
+                alert(data.message);
+                $("#requestJoin").closeModal();
+        }).
+            fail(function(err){
+                console.log(err);
+        });
+    });
+
+     /* ====================== For accepting or declining request ============================== */
+
+      $(".accept-decline").click(function(evt){
+        evt.preventDefault();
+
+        var id = $(this).attr('id');
+        var user = $(this).parent().parent().find("p.request-user-id").text();
+        var project = $(this).parent().parent().find("p.request-project-id").text();
+
+
+        console.log(user);
+
+        $.ajax({
+            url: '/notify',
+            method: 'post',
+            data: { proj_id : project , status: Number(id) , user_id: user },
+            dataType: 'json',
+        }).
+            done(function(data){
+                console.log(data);
+        }).
+            fail(function(err){
+                console.log(err);
+        });
+    });
+
     $('select').change(function () {
         var newValuesArr = [];
         var select = $(this);

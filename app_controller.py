@@ -66,9 +66,21 @@ def user_dashboard():
     for i in myProjects_domain:
         count.update({i['_id']: i['count']})
 
+    my_proj = find({'owner' : userId},'projects')
+    requests = []
+
+    print my_proj
+
+    for p in my_proj:
+        if 'requests' in p:
+            for r in p['requests']:
+                user = find_unique({'_id': ObjectId(r) },'users')
+                requests.append({'userName' : user['userName'] , 'userId' : r , 'projectId': p['_id'] , 'projectName': str(p['projectName']) })
+
+    print requests
     print count
     print "Hello"
-    return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count, aggregate = proj_aggregate)
+    return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count, aggregate = proj_aggregate, requests=requests)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def accept_signup():
@@ -628,9 +640,9 @@ def apply_proj():
         response['status'] = 0
         response['message'] = 'Request successfully sent'
     else:
-        request['status'] = 1
-        request['message'] = 'Already a member'
-    return json.dumps(request)
+        response['status'] = 1
+        response['message'] = 'Already a member'
+    return json.dumps(response)
 
 
 # function to accept or decline the notifications

@@ -27,7 +27,7 @@
                 <ul class="right hide-on-med-and-down">
                     <li><a href="#notificationModal" class="modal-trigger"><i class=" fa fa-envelope" aria-hidden="true"
                                                                               id="dropLogo"
-                                                                              style="color: white; font-size: 28px;"></i></a>
+                                                                              style="color: white; font-size: 28px;"></i><span class="badge white-text">{{ requests | length }}</span></a>
                     </li>
                     <li style="float:right;"><a href="#" data-activates='dropdown1' class='dropdown-button '><img
                             src="{{ url_for('static' , filename='images/userimage.png') }}"
@@ -116,25 +116,19 @@
         <div class="modal-content">
             <div class="row">
                 <div class="s12 center-align" style="padding-bottom: 20px;"><h4>New Notifications</h4></div>
-                <div class="s12" style="margin-bottom: 15px;">
-                    <h6 style="display: inline"> {{ "USERNAME" }} wants to contribute to {{ "PROJECT" }}</h6>
-                    <p style="display: inline;margin-left: 30%;"><a>Accept</a></p>
-                    <p style="display: inline;margin-left: 2%"><a>Decline</a></p><br>
-                    <hr>
-                </div>
-                <div class="s12" style="margin-bottom: 15px;">
-                    <h6 style="display: inline"> {{ "USERNAME" }} wants to contribute to {{ "PROJECT" }}</h6>
-                    <p style="display: inline;margin-left: 30%;"><a>Accept</a></p>
-                    <p style="display: inline;margin-left: 2%"><a>Decline</a></p><br>
-                    <hr>
-                </div>
-                <div class="s12" style="margin-bottom: 15px;">
-                    <h6 style="display: inline"> {{ "USERNAME" }} wants to contribute to {{ "PROJECT" }}</h6>
-                    <p style="display: inline;margin-left: 30%;"><a>Accept</a></p>
-                    <p style="display: inline;margin-left: 2%"><a>Decline</a></p><br>
-                    <hr>
-                </div>
 
+                {% for r in requests %}
+                    <div class="s12" style="margin-bottom: 15px;">
+                        <div class="request-meta hide">
+                            <p class="request-project-id">{{ r['projectId'] }}</p>
+                            <p class="request-user-id">{{ r['userId'] }}</p>
+                        </div>
+                        <h6 style="display: inline"> {{ r['userName'] }} wants to contribute to {{ r['projectName'] }}</h6>
+                        <p style="display: inline;margin-left: 30%;" ><a href="" class="accept-decline" id="1" >Accept</a></p>
+                        <p style="display: inline;margin-left: 2%"><a href="" class="accept-decline" id="0" >Decline</a></p><br>
+                        <hr>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -272,14 +266,14 @@
             </div>
 
             <div class="row" id="foundResults">
-
             </div>
 
             <div id="requestJoin" class="modal">
                 <div class="modal-content">
+                    <div class="hide" id="searched-project-id"></div>
                     <h4>Send Project owner a request to join</h4>
-                    <a class="waves-effect waves-light btn">Send</a>
-                    <a class="waves-effect waves-light btn">Cancel</a>
+                    <a class="waves-effect waves-light btn send-request">Send</a>
+                    <a class="waves-effect waves-light btn modal-close">Cancel</a>
                 </div>
             </div>
 
