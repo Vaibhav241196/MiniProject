@@ -68,7 +68,9 @@
     <nav id="secondary-nav">
         <div class="row nav-wrapper" id="nav-bar-secondary">
             <div class="col s10 m4 l3 offset-l2">
-                <a href="#new-project" title="New Project" class="modal-trigger"><i class=" waves-effect fa fa-plus" aria-hidden="true" id="new-logo"></i></a>
+                <a href="#new-project" title="New Project" class="modal-trigger"><i class=" waves-effect fa fa-plus"
+                                                                                    aria-hidden="true"
+                                                                                    id="new-logo"></i></a>
             </div>
 
             <ul class="right" id="nav-bar-right">
@@ -162,11 +164,9 @@
 
                         <div class="col l2 m4 s6 offset-m1 center-align">
                         <div class="single-project-listing center-align" id="{{ i['projectId'][j] }}">
-                            <div class="single-project-listing center-align" id="{{ i['projectId'][j] }}">
-                                <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
-                            </div>
-                            <p>{{ i['projectName'][j] }}</p>
+                            <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a>
                         </div>
+                        <p>{{ i['projectName'][j] }}</p>
                     {% endfor %}
                 {% endfor %}
                 {#                    {% endif %}#}
@@ -211,89 +211,69 @@
         </div>
 
         <div id="search-project" class="tab-content">
-
             <div class="row" style="background-color:darkslategrey; margin-right: 20px">
-                <form id="searchForm">
-                    <div class="col l4 m4 s12 center-align">
-                        <label style="color: white;">Domain</label>
-                        <select multiple id="multiselection">
+                <nav>
+                    <form id="searchForm">
+                        <div class="col l4 m4 s12 center-align">
+                            <label style="color: white;">Domain</label>
+                            <select multiple id="multiselection">
 
-                            <option value="Networking">Networking</option>
-                            <option value="Database">Database</option>
+                                <option value="Networking">Networking</option>
+                                <option value="Database">Database</option>
 
-                            <option value="MobileComputing">Mobile Computing</option>
-                            <option value="CloudComputing">Cloud Computing</option>
-                            <option value="Internetofthings">Internet of things</option>
-                            <option value="NetworkSecurity">Network Security</option>
-                            <option value="InformationSecurity">Information Security</option>
-                            <option value="OperatingSystems">Operating Systems</option>
+                                <option value="MobileComputing">Mobile Computing</option>
+                                <option value="CloudComputing">Cloud Computing</option>
+                                <option value="Internetofthings">Internet of things</option>
+                                <option value="NetworkSecurity">Network Security</option>
+                                <option value="InformationSecurity">Information Security</option>
+                                <option value="OperatingSystems">Operating Systems</option>
 
-                            <option value="WebMining">Web Mining</option>
-                            <option value="SoftComputing">Soft Computing</option>
-
-
-                            <option value="SoftwareEngineering">Software Engineering</option>
-                            <option value="GIS">GIS</option>
-
-                            <option value="BioInformatics">BioInformatics</option>
-                            <option value="MachineLearning/NLP">Machine Learning/NLP</option>
-
-                            <option value="SoftwareTesting">Software Testing</option>
-                            <option value="SoftwareArchitecture">Software Architecture</option>
-
-                            <option value="3DModelling">3D Modelling</option>
-                            <option value="BigDataAnalysis">Big Data Analysis</option>
-
-                            <option value="DataAnalytic">Data Analytic</option>
-
-                            <option value="WebEngineering">Web Engineering</option>
-                            <option value="RoboticsProgramming">Robotics Programming</option>
+                                <option value="WebMining">Web Mining</option>
+                                <option value="SoftComputing">Soft Computing</option>
 
 
-                        </select>
-                    </div>
+                                <option value="SoftwareEngineering">Software Engineering</option>
+                                <option value="GIS">GIS</option>
 
-                    </nav>
+                                <option value="BioInformatics">BioInformatics</option>
+                                <option value="MachineLearning/NLP">Machine Learning/NLP</option>
 
-                    <div id="rename-project" class="modal center-align">
-                        <div class="modal-content" id="renameModal">
-                            <h4 style="font-family: 'EB garamond', sans-serif;" class="red-text">Rename Project</h4>
-                            <div class="row center-align">
-                                <form id="rename-project-form">
-                                    <div class="input-field col s6 offset-s3">
-                                        <input id="new_project_name" name="new_project_name" type="text"
-                                               class="validate">
-                                        <label class="active" for="rename">New Project Name</label>
+                                <option value="SoftwareTesting">Software Testing</option>
+                                <option value="SoftwareArchitecture">Software Architecture</option>
+
+                                <option value="3DModelling">3D Modelling</option>
+                                <option value="BigDataAnalysis">Big Data Analysis</option>
+
+                                <option value="DataAnalytic">Data Analytic</option>
+
+                                <option value="WebEngineering">Web Engineering</option>
+                                <option value="RoboticsProgramming">Robotics Programming</option>
+
+
+                            </select>
+                        </div>
+                        <div class="col l6 m6 s12" style="padding-right: 0px;">
+
+                            <nav style="margin-top: 12px; background-color: white;">
+                                <div class="nav-wrapper">
+                                    <div class="input-field">
+                                        <input id="search" type="search" required><label for="search"><i
+                                            class="fa fa-search" style="font-size: 25px; color: black"></i></label>
+                                        <!-- I've put "red-text" class to emphasize -->
                                     </div>
-                                    <div class="input-field center-align">
-                                        <input type="submit" value="Submit" class=""/>
-                                    </div>
-                                </form>
-                            </div>
+                                </div>
+                            </nav>
 
+                        </div>
 
-                            <div class="col l6 m6 s12" style="padding-right: 0px;">
+                        <div class="col l2 m2 s12 " style="padding-left: 0px">
+                            <input type="submit" value="submit" id="submitButton" class="btn"
+                                   style="margin-top: 7%; height: 64px; border-radius: 0px;">
+                        </div>
+                    </form>
+                </nav>
 
-                                <nav style="margin-top: 12px; background-color: white;">
-                                    <div class="nav-wrapper">
-                                        <div class="input-field">
-                                            <input id="search" type="search" required><label for="search"><i
-                                                class="fa fa-search" style="font-size: 25px; color: black"></i></label>
-                                            <!-- I've put "red-text" class to emphasize -->
-                                        </div>
-                                    </div>
-                                </nav>
-
-
-                            </div>
-
-                            <div class="col l2 m2 s12 " style="padding-left: 0px">
-                                <input type="submit" value="submit" id="submitButton" class="btn"
-                                       style="margin-top: 7%; height: 64px; border-radius: 0px;">
-                            </div>
-                </form>
             </div>
-
             <div class="row" id="foundResults">
                 <div id="requestJoin" class="modal">
                     <div class="modal-content">
@@ -304,119 +284,131 @@
 
                 </div>
             </div>
+
         </div>
 
-        <div id="new-project" class="modal">
+        <div id="new-project" class="modal" style="position: absolute; height: 400px">
             <div class="modal-content">
-                <div class="row">
-                    <form class="col s12" id="new_project">
+                <form class="col s12" id="new_project" >
+                    <h2 class="center-align heading red-text"> Add New Project </h2>
 
-                        <h2 class="center-align heading red-text"> Add New Project </h2>
+                    <div class="row">
+                        <div class="input-field col s10 offset-s1">
+                            <input placeholder="Placeholder" id="project-name" name="project-name" type="text"
+                                   class="validate"/>
+                            <label for="first_name">Project Name</label>
+                        </div>
+                        <div class="input-field col s10 offset-s1">
+                            <input id="project-description" type="text" name="project-description"
+                                   class="validate" placeholder="Description"/>
+                            <label for="project-description">Project Description</label>
+                        </div>
 
-                        <div class="row">
-                            <div class="input-field col s10 offset-s1">
-                                <input placeholder="Placeholder" id="project-name" name="project-name" type="text"
-                                       class="validate"/>
-                                <label for="first_name">Project Name</label>
-                            </div>
-                            <div class="input-field col s10 offset-s1">
-                                <input id="project-description" type="text" name="project-description"
-                                       class="validate" placeholder="Description"/>
-                                <label for="project-description">Project Description</label>
+{#                        <div class="input-field">#}
+{#                            <p>#}
+{#                                <input name="group1" type="radio" class="with-gap" id="test1" />#}
+{#                                <label for="test1">Red</label>#}
+{#                            </p>#}
+{#                            <p>#}
+{#                              <input name="group1" type="radio" class="with-gap" id="test2" />#}
+{#                              <label for="test2">Yellow</label>#}
+{#                            </p>#}
+{#                        </div>#}
 
-                            </div>
+                        <div class="input-field col s10 offset-s1">
 
-                            <div class="row">
-                                <div class="input-field col s10 offset-s1">
+                            <select name="project-category" id="category">
+                                <option value="none" disabled selected>Select Technology</option>
+                                <option value="Networking">Networking</option>
+                                <option value="Database">Database</option>
 
-                                    <select name="project-category" id="category">
-                                        <option value="none" disabled selected>Select Technology</option>
-                                        <option value="Networking">Networking</option>
-                                        <option value="Database">Database</option>
+                                <option value="MobileComputing">Mobile Computing</option>
+                                <option value="CloudComputing">Cloud Computing</option>
+                                <option value="Internetofthings">Internet of things</option>
+                                <option value="NetworkSecurity">Network Security</option>
+                                <option value="InformationSecurity">Information Security</option>
+                                <option value="OperatingSystems">Operating Systems</option>
 
-                                        <option value="MobileComputing">Mobile Computing</option>
-                                        <option value="CloudComputing">Cloud Computing</option>
-                                        <option value="Internetofthings">Internet of things</option>
-                                        <option value="NetworkSecurity">Network Security</option>
-                                        <option value="InformationSecurity">Information Security</option>
-                                        <option value="OperatingSystems">Operating Systems</option>
-
-                                        <option value="WebMining">Web Mining</option>
-                                        <option value="SoftComputing">Soft Computing</option>
-
-
-                                        <option value="SoftwareEngineering">Software Engineering</option>
-                                        <option value="GIS">GIS</option>
-
-                                        <option value="BioInformatics">BioInformatics</option>
-                                        <option value="MachineLearning/NLP">Machine Learning/NLP</option>
-
-                                        <option value="SoftwareTesting">Software Testing</option>
-                                        <option value="SoftwareArchitecture">Software Architecture</option>
-
-                                        <option value="3DModelling">3D Modelling</option>
-                                        <option value="BigDataAnalysis">Big Data Analysis</option>
-
-                                        <option value="DataAnalytic">Data Analytic</option>
-
-                                        <option value="WebEngineering">Web Engineering</option>
-                                        <option value="RoboticsProgramming">Robotics Programming</option>
-
-                                    </select>
-                                    <label for="category">Members</label>
-
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col s10 offset-s1 input-field">
-                                    <span class="chip-label"> Technologies used </span>
-                                    <div class="chips chips-placeholder" id="technologies"></div>
-                                </div>
-                            </div>
+                                <option value="WebMining">Web Mining</option>
+                                <option value="SoftComputing">Soft Computing</option>
 
 
-                            <div class="row">
-                                <div class="input-field col s10 offset-s1">
-                                    <ul id="member-list">
-                                    </ul>
+                                <option value="SoftwareEngineering">Software Engineering</option>
+                                <option value="GIS">GIS</option>
 
-                                    <input type="text" name="member-name" id="member-name" placeholder="Username"/>
-                                    <label for="member-name">Members</label>
-                                    <a id="members-form-submit"
-                                       class="btn-floating btn-large waves-effect waves-light red" href="#"> <i
-                                            class="fa fa-2x fa-user-plus white-text    "></i> </a>
+                                <option value="BioInformatics">BioInformatics</option>
+                                <option value="MachineLearning/NLP">Machine Learning/NLP</option>
 
-                                </div>
-                            </div>
+                                <option value="SoftwareTesting">Software Testing</option>
+                                <option value="SoftwareArchitecture">Software Architecture</option>
 
+                                <option value="3DModelling">3D Modelling</option>
+                                <option value="BigDataAnalysis">Big Data Analysis</option>
 
-                            <div class="input-field col s10 offset-s1">
-                                <p style="display: inline; margin-right: 20px;">
-                                    <input name="type" type="radio" id="test1"/>
-                                    <label for="test1">Private Repository</label>
-                                </p>
-                                <p style="display: inline">
-                                    <input name="type" type="radio" id="test2"/>
-                                    <label for="test2">Public Repository</label>
-                                </p>
-                            </div>
+                                <option value="DataAnalytic">Data Analytic</option>
 
+                                <option value="WebEngineering">Web Engineering</option>
+                                <option value="RoboticsProgramming">Robotics Programming</option>
 
-                            <div class="row center-align">
-                                <input type="submit" value="Submit" class="btn waves-effect waves-light"/>
-                            </div>
+                            </select>
+                            <label for="category">Members</label>
+                        </div>
+
+                        <div class="col s10 offset-s1 input-field">
+                            <span class="chip-label"> Technologies used </span>
+                            <div class="chips chips-placeholder" id="technologies"></div>
+                        </div>
+
+                        <div class="input-field col s10 offset-s1">
+                            <ul id="member-list">
+                            </ul>
+
+                            <input type="text" name="member-name" id="member-name" placeholder="Username"/>
+                            <label for="member-name">Members</label>
+                            <a id="members-form-submit"
+                               class="btn-floating btn-large waves-effect waves-light red" href="#"> <i
+                                    class="fa fa-2x fa-user-plus white-text    "></i> </a>
+
+                        </div>
+
+                        <div class="input-field col s10 offset-s1 center-align">
+                            <p style="display: inline; margin-right: 20px;">
+                                <input name="type" type="radio" id="test1"/>
+                                <label for="test1">Private Repository</label>
+                            </p>
+                            <p style="display: inline">
+                                <input name="type" type="radio" id="test2"/>
+                                <label for="test2">Public Repository</label>
+                            </p>
+                        </div>
+
+                        <div class="input-field center-align col s11" style="padding-top: 30px;">
+                            <input type="submit" value="Submit" class="btn waves-effect waves-light"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="rename-project" class="modal center-align">
+            <div class="modal-content" id="renameModal">
+                <h4 style="font-family: 'EB garamond', sans-serif;" class="red-text">Rename Project</h4>
+                <div class="row center-align">
+                    <form id="rename-project-form">
+                        <div class="input-field col s6 offset-s3">
+                            <input id="new_project_name" name="new_project_name" type="text"
+                                   class="validate">
+                            <label class="active" for="rename">New Project Name</label>
+                        </div>
+                        <div class="input-field center-align">
+                            <input type="submit" value="Submit" class=""/>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
 
 
-    </div>
-
-</div>
-
-</div>
 
 
 <script rel="script" type="text/javascript"

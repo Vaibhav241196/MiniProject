@@ -262,3 +262,24 @@ a#members-form-submit {
 
 /*.modal { max-height: 95% !important } !* increase the width and height! *!*/
 
+[type="radio"]+label:before, [type="radio"]+label:after {
+    position: static !important;
+}
+
+[type="radio"]+label:before {
+    padding: 0 3.5%;
+}
+
+[type="radio"]:checked+label:before {
+    border-color : #26a69a;
+    background-color: #26a69a;
+}
+
+[type="radio"]+label:after {
+    border: none !important;
+}
+
+[type="radio"]:not(:checked)+label, [type="radio"]:checked+label {
+    padding-left: 0;
+    width: 47%;
+}
