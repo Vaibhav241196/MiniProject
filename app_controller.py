@@ -245,7 +245,7 @@ def create_project():
     call(['git', 'init'], shell=False)
     call(['git','commit','--allow-empty','-m','"Initial Empty Commit"'],shell=False)
 
-    return json.dumps({ 'id': str(project_id) } )
+    return redirect(url_for('project_dashboard',id=project_id))
 
 # function to create new file and folders
 @app.route('/create_new', methods=['POST'])
