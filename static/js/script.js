@@ -185,7 +185,7 @@ $(document).ready(function() {
         $("#nav-bar-right").css("display", "block");
         clickedFolder = $(this);
 
-        $('#foundResults').openModal();
+        $('#requestJoin').openModal();
     });
     //
     // <div class="row">
