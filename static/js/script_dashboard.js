@@ -42,7 +42,7 @@ $(document).ready(function(){
                 for (c in commits) {
                     $(".commit-log-div").append(commit_card);
                     $(".commit-log-div .card:last-of-type .commit-message").text(commits[c].comment);
-                    $(".commit-log-div .card:last-of-type .author").text(commits[c].author);
+                    $(".commit-log-div .card:last-of-type .author").text(commits[c].authorName);
                     $(".commit-log-div .card:last-of-type .date-time").text(commits[c].date);
                 }
             }).
@@ -130,19 +130,19 @@ $(document).ready(function(){
                         if (type == 'new-folder') {
 
                             if (i > 0)
-                                $(".folders:nth-child(" + i + ")").after('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> </td></tr>');
+                                $(".folders:nth-child(" + i + ")").after('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> </td> <a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></tr>');
                             else
                                 // $(".folders:first-child").before('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> </td></tr>');
-                                $("tbody").prepend('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> </td></tr>');
+                                $("tbody").prepend('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + name + '/ </p> <a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></td></tr>');
 
                         }
 
                         else if (type == 'new-file') {
                              if (i > 0)
-                                $(".files:nth-child(" + i + ")").after('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
+                                $(".files:nth-child(" + i + ")").after('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> <a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></td></tr>');
                              else
                                 // $(".files:first-child").before('<tr class="folders"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
-                                $("tbody").append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
+                                $("tbody").append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> <a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></td></tr>');
                         }
             }
         }).
@@ -236,8 +236,10 @@ $(document).ready(function(){
         }).
             done(function(res){
 
-            if(!res.response.status)
+            if(!res.response.status) {
                 displayDirStructure(res.list_dir);
+                $("#current_branch").text(branch_name);
+            }
 
             alert(res.response.message)
         }).
@@ -339,9 +341,6 @@ $(document).ready(function(){
             done(function(res){
                 alert(res.message);
 
-                if(res.status != 1 && res.status != 3)
-                    displayDirStructure(res.list_dir);
-
         }).
             fail(function(err){
                 console.log(err);
@@ -368,7 +367,7 @@ $(document).ready(function(){
     });
 
 
-    /* ========================= For adding new member to project ======================== */
+    /* ========================= For removing member from project ======================== */
     $("a#members-form-submit").click(function(evt){
 
         console.log('Test');
@@ -463,10 +462,10 @@ function displayDirStructure(res){
     table.html("");
 
     for (d in res.directories){
-        table.append('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + res.directories[d] + '/</p> </td></tr>')
+        table.append('<tr class="folders"><td> <i class="fa fa-folder"></i> <p>' + res.directories[d] + '/</p><a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a> </td></tr>')
     }
 
     for (f in res.files){
-        table.append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + res.files[f] + '</p> </td></tr>')
+        table.append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + res.files[f] + '</p><a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></td></tr>')
     }
 }

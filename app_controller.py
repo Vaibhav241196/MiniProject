@@ -363,6 +363,7 @@ def get_commits():
 
     commits = find({'project': project , 'branch' : branch },'commits')
     commits = list(commits)
+    commits.reverse()
 
     for c in commits:
         c['_id'] = str(c['_id'])
@@ -478,6 +479,8 @@ def commit_changes():
     proj_id = request.form['proj_id']
     message = request.form['message']
     response = {}
+
+    userId = session['id']
     if check_access(proj_id):
         call(['git', 'add', '.'], shell=False)
         call(['git', 'commit', '-m', str(message)], shell=False)
@@ -486,14 +489,21 @@ def commit_changes():
             response['message'] = "Nothing to commit"
             response['status'] = 1
         else:
+
+            # print getcwd()
+            # print check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
+
+            chdir(path.join(app.root_path,'../projects',proj_id))
+
             response['message'] = "Commit Successful"
             response['status'] = 0
             document = {
                 'sha_id': sha_id,
                 'branch': check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1],
                 'project': str(proj_id),
-                'author': session['id'],
-                'date': str(datetime.now()),
+                'authorId': userId,
+                'authorName': find_unique({ '_id' : ObjectId(userId)},'users')['userName'],
+                'date': datetime.now().strftime("%Y-%m-%d %H:%M"),
                 'comment': str(message)
             }
             insert(document, 'commits')
