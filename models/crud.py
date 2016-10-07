@@ -4,6 +4,7 @@ from bson.objectid import ObjectId
 users = db.users
 projects = db.projects
 commits = db.commits
+
 projects.create_index([('chips', 'text'),('technology' , 'text'), ('projectDescription','text')])
 
 

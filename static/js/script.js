@@ -170,7 +170,7 @@ $(document).ready(function() {
         });
     });
 
-    $(".searchResults").onclick(function (evt) {
+    $(".searchResults").click(function (evt) {
         evt.preventDefault();
         $('#foundResults').openModal();
 
