@@ -67,7 +67,7 @@ def user_dashboard():
 
     print count
     print "Hello"
-    return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count)
+    return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count, aggregate = proj_aggregate)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
