@@ -66,6 +66,11 @@ $(document).ready(function() {
         projectData.projectDescription = $("#project-description").val();
         projectData.projectMembers = [];
         projectData.projectTags = [];
+        projectData.domain = $("#domain").val();
+        projectData.type = $("[name='type']").val();
+
+        console.log(projectData.domain);
+        console.log(projectData.type);
 
         projectTags = $(".chips-placeholder").material_chip('data');
 
