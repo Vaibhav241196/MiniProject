@@ -66,13 +66,12 @@ def aggregate(id, collection_name):
 
 def aggregate_domain(id, collection_name):
     if collection_name == "projects":
-        return projects.aggregate(
-            [{'$match': {'projectMembers': id}}, {'$group': {'_id': '$domain', 'count': {'$sum': 1}}}])
+        return projects.aggregate([{'$match' : {'projectMembers' : id}} , {'$group' : {'_id' : '$domain' , 'count' : {'$sum' : 1}}}])
 
 
 def aggregateFunc(id, collection_name):
     if collection_name == "projects":
-        return projects.aggregate([{'$match': {'projectMembers': id}}, {'$group': {'_id': '$domain', 'projectName': {'$push': '$projectName'}, 'projectDescription': {'$push': '$projectDescription'}, 'projectId': {'$push': '$_id'}, 'projectOwner': {'$push': '$owner'}}}])
+        return projects.aggregate([{'$match' : {'projectMembers' : id}} , {'$group' : {'_id': '$domain', 'projectName' : {'$push' : '$projectName'}, 'projectDescription' : {'$push': '$projectDescription'}, 'projectId' : {'$push' : '$_id'}, 'projectOwner' : {'$push' : '$owner'}}}])
 
 
 def searchFunc(chips):

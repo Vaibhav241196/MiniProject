@@ -65,9 +65,21 @@ def user_dashboard():
     for i in myProjects_domain:
         count.update({i['_id']: i['count']})
 
+    my_proj = find({'owner' : userId},'projects')
+    requests = []
+
+    print my_proj
+
+    for p in my_proj:
+        if 'requests' in p:
+            for r in p['requests']:
+                user = find_unique({'_id': ObjectId(r) },'users')
+                requests.append({'userName' : user['userName'] , 'userId' : r , 'projectId': p['_id'] , 'projectName': str(p['projectName']) })
+
+    print requests
     print count
     print "Hello"
-    return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count, aggregate = proj_aggregate)
+    return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count, aggregate = proj_aggregate, requests=requests)
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -247,7 +259,7 @@ def create_project():
     call(['git', 'init'], shell=False)
     call(['git','commit','--allow-empty','-m','"Initial Empty Commit"'],shell=False)
 
-    return json.dumps({ 'id': str(project_id) } )
+    return redirect(url_for('project_dashboard',id=project_id))
 
 # function to create new file and folders
 @app.route('/create_new', methods=['POST'])
