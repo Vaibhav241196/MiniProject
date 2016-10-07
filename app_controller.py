@@ -491,7 +491,7 @@ def commit_changes():
             # print check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
 
             chdir(path.join(app.root_path,'../projects',proj_id))
-            
+
             response['message'] = "Commit Successful"
             response['status'] = 0
             document = {
