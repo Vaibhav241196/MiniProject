@@ -253,7 +253,7 @@ $(document).ready(function() {
         window.location.assign("project_dashboard/" + id);
     });
 
-
+    $('select').material_select();
     $('select').change(function () {
         var newValuesArr = [];
         var select = $(this);
