@@ -486,6 +486,9 @@ def commit_changes():
             response['message'] = "Nothing to commit"
             response['status'] = 1
         else:
+
+            print getcwd()
+            print check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
             response['message'] = "Commit Successful"
             response['status'] = 0
             document = {
