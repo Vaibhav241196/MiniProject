@@ -20,7 +20,7 @@
             <div class="page-wrapper">
 
                 <!-- Navigation Bar -->
-                <div class="navbar-fixed">
+                 <div class="navbar-fixed">
                     <nav class="dark-primary-color">
                         <div class="nav-wrapper">
                           <a href="#!" class="brand-logo garamond"><strong>proHub</strong></a>
@@ -55,7 +55,7 @@
 
                 </div>
 
-                <nav id="secondary-nav">
+                 <nav id="secondary-nav">
                     <div class = "row nav-wrapper" id ="nav-bar-secondary">
                         <div class="col s10 m4 l3 offset-l2" >
                             <a href="#new-project" title = "New Project" class="modal-trigger"><i class=" waves-effect fa fa-plus " aria-hidden="true" id="new-logo"></i></a>
@@ -75,7 +75,7 @@
                     </div>
                 </nav>
 
-                <div id="rename-project" class="modal center-align">
+                 <div id="rename-project" class="modal center-align">
                        <div class="modal-content" id="renameModal">
                             <h4 style="font-family: 'EB garamond', sans-serif;" class="red-text">Rename Project</h4>
                               <div class="row center-align">
@@ -120,7 +120,7 @@
                     </div>
                 </div>
 
-                <div class="content-main">
+                 <div class="content-main">
 
                     <ul class="side-nav tabs large-screen fixed default-primary-color">
                         <li class="tab"> <a class="waves-effect white-text active" href="#all-projects"> All Projects({{ count['allProjects']}}) </a></li>
@@ -130,84 +130,16 @@
                     </ul>
 
 
-                    <div id="search-project" class="tab-content">
-
-                        <div class="row" style="background-color:darkslategrey; margin-right: 20px">
-                         <form id="searchForm">
-                            <div class="col l4 m4 s12 center-align">
-                            <label style="color: white;">Domain</label>
-                                <select multiple id="multiselection">
-
-                                        <option value="Networking">Networking</option>
-                                        <option value="Database">Database</option>
-                                        <option value="Datawarehouse & Datamining">Datawarehouse & Datamining</option>
-                                        <option value="Mobile Computing">Mobile Computing</option>
-                                        <option value="Cloud Computing">Cloud Computing</option>
-                                        <option value="Internet of things6">Internet of things</option>
-                                        <option value="Network Security">Network Security</option>
-                                        <option value="Information Security">Information Security</option>
-                                        <option value="Operating Systems">Operating Systems</option>
-                                        <option value="Distributed and parallel OS">Distributed and parallel OS</option>
-                                        <option value="Web Mining">Web Mining</option>
-                                        <option value="Soft Computing">Soft Computing</option>
-                                        <option value="Embedded & Real Time">Embedded & Real Time</option>
-                                        <option value="Digital Signal/Image/Pattern Recognition">Digital Signal/Image/Pattern Recognition</option>
-                                        <option value="Software Engineering">Software Engineering</option>
-                                        <option value="GIS">GIS</option>
-                                        <option value="Multimedia & Animation">Multimedia & Animation</option>
-                                        <option value="BioInformatics">BioInformatics</option>
-                                        <option value="Machine Learning/NLP">Machine Learning/NLP</option>
-                                        <option value="Wireless Sensor Networks">Wireless Sensor Networks</option>
-                                        <option value="Software Testing">Software Testing</option>
-                                        <option value="Software Architecture">Software Architecture</option>
-                                        <option value="Service Oriented Architecture">Service Oriented Architecture</option>
-                                        <option value="Artificial Intelligence /Neural Networks">Artificial Intelligence /Neural Networks</option>
-                                        <option value="3D Modelling">3D Modelling</option>
-                                        <option value="Big Data Analysis">Big Data Analysis</option>
-                                        <option value="Usability Engineering">Usability Engineering</option>
-                                        <option value="Information Retrieval & Storage">Information Retrieval & Storage</option>
-                                        <option value="Data Analytic">Data Analytic</option>
-                                        <option value="Content based image/video retrieval">Content based image/video retrieval</option>
-                                        <option value="Web Engineering">Web Engineering</option>
-                                        <option value="Robotics Programming">Robotics Programming</option>
 
 
-                                </select>
-                        </div>
-                         <div class="col l6 m6 s12" style="padding-right: 0px;">
 
-                            <nav style="margin-top: 12px; background-color: white;">
-                                 <div class="nav-wrapper">
-
-
-                                         <div class="input-field">
-                                        <input id="search" type="search" required><label for="search"><i class="fa fa-search" style="font-size: 25px; color: black"></i></label>
-              <!-- I've put "red-text" class to emphasize -->
-
-                                        </div>
-
-                                 </div>
-                            </nav>
-
-
-                         </div>
-                       <div class = "col l2 m2 s12 " style="padding-left: 0px">
-                           <input type="submit" value="submit" id="submitButton" class="btn" style="margin-top: 7%; height: 64px; border-radius: 0px;">
-                          </div>
-                             </form>
-                       </div>
-                    <div class="row" id="foundResults">
-
-                    </div>
-
-                   </div>
 
                     <div id="all-projects" class="tab-content">
                         <div class="row">
 
                             {% for i in aggregate %}
                                 <div class = "col l12 m12 s12">
-                                <h4 style="font-family: EB garamond, sans-serif; text-decoration: underline; text-transform: capitalize">{{i['_id']}}</h4>
+                                <h4 style="font-family: EB garamond, sans-serif; text-decoration: underline; text-transform: capitalize">{{i['_id']}}({{ ((i['projectName']|length)) }})</h4>
                                 </div>
 
                                 {% for j in range((i['projectName']|length)) %}
@@ -218,6 +150,7 @@
                                     </div>
                                     <p>{{i['projectName'][j]}}</p>
                                     </div>
+
                                  {% endfor%}
                             {% endfor %}
     {#                    {% endif %}#}
@@ -261,6 +194,85 @@
                         </div>
                     </div>
 
+                  <div id="search-project" class="tab-content">
+
+                        <div class="row" style="background-color:darkslategrey; margin-right: 20px">
+                         <form id="searchForm">
+                            <div class="col l4 m4 s12 center-align">
+                            <label style="color: white;">Domain</label>
+                                <select multiple id="multiselection">
+
+                                        <option value="Networking">Networking</option>
+                                        <option value="Database">Database</option>
+
+                                        <option value="MobileComputing">Mobile Computing</option>
+                                        <option value="CloudComputing">Cloud Computing</option>
+                                        <option value="Internetofthings">Internet of things</option>
+                                        <option value="NetworkSecurity">Network Security</option>
+                                        <option value="InformationSecurity">Information Security</option>
+                                        <option value="OperatingSystems">Operating Systems</option>
+
+                                        <option value="WebMining">Web Mining</option>
+                                        <option value="SoftComputing">Soft Computing</option>
+
+
+                                        <option value="SoftwareEngineering">Software Engineering</option>
+                                        <option value="GIS">GIS</option>
+
+                                        <option value="BioInformatics">BioInformatics</option>
+                                        <option value="MachineLearning/NLP">Machine Learning/NLP</option>
+
+                                        <option value="SoftwareTesting">Software Testing</option>
+                                        <option value="SoftwareArchitecture">Software Architecture</option>
+
+                                        <option value="3DModelling">3D Modelling</option>
+                                        <option value="BigDataAnalysis">Big Data Analysis</option>
+
+                                        <option value="DataAnalytic">Data Analytic</option>
+
+                                        <option value="WebEngineering">Web Engineering</option>
+                                        <option value="RoboticsProgramming">Robotics Programming</option>
+
+
+                                </select>
+                        </div>
+                         <div class="col l6 m6 s12" style="padding-right: 0px;">
+
+                            <nav style="margin-top: 12px; background-color: white;">
+                                 <div class="nav-wrapper">
+
+
+                                         <div class="input-field">
+                                        <input id="search" type="search" required><label for="search"><i class="fa fa-search" style="font-size: 25px; color: black"></i></label>
+              <!-- I've put "red-text" class to emphasize -->
+
+                                        </div>
+
+                                 </div>
+                            </nav>
+
+
+                         </div>
+                       <div class = "col l2 m2 s12 " style="padding-left: 0px">
+                           <input type="submit" value="submit" id="submitButton" class="btn" style="margin-top: 7%; height: 64px; border-radius: 0px;">
+                          </div>
+                             </form>
+                       </div>
+
+                    <div class="row" id="foundResults">
+                            <div id="requestJoin" class="modal">
+                    <div class="modal-content">
+                        <h4>Send Project owner a request to join</h4>
+                        <a class="waves-effect waves-light btn">Send</a>
+                         <a class="waves-effect waves-light btn">Cancel</a>
+
+                    </div>
+
+                </div>
+                    </div>
+
+                   </div>
+
                     <div id="new-project" class="modal">
                         <div class="modal-content">
                               <div class="row">
@@ -284,12 +296,37 @@
 
                                           <select name="project-category" id="category">
                                               <option value="none" disabled selected>Select Technology</option>
-                                              <option value="web">Web Based Project</option>
-                                              <option value="software">Software Based Project</option>
-                                              <option value="web">Mobile Based Project</option>
-                                              <option value="web">Web Based</option>
-                                              <option value="web">Web Based</option>
-                                              <option value="web">Web Based</option>
+                                             <option value="Networking">Networking</option>
+                                        <option value="Database">Database</option>
+
+                                        <option value="MobileComputing">Mobile Computing</option>
+                                        <option value="CloudComputing">Cloud Computing</option>
+                                        <option value="Internetofthings">Internet of things</option>
+                                        <option value="NetworkSecurity">Network Security</option>
+                                        <option value="InformationSecurity">Information Security</option>
+                                        <option value="OperatingSystems">Operating Systems</option>
+
+                                        <option value="WebMining">Web Mining</option>
+                                        <option value="SoftComputing">Soft Computing</option>
+
+
+                                        <option value="SoftwareEngineering">Software Engineering</option>
+                                        <option value="GIS">GIS</option>
+
+                                        <option value="BioInformatics">BioInformatics</option>
+                                        <option value="MachineLearning/NLP">Machine Learning/NLP</option>
+
+                                        <option value="SoftwareTesting">Software Testing</option>
+                                        <option value="SoftwareArchitecture">Software Architecture</option>
+
+                                        <option value="3DModelling">3D Modelling</option>
+                                        <option value="BigDataAnalysis">Big Data Analysis</option>
+
+                                        <option value="DataAnalytic">Data Analytic</option>
+
+                                        <option value="WebEngineering">Web Engineering</option>
+                                        <option value="RoboticsProgramming">Robotics Programming</option>
+
                                           </select>
                                           <label for="category">Members</label>
 
@@ -344,6 +381,7 @@
 
                 </div>
 
+            </div>
             </div>
 
 

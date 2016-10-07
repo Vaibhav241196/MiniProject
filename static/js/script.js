@@ -134,14 +134,47 @@ $(document).ready(function (){
 
     $("#searchForm").submit(function (evt) {
        // $('#submitButton').click(function(evt) {
-        evt.preventDefault();
-        var domainSearch = [];
-        domainSearch = $('#multiselection').val();
-        console.log(domainSearch);
-        var chipSearch = [];
-        var str = $('#search').val();
-        console.log(str);
-        chipSearch = str.split(" ");
+//<<<<<<< HEAD
+//        evt.preventDefault();
+//        var domainSearch = [];
+//        domainSearch = $('#multiselection').val();
+//        console.log(domainSearch);
+//        var chipSearch = [];
+//        var str = $('#search').val();
+//        console.log(str);
+//        chipSearch = str.split(" ");
+//=======
+            evt.preventDefault();
+            var domainSearch = [];
+            domainSearch = $('#multiselection').val();
+            console.log(domainSearch);
+            var chipSearch = [];
+            var str = $('#search').val();
+            chipSearch = str.split(" ");
+
+            var data = {};
+            data = { domainSearch: domainSearch, chipSearch: chipSearch};
+           // alert(data.domainSearch)
+            //alert(multiselect);
+            $.ajax({
+                url: '/search',
+                method: 'POST' ,
+                data: JSON.stringify(data),
+                dataType: 'json',
+                contentType: 'application/json',
+
+            }).done(function (data) {
+
+                console.log(data);
+                console.log(data.array.length);
+                $('#foundResults').empty();
+                $('#foundResults').append(' <h5>Following Results found:</h5>');
+                for(var i =0;i < data.array.length;i++)
+                {
+                    console.log(i);
+
+                    $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align searchResults modal-trigger" id='+ data.array[i]._id+'><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>'+data.array[i].projectName+'</p></div>');
+//>>>>>>> origin/tejas
 
         var data = {};
         data = { domainSearch: domainSearch, chipSearch: chipSearch};
@@ -173,6 +206,16 @@ $(document).ready(function (){
             console.log(err);
 
         });
+//<<<<<<< HEAD
+//=======
+//
+//
+//    $(".searchResults").onclick(function(evt){
+//        evt.preventDefault();
+//        $('#foundResults').openModal();
+//
+//
+//>>>>>>> origin/tejas
     });
     //
     // <div class="row">

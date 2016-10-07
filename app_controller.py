@@ -70,6 +70,7 @@ def user_dashboard():
     print "Hello"
     return render_template('userdashboard.html', user=current_user, proj_list=proj_list, count=count, aggregate = proj_aggregate)
 
+
 @app.route('/signup', methods=['GET', 'POST'])
 def accept_signup():
     response = {}
@@ -724,12 +725,14 @@ def merge_branch():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     requestData = request.get_json()
-    print "tejas"
-    print requestData
-    domainSearch = []
-    chipsSearch = []
+    #print "tejas"
+   # print requestData
+    #domainSearch = ['WebMining', '"web development"']
+    #chipsSearch = ['python','django']
     domainSearch = requestData['domainSearch']
     chipsSearch = requestData['chipSearch']
+    print domainSearch
+    print chipsSearch
     chipsSearch = chipsSearch+domainSearch
     temp = []
     count_temp = []
