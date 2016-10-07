@@ -2,8 +2,6 @@ from flask import Flask, render_template, session, redirect, url_for, escape, re
 from models.crud import *
 
 import json
-import datetime
-from sendmail import sendEmails
 from os import makedirs, chdir, path, stat, listdir, curdir, remove, getcwd, mknod
 from shutil import rmtree
 from subprocess import call, check_output
@@ -235,8 +233,9 @@ def create_project():
     document = request.get_json()
     document['projectMembers'].append(session['id'])
     document['owner'] = session['id']
-    document['date_created'] = datetime.now().date()
-    document['branches'] = [{'branch_name' : 'master' , 'members' : [ session['id'] ] }]
+    print datetime.now().date()
+    document['date_created'] = str(datetime.now().date())
+    document['branches'] = [{'branch_name': 'master', 'members': [session['id']]}]
 
     project_id = insert(document, 'projects').inserted_id
 
@@ -482,7 +481,7 @@ def commit_changes():
                 'branch': check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1],
                 'project': str(proj_id),
                 'author': session['id'],
-                'date': datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                'date': str(datetime.now()),
                 'comment': str(message)
             }
             insert(document, 'commits')
