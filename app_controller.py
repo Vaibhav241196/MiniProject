@@ -631,9 +631,9 @@ def apply_proj():
         response['status'] = 0
         response['message'] = 'Request successfully sent'
     else:
-        request['status'] = 1
-        request['message'] = 'Already a member'
-    return json.dumps(request)
+        response['status'] = 1
+        response['message'] = 'Already a member'
+    return json.dumps(response)
 
 
 # function to accept or decline the notifications
@@ -727,10 +727,6 @@ def merge_branch():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     requestData = request.get_json()
-    #print "tejas"
-   # print requestData
-    #domainSearch = ['WebMining', '"web development"']
-    #chipsSearch = ['python','django']
     domainSearch = requestData['domainSearch']
     chipsSearch = requestData['chipSearch']
     print domainSearch
