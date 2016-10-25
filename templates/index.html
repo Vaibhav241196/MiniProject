@@ -45,8 +45,8 @@
       <h1 class="center-align" id="h1a">LOGIN FORM</h1>
 
       <form class="login-form" action="/login" method="post">
-          <input type="text" class="black-text" placeholder="Username/Email" name = "username"/>
-          <input type="password" class="black-text" placeholder="Password" name = "password"/>
+          <input type="text" class="black-text" placeholder="Username/Email" name="username"/>
+          <input type="password" class="black-text" placeholder="Password" name="password"/>
           <input type = "submit" class="btn waves-effect dark-primary-color white-text darken-text-2" id="buttonoflogin">
           <p class="message">Not registered? </p>
 
@@ -60,11 +60,11 @@
    <div id="modal2" class="modal center-align black-text">
     <form class="signup-form" action="/signup" method="post">
         <h1 id="h1a">SIGN UP</h1>
-        <input name = "fullName" type="text" placeholder="Full Name"/>
-        <input name="userName" type="text" placeholder="Username"/>
+        <input name = "fullname" type="text" placeholder="Full Name"/>
+        <input name="username" type="text" placeholder="Username"/>
         <input name="email" type="email" placeholder="E-mail"/>
         <input name="password" type="password" placeholder="Password"/>
-        <input name="repeatPassword" type="password" placeholder="Repeat Password"/>
+        <input name="repeatpassword" type="password" placeholder="Repeat Password"/>
         <input name="termsCheck" type="checkbox" class="filled-in" id="filled-in-box" checked="checked" />
         <label for="filled-in-box">You agree to the terms and conditions.</label><br>
 
@@ -180,22 +180,10 @@ The entire proHub team is dedicated to making work more productive and enjoyable
             </div>
           </div>
      <!--Import jQuery before materialize.js-->
-      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
-      <script type="text/javascript" src="{{ url_for('static',filename='js/wow.min.js') }}"></script>
-              <script>
-              new WOW().init();
-            </script>
-      <script type="text/javascript">
-        $( document ).ready(function(){
-            $(".button-collapse").sideNav();
-            $('.modal-trigger').leanModal();
-            $('.parallax').parallax();
-            $('.scrollspy').scrollSpy();
-
-        })
-      </script>
-
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='js/wow.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='js/script_index.js') }}"></script>
 
 
     </body>

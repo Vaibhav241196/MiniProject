@@ -4,11 +4,17 @@
 
 
 $(document).ready(function(){
-
+    dir_path = "";
     current_branch = $("#current_branch").text();
+
+    // Navbar collapsible dropdown button initialization for mobile
+    $(".button-collapse").sideNav();
 
     // For select input
     $('select').material_select();
+
+    // For dropdown button
+    $(".dropdown-button").dropdown({hover: false });
 
     var commit_log_open = false;                // flag varible for commit log
     $('ul.tabs').tabs();
@@ -16,10 +22,13 @@ $(document).ready(function(){
     $('.commit-log').click(function (evt) {
         evt.preventDefault();
 
+        var commit_log_div = $('.commit-log-div');
         if(!commit_log_open) {
-            $('.commit-log-div').animate({width: "30%"});
+            $(commit_log_div).css('display','block');
+            $(commit_log_div).animate({width: "26%"});
             $('.project-directory').animate(({width: "70%"}));
-            $('.commit-log-div').css('border-left','2px solid #888888');
+            $(commit_log_div).css('border-left','2px solid #888888');
+
             commit_log_open = true;
 
             $.ajax({
@@ -32,18 +41,19 @@ $(document).ready(function(){
 
                 console.log(res);
 
-                $(".commit-log-div").empty();
+                $(commit_log_div).empty();
                 var commit_card = '<div class="card blue-grey darken-1"> <div class="card-content white-text"> <p class="commit-message"></p> \
                     <p class="author"></p> <p class="date-time" </div> <div class="card-action"> \
-                    <a href="#">This is a link</a> <a href="#">This is a link</a> </div></div>'
+                    <a class="rollback">ROLLBACK</a> </div></div>'
 
                 var commits = res.commits;
 
                 for (c in commits) {
-                    $(".commit-log-div").append(commit_card);
+                    $(commit_log_div).append(commit_card);
                     $(".commit-log-div .card:last-of-type .commit-message").text(commits[c].comment);
                     $(".commit-log-div .card:last-of-type .author").text(commits[c].authorName);
                     $(".commit-log-div .card:last-of-type .date-time").text(commits[c].date);
+                    $(".commit-log-div .card:last-of-type .rollback").attr("href",'/rollback/'+ commits[c]._id);
                 }
             }).
                 fail(function(err){
@@ -52,11 +62,31 @@ $(document).ready(function(){
         }
         
         else {
-            $('.commit-log-div').animate({width: "0"});
+            $(commit_log_div).animate({width: "0"});
             $('.project-directory').animate(({width: "100%"}));
-            $('.commit-log-div').css('border-left','none');
+            $(commit_log_div).css('border-left','none');
+            $(commit_log_div).css('display','none');
             commit_log_open = false;
         }
+    });
+
+    $(document).on('click','.rollback',function(evt){
+        evt.preventDefault();
+        alert("Are you sure you want to rollback. This cannot be undone");
+
+        var url = $(this).attr("href");
+
+        $.ajax({
+            url: url,
+            method: 'get',
+            datatype: 'json',
+        }).
+            done(function (res) {
+                displayDirStructure(res);
+        }).
+            fail(function (err) {
+                console.log(err);
+        })
     });
 
     $('.modal-trigger').leanModal();
@@ -96,7 +126,7 @@ $(document).ready(function(){
                 if ( data['status'] == 0 ){
 
                         var elements_final = [];
-                        var elements
+                        var elements;
 
                         if(type == 'new-folder')
                             elements = $(".folders");
@@ -139,10 +169,10 @@ $(document).ready(function(){
 
                         else if (type == 'new-file') {
                              if (i > 0)
-                                $(".files:nth-child(" + i + ")").after('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> <a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></td></tr>');
+                                $(".files:nth-child(" + i + ")").after('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '</p> <a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></td></tr>');
                              else
-                                // $(".files:first-child").before('<tr class="folders"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> </td></tr>');
-                                $("tbody").append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '/ </p> <a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></td></tr>');
+                                // $(".files:first-child").before('<tr class="folders"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '</p> </td></tr>');
+                                $("tbody").append('<tr class="files"><td> <i class="fa fa-file-code-o"></i> <p>' + name + '</p> <a class="download-path right" href="" style="margin: 5px;">Download</a> <a class="delete-path right" href="" style="margin: 5px;">Delete</a> <a class="edit right modal-trigger" href="#edit-modal" style="margin: 5px;">Edit</a></td></tr>');
                         }
             }
         }).
@@ -154,31 +184,36 @@ $(document).ready(function(){
 
     $(document).on('dblclick','.folders',function(){
 
-        var dir_path = $(this).find('p').text().slice(0,-1);
+        var new_folder = $(this).find('p').text();
+
+        dir_path = dir_path + new_folder;
 
         changeDir(dir_path,function(){
-            $(".breadcrumbs-div").append('<a href="#!" class="breadcrumb">' + dir_path + '</a>');
+            $(".breadcrumbs-div").append('<a href="#!" class="breadcrumb">' + new_folder.slice(0,-1) + '</a>');
         });
     });
 
     $(document).on('click','.breadcrumb',function(evt){
         evt.preventDefault();
         var breadcrumbs = $('.breadcrumb');
-        var back_times;
-        var dir_path = "";
+        var back_times = 0;
         var i;
+        var current_breadcrumb;
 
         l = breadcrumbs.length;
 
-        for (i in breadcrumbs) {
-            if(evt.target === breadcrumbs[i]) {
-                back_times = l-i-1;
-                break;
-            }
-        }
+        for (i = l-1 ; i >=0 ; i--) {
 
-        for(i=0; i< back_times; i++ )
-            dir_path = dir_path + "../"
+            current_breadcrumb = breadcrumbs[i];
+
+            if(current_breadcrumb !== evt.target){
+                dir_path = dir_path + "../";
+                back_times++;
+            }
+
+            else
+                break;
+        }
 
         changeDir(dir_path,function() {
 
@@ -250,7 +285,7 @@ $(document).ready(function(){
 
     /* ============================ For editing ================================= */
 
-    $(".edit").click(function(){
+    $(document).on('click','.edit',function(){
         var path = $(this).parent().find("p").text();
 
         $.ajax({
@@ -296,14 +331,15 @@ $(document).ready(function(){
     });
 
     /* =========================== For deleting file folder =================== */
-    $(".delete-path").click(function(evt){
+    $(document).on('click','.delete-path',function(evt){
         evt.preventDefault();
 
         var target = $(this).parent().parent();
         var data = {};
         var flag = false;
         data.proj_id = $("#project_id").text();
-        data.path = $(this).parent().find('p').text();
+
+        data.path = dir_path + $(this).parent().find("p").text();
 
         if (data.path[-1] == '/')
             data.path = data.path.slice(0,-1);
@@ -324,6 +360,13 @@ $(document).ready(function(){
             fail(function(err){
             console.log(err)
         });
+    });
+
+
+    /* =========================== For editing file and folders ================= */
+    $(document).on('click','.edit',function (evt) {
+        evt.preventDefault();
+        $("#edit-modal").openModal();
     });
 
     /* =========================== For committing changes ====================== */
@@ -367,7 +410,7 @@ $(document).ready(function(){
     });
 
 
-    /* ========================= For removing member from project ======================== */
+    /* ========================= For adding and removing member to and from project ======================== */
     $("a#members-form-submit").click(function(evt){
 
         console.log('Test');
@@ -407,7 +450,7 @@ $(document).ready(function(){
 
     });
 
-    $(".remove").click(function(evt){
+    $(document).on('click','.remove',function(evt){
         evt.preventDefault();
 
         console.log($(this).parent().attr('id'));

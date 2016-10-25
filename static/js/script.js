@@ -8,8 +8,9 @@ $(document).ready(function() {
 
     // Navbar collapsible dropdown button initialization for mobile
     $(".button-collapse").sideNav();
-    $('ul.tabs').tabs();
 
+    // For dropdown button
+    $(".dropdown-button").dropdown();
 
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal-trigger').leanModal();
@@ -23,8 +24,10 @@ $(document).ready(function() {
         secondaryPlaceholder: "Enter a technology",
     });
 
-    console.log($('.chips.focus').prev());
     $('.chips.focus').prev().css('color', 'red');
+
+
+
 
     $("a#members-form-submit").click(function (evt) {
 
@@ -94,14 +97,17 @@ $(document).ready(function() {
         });
 
         console.log(projectData);
+
+
         $.ajax({
             url: '/create_project',
             method: 'POST',
             data: JSON.stringify(projectData),
             contentType: 'application/json',
-            dataType: 'html',
+            dataType: 'json',
         }).done(function (res) {
-            document.write(res);
+            console.log(res);
+            window.location.assign('/project_dashboard/' + res.id);
         }).fail(function (err) {
             console.log(err);
         });
@@ -161,14 +167,13 @@ $(document).ready(function() {
 
             console.log(data);
             console.log(data.array.length);
-            $('#foundResults').empty();
-            $('#foundResults').append(' <h5>Following Results found:</h5>');
+            var found_results = $("#foundResults");
+            $(found_results).empty();
+            $(found_results).append(' <h5>Following Results found:</h5>');
             for (var i = 0; i < data.array.length; i++) {
-                console.log(i);
-                $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align searchResults modal-trigger" id=' + data.array[i]._id + '><a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>' + data.array[i].projectName + '</p></div>');
+
+                $('#foundResults').append('<div class="col l2 m4 s6 offset-m1 center-align"><div class="single-project-listing center-align searchResults modal-trigger" id=' + data.array[i]._id +  '> <div class="hide projectName">' + data.array[i].projectName + '</div> <div class="hide projectDescription"> ' + data.array[i].projectDescription + '</div> <div class="hide projectMembers">' + JSON.stringify(data.array[i].memberNames) + '</div> <div class="hide projectOwner">' + data.array[i].ownerName + '</div> <div class="hide projectDomain">' + data.array[i].domain + '</div> <div class="hide projectTags">'  + JSON.stringify(data.array[i].projectTags) + '</div> <a href="#"><i class="fa fa-folder" aria-hidden="true" id="projFolder"></i></a> </div><p>' + data.array[i].projectName + '</p></div>');
             }
-            // data.array[i].projectName
-            //  '<div class="" id=' + data.array[i]._id + ''
 
         }).fail(function (err) {
             console.log(err);
@@ -186,7 +191,25 @@ $(document).ready(function() {
         clickedFolder = $(this);
         $("#searched-project-id").text($(this).attr('id'));
 
+        var name = $(this).find('.projectName').text();
+        var description = $(this).find('.projectDescription').text();
+        var members = JSON.parse($(this).find('.projectMembers').text());
+        var domain = $(this).find('.projectDomain').text();
+        var tags = JSON.parse($(this).find('.projectTags').text());
+        var owner = $(this).find('.projectOwner').text();
+
+        var container = $("#requestJoin .description-container");
+
+        container.empty();
+        container.prepend("<p> Owner : " + owner + "</p>");
+        container.prepend("<p>Tags : " + tags + "</p>");
+        container.prepend("<p> Domain : " + domain + "</p>");
+        container.prepend("<p> Members : " + members + "</p>");
+        container.prepend("<p> Description : " + description + "</p>");
+        container.prepend("<h3>" +  name + "</h3>");
+
         $('#requestJoin').openModal();
+
     });
 
 
@@ -204,6 +227,7 @@ $(document).ready(function() {
             dataType: 'json'
         }).done(function (data) {
             clickedFolder.parent().find("p").text(data.new_name);
+
         }).fail(function (err) {
             console.log(err);
         });
@@ -217,7 +241,7 @@ $(document).ready(function() {
         data.proj_id = clickedFolder.attr('id');
 
         $.ajax({
-            url: '/delete',
+            url: '/delete_project',
             method: 'POST',
             data: data,
             dataType: 'json'
@@ -238,8 +262,6 @@ $(document).ready(function() {
     $("#download-project").click(function (evt) {
         $("form#download-project-form").submit();
     });
-
-
 
     $(document).on('dblclick','.single-project-listing',function (evt) {
         var id = $(this).attr('id');
@@ -272,7 +294,7 @@ $(document).ready(function() {
 
      /* ====================== For accepting or declining request ============================== */
 
-      $(".accept-decline").click(function(evt){
+    $(".accept-decline").click(function(evt){
         evt.preventDefault();
 
         var id = $(this).attr('id');

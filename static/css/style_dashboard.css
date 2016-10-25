@@ -20,6 +20,7 @@ ul.tabsnew {
 }
 
 .commit-log-div {
+    display:none;
     width : 0;
     position: fixed;
     top: 260px;
@@ -48,6 +49,28 @@ ul.tabsnew {
     width:100%;
     margin-top:20px;
 
+}
+
+/* For user image in navbar */
+#userImage
+{
+    height: auto;
+    width: 12%;
+    vertical-align: center;
+    padding-top: 18px;
+    float: left;
+}
+
+
+/* For dropdown */
+#dropdown1{
+    top: 64px !important;
+}
+
+#dropLogo {
+    color:darkslategrey;
+    font-size: 14px;
+    padding-right: 10px;
 }
 
 /* Right Scrren */

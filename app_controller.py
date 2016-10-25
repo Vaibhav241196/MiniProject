@@ -87,8 +87,8 @@ def accept_signup():
     response = {}
     if request.method == 'POST':
 
-        fullname = request.form['fullName']
-        username = request.form['userName']
+        fullname = request.form['fullname']
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
 
@@ -113,8 +113,6 @@ def accept_signup():
             response['status'] = 0
             response['message'] = "Registration successful"
 
-            return redirect(url_for('index'))
-
         else:
             response['status'] = 1
             if result1.count() == 0:
@@ -122,7 +120,8 @@ def accept_signup():
 
             else:
                 response['message'] = "Email already exists"
-                return json.dumps(response)
+
+        return json.dumps(response)
 
     else:
         return render_template("index.html")
@@ -158,17 +157,16 @@ def log_in():
             else:
                 session['id'] = str(result2['_id'])
 
-            return redirect(url_for('index'))
-
-
         else:
+            response['status'] = 1
             response['message'] = "Invalid username and password"
-            return json.dumps(response)
+
 
     else:
-        response['status'] = 1
+        response['status'] = 2
         response['message'] = "Request message not post"
-        return json.dumps(response)
+
+    return json.dumps(response)
 
 
 @app.route('/logout')
@@ -191,6 +189,7 @@ def check_members():
 
     else:
         return json.dumps({"status": 2, "message": "No such user found"})
+
 
 @app.route('/add_members',methods=['POST'])
 def add_members():
@@ -226,6 +225,7 @@ def remove_members():
     if m:
         if str(m['_id']) in project['projectMembers']:
             update(proj_id, {'$pull': {'projectMembers': str(m['_id'])}},'projects')
+            # add another update query asap
             response = {"status": 0, "message": "Member successfully removed"}
 
         else:
@@ -240,9 +240,9 @@ def remove_members():
 # creates new project and redirects to the project home page
 @app.route('/create_project', methods=['POST'])
 def create_project():
-    print 'Hello'
 
     document = request.get_json()
+
     document['projectMembers'].append(session['id'])
     document['owner'] = session['id']
     document['branches'] = [{'branch_name' : 'master' , 'members' : [ session['id'] ] }]
@@ -252,16 +252,16 @@ def create_project():
     for i in document['projectMembers']:
         temp_update = update(i, {"$push": {'projects': str(project_id)}}, 'users')
 
-    makedirs(path.join(app.root_path,'../projects', str(project_id) ))
-    chdir(path.join(app.root_path,'../projects', str(project_id) ))
+    makedirs(path.join(app.root_path,'../projects', str(project_id)))
+    chdir(get_project_path(str(project_id)))
     call(['git', 'init'], shell=False)
     call(['git','commit','--allow-empty','-m','"Initial Empty Commit"'],shell=False)
 
-    return redirect(url_for('project_dashboard',id=project_id))
+    return json.dumps({'status': 0 , 'id': str(project_id)})
 
 # function to create new file and folders
 @app.route('/create_new', methods=['POST'])
-def create_file():
+def create_file_folder():
     name = request.form['name']
     type = request.form['type']
 
@@ -323,9 +323,13 @@ def return_list():
 
 @app.route('/project_dashboard/<id>', methods=['GET','POST'])
 def project_dashboard(id):
-    print "Hello"
 
-    project_path = path.join(app.root_path,'../projects', id)
+    project_path = get_project_path(id)
+    print project_path
+
+    userId = session['id']
+    current_user = find_unique({'_id': ObjectId(userId)}, 'users')
+    user_name = current_user['userName']
 
     if request.method == 'GET':
         project = find_unique({'_id': ObjectId(id)}, 'projects')
@@ -340,11 +344,13 @@ def project_dashboard(id):
         current_branch = check_output(['git','rev-parse','--abbrev-ref','HEAD'],shell=False)
         current_branch = current_branch[:-1]
 
-        return render_template('project_dashboard.html', project=project, members=members , list_dir=list_dir,current_branch=current_branch)
+        return render_template('project_dashboard.html', user_name=user_name, project=project, members=members , list_dir=list_dir,current_branch=current_branch)
 
     elif request.method == 'POST':
+
         dir_path = request.form['dir_path']
-        chdir(dir_path)
+        print project_path
+        chdir(path.join(project_path,dir_path))
         list_dir = return_list()
 
         l = len(project_path)
@@ -367,6 +373,11 @@ def get_commits():
 
     return json.dumps({ 'commits' : list(commits) })
 
+@app.route('/rollback/<sha_id>')
+def rollback(sha_id):
+    temp = call(['git','checkout',sha_id])
+    l = return_list()
+    return json.dumps(l)
 
 # function to change branch input (project id,branch name)
 # returns the list of folders and files after git checkout
@@ -374,7 +385,7 @@ def get_commits():
 def change_branch():
     proj_id = request.form['proj_id']
     change_branch = request.form['branch_name']
-    chdir(path.join(app.root_path,'../projects',str(proj_id)))
+    chdir(get_project_path(proj_id))
     temp = call(['git', 'checkout', str(change_branch)], shell=False)
     response = {}
     if temp == 1:
@@ -406,7 +417,7 @@ def create_branch():
     response = {}
 
     if project['owner'] == session['id']:
-        chdir(path.join(app.root_path,'../projects', proj_id))
+        chdir(get_project_path(proj_id))
         temp = call(['git', 'branch', str(branch_data['branch_name'])], shell=False)
 
         if temp == 0:
@@ -429,8 +440,8 @@ def create_branch():
 @app.route('/path', methods=['POST'])
 def return_files():
     proj_id = request.form['id']
-    path = request.form['path']
-    chdir(path.join(app.root_path,'../projects',str(proj_id),path))
+    dir_path = request.form['path']
+    chdir(path.join(get_project_path(proj_id),dir_path))
     list_dir = return_list()
     return json.dumps(list_dir)
 
@@ -441,20 +452,27 @@ def return_files():
 @app.route('/delete_path', methods=['POST'])
 def delete_files():
     proj_id = request.form['proj_id']
-    delete_path = request.form['path']
+    del_path = request.form['path']
 
     response = {}
     if check_access(proj_id):
-        try:
-            remove(path.join(app.root_path,'../projects',str(proj_id),str(delete_path)))
-        except:
-            rmtree(path.join(app.root_path,'../projects' ,str(proj_id),str(delete_path)))
+
+        delete_path(path.join(get_project_path(proj_id),del_path))
         response['status'] = 0
         response['message'] = 'Successfully deleted'
     else:
         response['status'] = 1
         response['message'] = 'Permission Denied'
     return json.dumps(response)
+
+
+def delete_path(delete_path):
+    try:
+        remove(delete_path)
+    except OSError:
+        rmtree(delete_path)
+    except:
+        print "Neither a file or directory"
 
 
 # function to download files and folder
@@ -464,7 +482,7 @@ def delete_files():
 def download_path():
     proj_id = request.form['id']
     path = request.form['path']
-    call(['tar', '-czvf', path.join(app.root_path , '../projects', str(proj_id) ,'.tar.gz'), path.join(app.root_path,'../projects',str(proj_id) , str(path))], shell=False)
+    call(['tar', '-czvf', path.join(app.root_path , '../projects', str(proj_id) ,'.tar.gz'), path.join(app.root_path,'../projects',str(proj_id),str(path))], shell=False)
     temp_path = path.join(app.root_path , '../projects')
     return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
 
@@ -479,9 +497,11 @@ def commit_changes():
 
     userId = session['id']
     if check_access(proj_id):
+        chdir(get_project_path(proj_id))
         call(['git', 'add', '.'], shell=False)
         call(['git', 'commit', '-m', str(message)], shell=False)
         sha_id = check_output(['git', 'rev-parse', 'HEAD'], shell=False)
+
         if find_unique({'sha_id': sha_id}, 'commits'):
             response['message'] = "Nothing to commit"
             response['status'] = 1
@@ -489,8 +509,6 @@ def commit_changes():
 
             # print getcwd()
             # print check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], shell=False)[:-1]
-
-            chdir(path.join(app.root_path,'../projects',proj_id))
 
             response['message'] = "Commit Successful"
             response['status'] = 0
@@ -592,8 +610,8 @@ def rename():  # yet to be integrated
     # return json.dumps({'user': current_user, 'proj_list': proj_list})
     # return json.dumps({'status': 1, 'message': 'Successfully renamed', 'new_name': new_name})
 
-@app.route('/delete', methods=['POST'])
-def remove():
+@app.route('/delete_project', methods=['POST'])
+def remove_project():
     proj_id = request.form['proj_id']
     userId = session['id']
 
@@ -604,15 +622,19 @@ def remove():
     print userId
 
     if project['owner'] == userId:
-        for i in project['projectMembers']:
-            temp_update = update(i, {'$pull': {'projects': str(proj_id)}}, users)
-        temp = delete({'_id': ObjectId(proj_id)}, 'projects')
-        response['status'] = 0
-        response['message'] = "Successfully deleted"
-        #projectMembers = find({'projects': str(proj_id)}, 'users')
 
         for i in project['projectMembers']:
             update_users = update(i, {'$pull' : {'projects' : str(proj_id)}} , 'users')
+
+        temp = delete({'_id': ObjectId(proj_id)}, 'projects')
+
+
+        response['status'] = 0
+        response['message'] = "Successfully deleted"
+
+
+
+
     else:
         response['status'] = 1
         response['message'] = "Only owner can delete a project"
@@ -630,10 +652,13 @@ def remove():
 # print app.config['MODELS']
 @app.route('/download', methods=['GET', 'POST'])
 def download():  # extension problem
+    print 'hello'
+    print getcwd()
     proj_id = request.form['download-project-id']
-    call(['tar', '-czvf', path.join(app.root_path,'../projects' , str(proj_id) ,'.tar.gz') , path.join(app.root_path,'../projects',str(proj_id)) ] ,shell=False)
-    temp_path = path.join(app.root_path + '../projects')
-    return send_from_directory(directory=temp_path, filename=str(proj_id) + '.tar.gz')
+    call(['tar','-czvf', path.join(app.root_path,'../projects',str(proj_id)+'.tar.gz'),'-C',path.join(app.root_path,'../projects',str(proj_id)),'.'] ,shell=False)
+    temp_path = path.join(app.root_path,'../projects')
+    print 'hello2'
+    return send_from_directory(directory=temp_path,filename=str(proj_id)+'.tar.gz')
 
 
 # function to send request for project
@@ -711,7 +736,7 @@ def merge_branch():
     response = {}
 
     if id == current_project['owner']:
-        chdir(path.join(app.root_path,'../projects',str(project_id) ))
+        chdir(get_project_path(project_id))
         checkout_result = call(['git', 'checkout', str(parent_branch)], shell=False)
 
         if checkout_result == 1:
@@ -772,6 +797,13 @@ def search():
     print count_temp
     for i in temp:
         i['_id'] = str(i['_id'])
+        i['memberNames'] = []
+
+        for m in i['projectMembers']:
+            i['memberNames'].append(find_unique({ '_id' : ObjectId(m)},'users')['userName'])
+
+        i['ownerName'] = find_unique({ '_id' : ObjectId(i['owner'])},'users')['userName']
+
     return_list = []
     length = len(temp)
     for i in range(length):
@@ -780,6 +812,10 @@ def search():
         count_temp.remove(max(count_temp))
 
     return json.dumps({'array':return_list})
+
+################################ For generating project path ##################################################
+def get_project_path(proj_id):
+    return path.join(app.root_path,'../projects',proj_id)
 
 ################################# Static file cache bursting code #####################################################
 @app.context_processor

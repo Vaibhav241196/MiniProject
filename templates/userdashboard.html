@@ -22,27 +22,31 @@
     <div class="navbar-fixed">
         <nav class="dark-primary-color">
             <div class="nav-wrapper">
-                <a href="#!" class="brand-logo garamond"><strong>proHub</strong></a>
+                <a href="/" class="brand-logo garamond"><strong>proHub</strong></a>
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     <li><a href="#notificationModal" class="modal-trigger"><i class=" fa fa-envelope" aria-hidden="true"
                                                                               id="dropLogo"
                                                                               style="color: white; font-size: 28px;"></i><span class="badge white-text">{{ requests | length }}</span></a>
                     </li>
-                    <li style="float:right;"><a href="#" data-activates='dropdown1' class='dropdown-button '><img
+
+                    <li style="float:right;"><a href="#" data-activates='dropdown1' class='dropdown-button'>
+                        <img
                             src="{{ url_for('static' , filename='images/userimage.png') }}"
                             class="responsive-img circle"
-                            id="userImage"/><span><strong>Howdy {{ user['userName'] }}</strong></span></a></li>
+                            id="userImage"/><span><strong>Howdy {{ user['userName'] }}</strong></span></a>
+                    </li>
 
                 </ul>
 
 
                 <ul id='dropdown1' class='dropdown-content'>
-                    <li><a href="#!"><i class=" waves-effect fa fa-camera " aria-hidden="true" id="dropLogo"></i>Change
-                        Pic</a></li>
-                    <li><a href="#!"><i class=" waves-effect fa fa-cog " aria-hidden="true"
-                                        id="dropLogo"></i>Settings</a></li>
-                    <li class="divider"></li>
+{#                    <li><a href="#!"><i class=" waves-effect fa fa-camera " aria-hidden="true" id="dropLogo"></i>Change#}
+{#                        Pic</a></li>#}
+{#                    <li><a href="#!"><i class=" waves-effect fa fa-cog " aria-hidden="true"#}
+{#                                        id="dropLogo"></i>Settings</a></li>#}
+{#                    <li class="divider"></li>#}
+
                     <li><a href="/logout"><i class=" waves-effect fa fa-sign-out " aria-hidden="true" id="dropLogo"></i>Logout</a>
                     </li>
                 </ul>
@@ -65,7 +69,7 @@
 
     </div>
 
-    <nav id="secondary-nav">
+    <nav id="secondary-nav" class="fixed">
         <div class="row nav-wrapper" id="nav-bar-secondary">
             <div class="col s10 m4 l3 offset-l2">
                 <a href="#new-project" title="New Project" class="modal-trigger"><i class=" waves-effect fa fa-plus"
@@ -101,7 +105,7 @@
                         <label class="active" for="rename">New Project Name</label>
                     </div>
                     <div class="input-field center-align">
-                        <input type="submit" value="Submit" class=""/>
+                        <input type="submit" value="Submit" class="btn waves-effect waves-light modal-action modal-close"/>
                     </div>
                 </form>
             </div>
@@ -271,6 +275,9 @@
             <div id="requestJoin" class="modal">
                 <div class="modal-content">
                     <div class="hide" id="searched-project-id"></div>
+
+                    <div class="description-container"></div>
+
                     <h4>Send Project owner a request to join</h4>
                     <a class="waves-effect waves-light btn send-request">Send</a>
                     <a class="waves-effect waves-light btn modal-close">Cancel</a>
@@ -279,7 +286,7 @@
 
         </div>
 
-        <div id="new-project" class="modal" style="position: absolute; height: 400px">
+        <div id="new-project" class="modal" style="position: absolute;">
             <div class="modal-content">
                 <form class="col s12" id="new_project" >
                     <h2 class="center-align heading red-text"> Add New Project </h2>
@@ -292,7 +299,7 @@
                         </div>
                         <div class="input-field col s10 offset-s1">
                             <textarea id="project-description" name="project-description"
-                                   class="materialize-textarea" placeholder="Description"> </textarea>
+                                   class="materialize-textarea"> </textarea>
                             <label for="project-description">Project Description</label>
                         </div>
 
@@ -332,7 +339,7 @@
                                 <option value="RoboticsProgramming">Robotics Programming</option>
 
                             </select>
-                            <label for="category">Members</label>
+                            <label for="category">Domain</label>
                         </div>
 
                         <div class="col s10 offset-s1 input-field">
@@ -370,27 +377,6 @@
                 </form>
             </div>
         </div>
-
-        <div id="rename-project" class="modal center-align">
-            <div class="modal-content" id="renameModal">
-                <h4 style="font-family: 'EB garamond', sans-serif;" class="red-text">Rename Project</h4>
-                <div class="row center-align">
-                    <form id="rename-project-form">
-                        <div class="input-field col s6 offset-s3">
-                            <input id="new_project_name" name="new_project_name" type="text"
-                                   class="validate">
-                            <label class="active" for="rename">New Project Name</label>
-                        </div>
-                        <div class="input-field center-align">
-                            <input type="submit" value="Submit" class=""/>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-
-
 
 <script rel="script" type="text/javascript"
         src="{{ url_for( 'static' , filename='js/jquery-3.1.0.min.js') }}"></script>
